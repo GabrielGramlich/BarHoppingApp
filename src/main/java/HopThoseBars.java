@@ -1,46 +1,68 @@
+import static input.InputUtils.stringInput;
+
 public class HopThoseBars {
     public static void main(String[] args) {
         //TODO separate into different classes
-        boolean weHave = haveWeMet();
-        boolean youreIn = false;
+        if (newUser) {
+            pullUpAStool();
+        } else {
+            boolean weHave = haveWeMet();
+            boolean youreIn;
+
+            if (!weHave) {
+                youreIn = whosThere();
+            } else {
+                youreIn = true;
+            }
+            if (youreIn) {
+                whatreYouHaving();
+            }
+        }
+    }
+    //Following methods are for all users types
+    public static void pullUpAStool() {
+        //TODO get input about account type, username, password, all that fun stuff
+        String potatoes = stringInput("Oy. Password, guvna!");
+        String seasoning = DontHopUnlessISaySo.getSalt();
+        String saltyHashBrowns = DontHopUnlessISaySo.getSecurePassword(potatoes, seasoning);
+        thisOrThat();
+    }
+    public static void whatreYouHaving() {
         int howMuchHaveYouHad;
         int tooMuch;
         String pubCrawl;
 
-        if (!weHave) {
-            youreIn = whosThere();
-        } else {
-            youreIn = true;
-        }
-
-        if (youreIn) {
-            pubCrawl = doINeedATie();
-            if (pubCrawl.equals("pub")) {
-                whatCanIDoForYouMaster();
-            } else if (pubCrawl.equals("crawl")) {
-                whatDoYouWantPeasant();
+        pubCrawl = doINeedATie();
+        if (pubCrawl.equals("pub")) {
+            whatCanIDoForYouMaster();
+        } else if (pubCrawl.equals("crawl")) {
+            whatDoYouWantPeasant();
+            if (howMuchHaveYouHad >= tooMuch) {
+                cuttingYouOff();
             }
         }
-
-        if (howMuchHaveYouHad >= tooMuch) {
-            cuttingYouOff();
-        }
     }
-    //Following methods are for all users types
     public static boolean haveWeMet() {
         //TODO check if user is already signed in
     }
     public static boolean whosThere() {
         //TODO let them sign in
-        boolean youToldTheTruth = youLiar();
+        String username = stringInput("Enter your username:");
+        String password = stringInput("Enter your password:");
+
+        boolean youToldTheTruth = youLiar(username, password);
 
         return youToldTheTruth;
     }
-    public static boolean youLiar () {
+    public static boolean youLiar (String username, String potatoes) {
+        //TODO get salt from db
+        //TODO get hashed password from db
         //TODO check credentials from user database
         boolean iBelieveYou;
 
-        if (userCredentials == databaseCredentials) {
+        String saltyHashBrowns = DontHopUnlessISaySo.getSecurePassword(potatoes, seasoning);
+
+        if (saltyHashBrowns == databaseCredentials) {
             iBelieveYou = true;
         } else {
             iBelieveYou = false;
