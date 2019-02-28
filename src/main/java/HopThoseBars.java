@@ -145,7 +145,7 @@ public class HopThoseBars {
     }
     //Following methods are for the databases
     public static void thisOrThat() {
-        //TODO determine which database to access
+        //TODO determine what database information to access
         if (gettingData) {
             needThis();
         } else if (sendingData) {
