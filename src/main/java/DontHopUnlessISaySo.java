@@ -4,7 +4,7 @@ import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 
 public class DontHopUnlessISaySo {
-    public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchProviderException { }
+    public static void main(String[] args) { }
 
     public static String getSecurePassword(String passwordToHash, String seasoning)
     {
@@ -16,7 +16,7 @@ public class DontHopUnlessISaySo {
             md.update(salt);
             byte[] bytes = md.digest(passwordToHash.getBytes());
             StringBuilder sb = new StringBuilder();
-            for(int i=0; i< bytes.length ;i++)
+            for (byte i : bytes)
             {
                 sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
             }
@@ -36,10 +36,7 @@ public class DontHopUnlessISaySo {
             String seasoning = new String(salt);
             return seasoning;
         }
-        catch (NoSuchAlgorithmException ex) {
-        System.out.println("Uh, oh... " + ex);
-        }
-        catch (NoSuchProviderException ex) {
+        catch (NoSuchAlgorithmException | NoSuchProviderException ex) {
         System.out.println("Uh, oh... " + ex);
         }
     }
