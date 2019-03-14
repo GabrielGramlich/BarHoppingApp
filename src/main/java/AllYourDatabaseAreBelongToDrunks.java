@@ -57,84 +57,26 @@ public class AllYourDatabaseAreBelongToDrunks {
         }
     }
 
-    public static Integer needThatCredentialID(String username) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
-            Statement statement = connection.createStatement();
-
-            String getCredentialID = "SELECT Login_ID FROM Login_Credentials WHERE Username = \"" + username + "\";";
-            ResultSet retrievedData = statement.executeQuery(getCredentialID);
-
-            Integer credentialID = 0;
-            while (retrievedData.next()) {
-                credentialID = retrievedData.getInt("Login_ID");
-            }
-
-            statement.close();
-            connection.close();
-
-
-            return credentialID;
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-            return 0;
+    public static Integer needThatAccountType(String username) {
+        String sqlStatement = "SELECT Account_Type FROM Login_Credentials WHERE Username = \"" + username + "\";";
+        boolean accountType = needThatBoolean("Account_Type", sqlStatement);
+        if (accountType) {
+            return  2;
+        } else {
+            return  1;
         }
     }
 
-    public static Integer needThatAccountType(String username) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
-            Statement statement = connection.createStatement();
-
-            String getAccountType = "SELECT Account_Type FROM Login_Credentials WHERE Username = \"" + username + "\";";
-            ResultSet retrievedData = statement.executeQuery(getAccountType);
-
-            Integer accountType = 0;
-            while (retrievedData.next()) {
-                boolean type = retrievedData.getBoolean("Account_Type");
-                if (type) {
-                    accountType = 2;
-                } else {
-                    accountType = 1;
-                }
-            }
-
-            statement.close();
-            connection.close();
-
-            return accountType;
-
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-            return 0;
-        }
+    public static Integer needThatCredentialID(String username) {
+        String sqlStatement = "SELECT Login_ID FROM Login_Credentials WHERE Username = \"" + username + "\";";
+        Integer loginID = needThatInteger("Login_ID", sqlStatement);
+        return loginID;
     }
 
     public static String needThatSalt(String username) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
-            Statement statement = connection.createStatement();
-
-            String getSalt = "SELECT Salt FROM Login_Credentials WHERE Username = \"" + username + "\";";
-            ResultSet retrievedData = statement.executeQuery(getSalt);
-
-            String salt = "";
-            while (retrievedData.next()) {
-                salt = retrievedData.getString("Salt");
-            }
-
-            statement.close();
-            connection.close();
-
-
-            return salt;
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-            return "";
-        }
+        String sqlStatement = "SELECT Salt FROM Login_Credentials WHERE Username = \"" + username + "\";";
+        String salt = needThatString("Salt", sqlStatement);
+        return salt;
     }
 
     public static String needThatPassword(String username) {
@@ -151,7 +93,6 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
     public static String needThatString(String column, String sqlStatement) {
-        //TODO figure out why this isn't working
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
@@ -176,7 +117,6 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
     public static Integer needThatInteger(String column, String sqlStatement) {
-        //TODO figure out why this isn't working
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
@@ -197,6 +137,30 @@ public class AllYourDatabaseAreBelongToDrunks {
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
             return 0;
+        }
+    }
+
+    public static boolean needThatBoolean(String column, String sqlStatement) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+            Statement statement = connection.createStatement();
+
+            ResultSet retrievedData = statement.executeQuery(sqlStatement);
+
+            boolean returnBoolean = false;
+            while (retrievedData.next()) {
+                returnBoolean = retrievedData.getBoolean(column);
+            }
+
+            statement.close();
+            connection.close();
+
+            return returnBoolean;
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            return false;
         }
     }
 
