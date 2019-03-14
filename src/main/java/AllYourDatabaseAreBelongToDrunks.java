@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 
 import static input.InputUtils.yesNoInput;
 
@@ -172,6 +173,11 @@ public class AllYourDatabaseAreBelongToDrunks {
 
         insertDataSql = "DELETE FROM Login_Credentials WHERE Login_ID = \"" + loginID + "\";";
         dontNeedThat(insertDataSql);
+    }
+
+    public static void youGotSomeWeirdKinks(String username, ArrayList allergies, String topShelf, String bottomShelf, boolean weakOrStrong, boolean deepPockets, boolean youFancy) {
+        //TODO put user defined preferences in database
+        //TODO move this to AllYouDatabase class
     }
 
 //    public static void nevermind() {
