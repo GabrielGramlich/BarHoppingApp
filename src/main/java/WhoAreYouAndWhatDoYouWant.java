@@ -1,9 +1,13 @@
 import static input.InputUtils.stringInput;
+import static input.InputUtils.yesNoInput;
 
 public class WhoAreYouAndWhatDoYouWant {
     public static void main(String[] args) {
-//        if (newUser) {
-//            pullUpAStool();
+        boolean newUser = yesNoInput("Are you a new member?");
+
+        if (newUser) {
+            pullUpAStool();
+        }
 //        } else {
 //            boolean youreIn;
 //            boolean weHave = DontHopUnlessISaySo.haveWeMet();
@@ -18,24 +22,28 @@ public class WhoAreYouAndWhatDoYouWant {
 //            }
 //        }
     }
-//    public static void whatreYouHaving() {
-//        String pubCrawl;
-//
-//        pubCrawl = doINeedATie();
-//        if (pubCrawl.equals("pub")) {
-//            whatCanIDoForYouMaster();
-//        } else if (pubCrawl.equals("crawl")) {
-//            whatDoYouWantPeasant();
-//        }
-//    }
-//    public static String doINeedATie() {
-//        //TODO determine if end user is on the professional end, or consumer end
-//        if (professional) {
-//            return "pub";
-//        } else if (consumer) {
-//            return "crawl";
-//        }
-//    }
+    public static void whatreYouHaving(String username, String password) {
+        String pubCrawl = doINeedATie(username, password);
+        if (pubCrawl.equals("pub")) {
+            whatCanIDoForYouMaster();
+        } else if (pubCrawl.equals("crawl")) {
+            whatDoYouWantPeasant();
+        }
+    }
+
+    public static String doINeedATie(String username, String password) {
+        //TODO determine if end user is on the professional end, or consumer end
+
+        Integer pubcrawl = AllYourDatabaseAreBelongToDrunks.needThatAccountType(username, password);
+
+        if (pubcrawl == 2) {
+            return "pub";
+        } else if (pubcrawl == 1) {
+            return "crawl";
+        } else {
+            return "failure";
+        }
+    }
 //    public static void IHateYou() {
 //        //TODO allow user to delete profile
 //        nevermind();
@@ -44,21 +52,39 @@ public class WhoAreYouAndWhatDoYouWant {
 //        //TODO discard changes or save to database
 //        AllYourDatabaseAreBelongToDrunks.thisOrThat();
 //    }
-//    public static void pullUpAStool() {
-//        //TODO get input about account type, username, password, all that fun stuff
-//        String potatoes = stringInput("Oy. Password, guvna!");
-//        String seasoning = DontHopUnlessISaySo.worthYourWeightInEncryption();
-//        String saltyHashBrowns = DontHopUnlessISaySo.nothingCuresAHangoverLikeATastyPassword(potatoes, seasoning);
-//        //TODO send that info to db
-//        AllYourDatabaseAreBelongToDrunks.thisOrThat();
-//
-//        whatreYouHaving();
-//    }
-//    public static void whatCanIDoForYouMaster() {
+
+    public static void pullUpAStool() {
+        Integer alreadyChosen = 1;
+        String recipe = "";
+        String potatoes = "";
+        boolean hotOrCold = yesNoInput("You a corporate fat cat?");
+
+        while (alreadyChosen != 0) {
+            recipe = stringInput("Username. Gimme.");
+            potatoes = stringInput("Oy. Password, guvna!");
+            // TODO fix this. Take out the password in the called method. It's not really necessary anyway.
+            alreadyChosen = AllYourDatabaseAreBelongToDrunks.needThatAccountType(recipe, potatoes);
+            if (alreadyChosen != 0) {
+                System.out.println("Already chosen. Pick a different username.");
+            }
+        }
+
+        String email = stringInput("Now the email.");
+        // TODO check formatting for input
+
+        String seasoning = DontHopUnlessISaySo.worthYourWeightInEncryption();
+        String saltyHashBrowns = DontHopUnlessISaySo.nothingCuresAHangoverLikeATastyPassword(potatoes, seasoning);
+
+        AllYourDatabaseAreBelongToDrunks.whoAreYou(hotOrCold, recipe, email, saltyHashBrowns, seasoning);
+
+        whatreYouHaving(recipe, saltyHashBrowns);
+    }
+
+    public static void whatCanIDoForYouMaster() {
 //        //TODO create user menu
 //        youveLostWeight();
 //        IHateYou();
-//    }
+    }
 //    public static void youveLostWeight() {
 //        //TODO allow user to change account settings
 //        whereAmI();
@@ -73,14 +99,14 @@ public class WhoAreYouAndWhatDoYouWant {
 //        //TODO allowing updating of products and ingredients
 //        AllYourDatabaseAreBelongToDrunks.thisOrThat();
 //    }
-//
-//    public static void whatDoYouWantPeasant() {
+
+    public static void whatDoYouWantPeasant() {
 //        //TODO create user menu
 //        HopThoseBars.letsGetLit();
 //        youvePutOnAFewPounds();
 //        IHateYou();
 //        HopThoseBars.seeYouAround();
-//    }
+    }
 //    public static void youvePutOnAFewPounds() {
 //        //TODO allow user to change account settings
 //        AllYourDatabaseAreBelongToDrunks.thisOrThat();
