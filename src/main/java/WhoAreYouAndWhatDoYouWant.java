@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import static input.InputUtils.stringInput;
 import static input.InputUtils.yesNoInput;
@@ -82,7 +83,10 @@ public class WhoAreYouAndWhatDoYouWant {
 
         if (!quit) {
             String email = stringInput("Now the email.");
-            // TODO check formatting for input
+
+            while (!itsCalledEmailGrandpa(email)) {
+                email = stringInput("Wrong. Try again.");
+            }
 
             String seasoning = DontHopUnlessISaySo.worthYourWeightInEncryption();
             String saltyHashBrowns = DontHopUnlessISaySo.nothingCuresAHangoverLikeATastyPassword(potatoes, seasoning);
@@ -97,6 +101,18 @@ public class WhoAreYouAndWhatDoYouWant {
             yourePrettyPickyArentYou(recipe, true);
         }
         return quit;
+    }
+
+    public static boolean itsCalledEmailGrandpa(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
     }
 
     public static void yourePrettyPickyArentYou(String username, boolean firstTime) {
@@ -257,6 +273,9 @@ public class WhoAreYouAndWhatDoYouWant {
                 yourePrettyPickyArentYou(username, false);
             } else if (toBeUpdated.equals("email")) {
                 newInfo = stringInput("New email?");
+                while (!itsCalledEmailGrandpa(newInfo)) {
+                    newInfo = stringInput("Wrong. Try again.");
+                }
             } else if (toBeUpdated.equals("name")) {
                 newInfo = stringInput("New name?");
             } else if (toBeUpdated.equals("username")) {
