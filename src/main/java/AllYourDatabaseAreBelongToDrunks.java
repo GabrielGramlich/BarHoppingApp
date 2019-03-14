@@ -59,12 +59,8 @@ public class AllYourDatabaseAreBelongToDrunks {
 
     public static Integer needThatAccountType(String username) {
         String sqlStatement = "SELECT Account_Type FROM Login_Credentials WHERE Username = \"" + username + "\";";
-        boolean accountType = needThatBoolean("Account_Type", sqlStatement);
-        if (accountType) {
-            return  2;
-        } else {
-            return  1;
-        }
+        Integer accountType = needThatBoolean("Account_Type", sqlStatement);
+        return accountType;
     }
 
     public static Integer needThatCredentialID(String username) {
@@ -140,7 +136,7 @@ public class AllYourDatabaseAreBelongToDrunks {
         }
     }
 
-    public static boolean needThatBoolean(String column, String sqlStatement) {
+    public static Integer needThatBoolean(String column, String sqlStatement) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
@@ -148,19 +144,25 @@ public class AllYourDatabaseAreBelongToDrunks {
 
             ResultSet retrievedData = statement.executeQuery(sqlStatement);
 
-            boolean returnBoolean = false;
+            Integer returnInteger = 0;
+            boolean type;
             while (retrievedData.next()) {
-                returnBoolean = retrievedData.getBoolean(column);
+                type = retrievedData.getBoolean(column);
+                if (type) {
+                    returnInteger = 2;
+                } else {
+                    returnInteger = 1;
+                }
             }
 
             statement.close();
             connection.close();
 
-            return returnBoolean;
+            return returnInteger;
 
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
-            return false;
+            return 0;
         }
     }
 

@@ -70,6 +70,7 @@ public class WhoAreYouAndWhatDoYouWant {
             alreadyChosen = AllYourDatabaseAreBelongToDrunks.needThatAccountType(recipe);
             if (alreadyChosen != 0) {
                 System.out.println("Already chosen. Pick a different username.");
+                //TODO check if they want to sign in
             }
         }
 
