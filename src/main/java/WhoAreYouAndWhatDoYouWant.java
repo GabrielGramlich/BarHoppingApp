@@ -7,28 +7,33 @@ public class WhoAreYouAndWhatDoYouWant {
 
         if (newUser) {
             pullUpAStool();
+        } else {
+            boolean weHave = DontHopUnlessISaySo.haveWeMet();
+            String username = "";
+            String password = "";
+            // TODO get username and password if already signed in
+
+            while (!weHave) {
+                username = stringInput("Enter your username:");
+                password = stringInput("Enter your password:");
+                weHave = DontHopUnlessISaySo.whosThere(username, password);
+            }
+
+            password = AllYourDatabaseAreBelongToDrunks.needThatPassword(username);
+            whatreYouHaving(username, password);
         }
-//        } else {
-//            boolean youreIn;
-//            boolean weHave = DontHopUnlessISaySo.haveWeMet();
-//
-//            if (!weHave) {
-//                youreIn = DontHopUnlessISaySo.whosThere();
-//            } else {
-//                youreIn = true;
-//            }
-//            if (youreIn) {
-//                whatreYouHaving();
-//            }
-//        }
     }
+
     public static void whatreYouHaving(String username, String password) {
         String pubCrawl = doINeedATie(username, password);
         if (pubCrawl.equals("pub")) {
+            System.out.println("Calling whatCanIDoForYouMaster");
             whatCanIDoForYouMaster();
         } else if (pubCrawl.equals("crawl")) {
+            System.out.println("Calling whatDoYouWantPeasant");
             whatDoYouWantPeasant();
         }
+        // TODO I mean not really, but I left off here.
     }
 
     public static String doINeedATie(String username, String password) {
@@ -41,13 +46,15 @@ public class WhoAreYouAndWhatDoYouWant {
         } else if (pubcrawl == 1) {
             return "crawl";
         } else {
-            return "failure";
+            return "failureasfsdf";
         }
     }
+
 //    public static void IHateYou() {
 //        //TODO allow user to delete profile
 //        nevermind();
 //    }
+
 //    public static void nevermind() {
 //        //TODO discard changes or save to database
 //        AllYourDatabaseAreBelongToDrunks.thisOrThat();
@@ -75,7 +82,12 @@ public class WhoAreYouAndWhatDoYouWant {
         String seasoning = DontHopUnlessISaySo.worthYourWeightInEncryption();
         String saltyHashBrowns = DontHopUnlessISaySo.nothingCuresAHangoverLikeATastyPassword(potatoes, seasoning);
 
-        AllYourDatabaseAreBelongToDrunks.whoAreYou(hotOrCold, recipe, email, saltyHashBrowns, seasoning);
+        Integer ID = AllYourDatabaseAreBelongToDrunks.whoAreYou(hotOrCold, recipe, email, saltyHashBrowns, seasoning);
+
+        String firstName = stringInput("What's your first name? It's Douche, isn't it?");
+        String lastName = stringInput("Last name, Bag.");
+
+        AllYourDatabaseAreBelongToDrunks.greetingsFriend(firstName, lastName, ID);
 
         whatreYouHaving(recipe, saltyHashBrowns);
     }
@@ -85,16 +97,19 @@ public class WhoAreYouAndWhatDoYouWant {
 //        youveLostWeight();
 //        IHateYou();
     }
+
 //    public static void youveLostWeight() {
 //        //TODO allow user to change account settings
 //        whereAmI();
 //        whatWasThat();
 //        nevermind();
 //    }
+
 //    public static void whereAmI() {
 //        //TODO allowing updating of locations and hours
 //        AllYourDatabaseAreBelongToDrunks.thisOrThat();
 //    }
+
 //    public static void whatWasThat() {
 //        //TODO allowing updating of products and ingredients
 //        AllYourDatabaseAreBelongToDrunks.thisOrThat();
@@ -107,6 +122,7 @@ public class WhoAreYouAndWhatDoYouWant {
 //        IHateYou();
 //        HopThoseBars.seeYouAround();
     }
+
 //    public static void youvePutOnAFewPounds() {
 //        //TODO allow user to change account settings
 //        AllYourDatabaseAreBelongToDrunks.thisOrThat();

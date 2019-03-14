@@ -88,4 +88,54 @@ public class AllYourDatabaseAreBelongToDrunks {
             return 0;
         }
     }
+
+    public static String needThatSalt(String username) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+            Statement statement = connection.createStatement();
+
+            String getSalt = "SELECT Salt FROM Login_Credentials WHERE Username = \"" + username + "\";";
+            ResultSet retrievedData = statement.executeQuery(getSalt);
+
+            String salt = "";
+            while (retrievedData.next()) {
+                salt = retrievedData.getString("Salt");
+            }
+
+            statement.close();
+            connection.close();
+
+            return salt;
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            return "";
+        }
+    }
+
+    public static String needThatPassword(String username) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+            Statement statement = connection.createStatement();
+
+            String getPassword = "SELECT Password FROM Login_Credentials WHERE Username = \"" + username + "\";";
+            ResultSet retrievedData = statement.executeQuery(getPassword);
+
+            String password = "";
+            while (retrievedData.next()) {
+                password = retrievedData.getString("Password");
+            }
+
+            statement.close();
+            connection.close();
+
+            return password;
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            return "";
+        }
+    }
 }

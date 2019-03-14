@@ -8,35 +8,28 @@ import static input.InputUtils.stringInput;
 public class DontHopUnlessISaySo {
     public static void main(String[] args) { }
 
-//    public static boolean haveWeMet() {
-//        //TODO check if user is already signed in
-//    }
+    public static boolean haveWeMet() {
+        //TODO check if user is already signed in
 
-//    public static boolean whosThere() {
-//        //TODO let them sign in
-//        String username = stringInput("Enter your username:");
-//        String password = stringInput("Enter your password:");
-//
-//        boolean youToldTheTruth = youLiar(username, password);
-//
-//        return youToldTheTruth;
-//    }
-//    public static boolean youLiar (String username, String potatoes) {
-//        //TODO get salt from db
-//        //TODO get hashed password from db
-//        //TODO check credentials from user database
-//        boolean iBelieveYou;
-//
-//        String saltyHashBrowns = nothingCuresAHangoverLikeATastyPassword(potatoes, seasoning);
-//
-//        if (saltyHashBrowns == databaseCredentials) {
-//            iBelieveYou = true;
-//        } else {
-//            iBelieveYou = false;
-//        }
-//
-//        return iBelieveYou;
-//    }
+        return false;
+    }
+
+    public static boolean whosThere (String username, String potatoes) {
+        boolean iBelieveYou;
+
+        String seasoning = AllYourDatabaseAreBelongToDrunks.needThatSalt(username);
+        String databaseCredentials = AllYourDatabaseAreBelongToDrunks.needThatPassword(username);
+
+        String saltyHashBrowns = nothingCuresAHangoverLikeATastyPassword(potatoes, seasoning);
+
+        if (saltyHashBrowns.equals(databaseCredentials)) {
+            iBelieveYou = true;
+        } else {
+            iBelieveYou = false;
+        }
+
+        return iBelieveYou;
+    }
 
     public static String nothingCuresAHangoverLikeATastyPassword(String potatoes, String seasoning) {
         String hashbrowns = null;
