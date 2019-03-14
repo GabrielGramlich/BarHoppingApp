@@ -117,7 +117,7 @@ public class WhoAreYouAndWhatDoYouWant {
         boolean deepPockets = !yesNoInput("You broke, homie?");
         boolean youFancy = yesNoInput("You a fan of mixology?");
 
-        youGotSomeWeirdKinks(username, allergies, topShelf, bottomShelf, weakOrStrong, deepPockets, youFancy);
+        AllYourDatabaseAreBelongToDrunks.youGotSomeWeirdKinks(username, allergies, topShelf, bottomShelf, weakOrStrong, deepPockets, youFancy);
     }
 
     public static void whatCanIDoForYouMaster(String username) {
@@ -166,11 +166,68 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     public static void whereAmI() {
-        //TODO allowing updating of locations and hours
+        String decision = stringInput("Create, update, delete or review locations?");
+        String otherDecision;
+        if (decision.equals("create")) {
+            //TODO get all location data
+            //TODO push all location data
+            //TODO get all hours data
+            //TODO push all hours data
+        } else if (decision.equals("update")) {
+            otherDecision = stringInput("Location information or hours of operation (decision or hours).");
+            if (otherDecision.equals("location")) {
+                //TODO print location information
+                //TODO get new information type #street, name, whatever
+                //TODO get new data
+                //TODO push new data
+            } else if (otherDecision.equals("hours")) {
+                //TODO print location information
+                //TODO get selection for location
+                //TODO print hour information for selected location
+                //TODO get new information type #hours, days, specialty hours, whatever
+                //TODO get new data
+                //TODO push new data
+            }
+        } else if (decision.equals("delete")) {
+            //TODO print location information
+            //TODO get selection for location
+            //TODO delete selection
+        } else if (decision.equals("review")) {
+            otherDecision = stringInput("Location information or hours of operation (decision or hours).");
+            if (otherDecision.equals("location")) {
+                //TODO print location information
+            } else if (otherDecision.equals("hours")) {
+                //TODO print location information
+                //TODO get selection for location
+                //TODO print hour information for selected location
+            }
+        }
     }
 
     public static void whatWasThat() {
-        //TODO allowing updating of products and ingredients
+        String decision = stringInput("Create, update, delete or review drinks?");
+        if (decision.equals("create")) {
+            //TODO get drink name and availability
+            //TODO get drink descriptions
+            //TODO get drink ingredient array
+            //TODO push all data
+        } else if (decision.equals("update")) {
+            //TODO print all drinks
+            //TODO get drink selection
+            //TODO get decision for updating ingredients, description, or availability
+            //TODO print corresponding data
+            //TODO get new data
+            //TODO push new data
+        } else if (decision.equals("delete")) {
+            //TODO print all drinks
+            //TODO get drink selection
+            //TODO delete selection
+        } else if (decision.equals("review")) {
+            //TODO print all drinks
+            //TODO get drink selection
+            //TODO get decision for reviewing ingredients, description, or availability
+            //TODO print corresponding data
+        }
     }
 
     public static void whatDoYouWantPeasant(String username) {
