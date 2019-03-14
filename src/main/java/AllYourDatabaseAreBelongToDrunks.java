@@ -138,82 +138,66 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
     public static String needThatPassword(String username) {
+        String sqlStatement = "SELECT Password FROM Login_Credentials WHERE Username = \"" + username + "\";";
+        String password = needThatString("Password", sqlStatement);
+        return password;
+    }
+
+    public static Integer needThatUserID(String username) {
+        Integer loginID = needThatCredentialID(username);
+        String sqlStatement = "SELECT User_ID FROM Users WHERE Login_Credentials_Login_ID = " + loginID + ";";
+        Integer userID = needThatInteger("User_ID", sqlStatement);
+        return userID;
+    }
+
+    public static String needThatString(String column, String sqlStatement) {
+        //TODO figure out why this isn't working
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
             Statement statement = connection.createStatement();
 
-            String getPassword = "SELECT Password FROM Login_Credentials WHERE Username = \"" + username + "\";";
-            ResultSet retrievedData = statement.executeQuery(getPassword);
+            ResultSet retrievedData = statement.executeQuery(sqlStatement);
 
-            String password = "";
+            String returnString = "";
             while (retrievedData.next()) {
-                password = retrievedData.getString("Password");
+                returnString = retrievedData.getString(column);
             }
 
             statement.close();
             connection.close();
 
 
-            return password;
+            return returnString;
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
             return "";
         }
     }
 
-    public static Integer needThatUserID(String username) {
+    public static Integer needThatInteger(String column, String sqlStatement) {
+        //TODO figure out why this isn't working
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
             Statement statement = connection.createStatement();
 
-            Integer loginID = needThatCredentialID(username);
+            ResultSet retrievedData = statement.executeQuery(sqlStatement);
 
-            String getUserID = "SELECT User_ID FROM Users WHERE Login_Credentials_Login_ID = " + loginID + ";";
-            ResultSet retrievedData = statement.executeQuery(getUserID);
-
-            Integer userID = 0;
+            Integer returnInteger = 0;
             while (retrievedData.next()) {
-                userID = retrievedData.getInt("User_ID");
+                returnInteger = retrievedData.getInt(column);
             }
 
             statement.close();
             connection.close();
 
 
-            return userID;
+            return returnInteger;
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
             return 0;
         }
-    }
-
-    public static String needThatString(String column, String table, String username) {
-        //TODO figure out why this isn't working
-//        try {
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
-//            Statement statement = connection.createStatement();
-//
-//            String getCredentialID = "SELECT " + column + " FROM " + table + " WHERE Username = \"" + username + "\";";
-//            ResultSet retrievedData = statement.executeQuery(getCredentialID);
-//
-//            String returnString = "";
-//            while (retrievedData.next()) {
-//                returnString = retrievedData.getString(column);
-//            }
-//
-//            statement.close();
-//            connection.close();
-//
-//
-//            return returnString;
-//        } catch (SQLException | ClassNotFoundException e) {
-//            System.out.println(e.getMessage());
-//            return "";
-//        }
-        return "";
     }
 
     public static void throwThatInTheTrash(Integer loginID, Integer userID) {
