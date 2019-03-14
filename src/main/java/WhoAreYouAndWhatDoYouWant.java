@@ -48,15 +48,15 @@ public class WhoAreYouAndWhatDoYouWant {
         }
     }
 
-//    public static void IHateYou() {
-//        //TODO allow user to delete profile
-//        nevermind();
-//    }
-
-//    public static void nevermind() {
-//        //TODO discard changes or save to database
-//        AllYourDatabaseAreBelongToDrunks.thisOrThat();
-//    }
+    public static void IHateYou(String username) {
+        //TODO allow user to delete profile
+        Integer loginID = AllYourDatabaseAreBelongToDrunks.needThatCredentialID(username);
+        Integer userID = AllYourDatabaseAreBelongToDrunks.needThatUserID(username);
+        boolean response = yesNoInput("You sure you wanna leave, ya big baby?");
+        if (response) {
+            AllYourDatabaseAreBelongToDrunks.throwThatInTheTrash(loginID, userID);
+        }
+    }
 
     public static void pullUpAStool() {
         Integer alreadyChosen = 1;
@@ -146,7 +146,7 @@ public class WhoAreYouAndWhatDoYouWant {
             if (otherDecision.equals("change")) {
                 youvePutOnAFewPounds(username);
             } else if (otherDecision.equals("delete")) {
-//                IHateYou();
+                IHateYou(username);
             }
         } else if (decision.equals("home")) {
 //            HopThoseBars.seeYouAround();
@@ -168,11 +168,13 @@ public class WhoAreYouAndWhatDoYouWant {
             } else if (toBeUpdated.equals("username")) {
                 newInfo = stringInput("New username?");
             } else if (toBeUpdated.equals("password")) {
-                newInfo = stringInput("New password?");
+                String newPassword = stringInput("New password?");
+                String salt = AllYourDatabaseAreBelongToDrunks.needThatSalt(username);
+                newInfo = DontHopUnlessISaySo.nothingCuresAHangoverLikeATastyPassword(newPassword, salt);
             }
 
             AllYourDatabaseAreBelongToDrunks.makeUpYourMindAlready(toBeUpdated, newInfo, username);
-        } while (yesNoInput("You done yet?"));
+        } while (!yesNoInput("You done yet?"));
 
         System.out.println("Bout time.");
     }

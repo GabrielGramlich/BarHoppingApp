@@ -32,6 +32,7 @@ public class HopThoseBars {
 //        //TODO find it via GPS or send to google maps
 //        AllYourDatabaseAreBelongToDrunks.thisOrThat();
 //    }
+
 //    public static void seeYouAround() {
 //        //TODO store users last trip
 //        //TODO wait for users return
@@ -39,6 +40,7 @@ public class HopThoseBars {
 //        keepEmComingBarkeep();
 //        theHangoverThisAppEdition();
 //    }
+
 //    public static void checkPlease() {
 //        //TODO get results from user and send them to ML database
 //        AllYourDatabaseAreBelongToDrunks.thisOrThat();
