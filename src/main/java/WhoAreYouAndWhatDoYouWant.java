@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import static input.InputUtils.stringInput;
 import static input.InputUtils.yesNoInput;
 
@@ -19,27 +21,23 @@ public class WhoAreYouAndWhatDoYouWant {
                 weHave = DontHopUnlessISaySo.whosThere(username, password);
             }
 
-            password = AllYourDatabaseAreBelongToDrunks.needThatPassword(username);
-            whatreYouHaving(username, password);
+            whatreYouHaving(username);
         }
     }
 
-    public static void whatreYouHaving(String username, String password) {
-        String pubCrawl = doINeedATie(username, password);
+    public static void whatreYouHaving(String username) {
+        String pubCrawl = doINeedATie(username);
         if (pubCrawl.equals("pub")) {
             System.out.println("Calling whatCanIDoForYouMaster");
             whatCanIDoForYouMaster();
         } else if (pubCrawl.equals("crawl")) {
             System.out.println("Calling whatDoYouWantPeasant");
-            whatDoYouWantPeasant();
+            whatDoYouWantPeasant(username);
         }
-        // TODO I mean not really, but I left off here.
     }
 
-    public static String doINeedATie(String username, String password) {
-        //TODO determine if end user is on the professional end, or consumer end
-
-        Integer pubcrawl = AllYourDatabaseAreBelongToDrunks.needThatAccountType(username, password);
+    public static String doINeedATie(String username) {
+        Integer pubcrawl = AllYourDatabaseAreBelongToDrunks.needThatAccountType(username);
 
         if (pubcrawl == 2) {
             return "pub";
@@ -69,8 +67,7 @@ public class WhoAreYouAndWhatDoYouWant {
         while (alreadyChosen != 0) {
             recipe = stringInput("Username. Gimme.");
             potatoes = stringInput("Oy. Password, guvna!");
-            // TODO fix this. Take out the password in the called method. It's not really necessary anyway.
-            alreadyChosen = AllYourDatabaseAreBelongToDrunks.needThatAccountType(recipe, potatoes);
+            alreadyChosen = AllYourDatabaseAreBelongToDrunks.needThatAccountType(recipe);
             if (alreadyChosen != 0) {
                 System.out.println("Already chosen. Pick a different username.");
             }
@@ -89,7 +86,30 @@ public class WhoAreYouAndWhatDoYouWant {
 
         AllYourDatabaseAreBelongToDrunks.greetingsFriend(firstName, lastName, ID);
 
-        whatreYouHaving(recipe, saltyHashBrowns);
+        yourePrettyPickyArentYou(recipe, true);
+
+        whatreYouHaving(recipe);
+    }
+
+    public static void yourePrettyPickyArentYou(String username, boolean firstTime) {
+        //TODO set user preferences
+
+        if (firstTime) {
+            ArrayList<String> allergies = new ArrayList<>();
+
+            while (yesNoInput("Any (more) allergies?")) {
+                allergies.add(stringInput("What'll kill ya?"));
+            }
+            //TODO put allergies in database
+        }
+
+        String topShelf = stringInput("Favorite spirit?");
+        String bottomShelf = stringInput("Least favorite?");
+        boolean strongOrWeak = yesNoInput("Do you have hair on your chest?");
+        boolean deepPockets = yesNoInput("You're not broke, right?");
+        boolean youFancy = yesNoInput("You a fan of mixology?");
+
+        //TODO put user defined preferences in database
     }
 
     public static void whatCanIDoForYouMaster() {
@@ -115,17 +135,34 @@ public class WhoAreYouAndWhatDoYouWant {
 //        AllYourDatabaseAreBelongToDrunks.thisOrThat();
 //    }
 
-    public static void whatDoYouWantPeasant() {
-//        //TODO create user menu
+    public static void whatDoYouWantPeasant(String username) {
+        //TODO I mean nothing new really, but I left off here.
+        //TODO create user menu
 //        HopThoseBars.letsGetLit();
-//        youvePutOnAFewPounds();
+        youvePutOnAFewPounds(username);
 //        IHateYou();
 //        HopThoseBars.seeYouAround();
     }
 
-//    public static void youvePutOnAFewPounds() {
-//        //TODO allow user to change account settings
-//        AllYourDatabaseAreBelongToDrunks.thisOrThat();
-//        nevermind();
-//    }
+    public static void youvePutOnAFewPounds(String username) {
+        //TODO allow user to change account settings
+        while (yesNoInput("Wanna change something in your account?")) {
+            String toBeUpdated = stringInput("Change email, name, username, password, or preferences?");
+            String newInfo = "";
+
+            if (toBeUpdated.equals("preferences")) {
+                yourePrettyPickyArentYou(username, false);
+            } else if (toBeUpdated.equals("email")) {
+                newInfo = stringInput("New email?");
+            } else if (toBeUpdated.equals("name")) {
+                newInfo = stringInput("New name?");
+            } else if (toBeUpdated.equals("username")) {
+                newInfo = stringInput("New username?");
+            } else if (toBeUpdated.equals("password")) {
+                newInfo = stringInput("New password?");
+            }
+
+            AllYourDatabaseAreBelongToDrunks.makeUpYourMindAlready(toBeUpdated, newInfo, username);
+        }
+    }
 }
