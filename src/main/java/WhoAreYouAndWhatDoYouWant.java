@@ -106,7 +106,7 @@ public class WhoAreYouAndWhatDoYouWant {
         String topShelf = stringInput("Favorite spirit?");
         String bottomShelf = stringInput("Least favorite?");
         boolean strongOrWeak = yesNoInput("Do you have hair on your chest?");
-        boolean deepPockets = yesNoInput("You're not broke, right?");
+        boolean deepPockets = !yesNoInput("You broke, homie?");
         boolean youFancy = yesNoInput("You a fan of mixology?");
 
         //TODO put user defined preferences in database
