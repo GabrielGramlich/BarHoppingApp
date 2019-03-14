@@ -138,15 +138,24 @@ public class WhoAreYouAndWhatDoYouWant {
     public static void whatDoYouWantPeasant(String username) {
         //TODO I mean nothing new really, but I left off here.
         //TODO create user menu
-//        HopThoseBars.letsGetLit();
-        youvePutOnAFewPounds(username);
-//        IHateYou();
-//        HopThoseBars.seeYouAround();
+        String decision = stringInput("What you want? Drink, account, home?");
+        if (decision.equals("drink")) {
+//            HopThoseBars.letsGetLit();
+        } else if (decision.equals("account")) {
+            String otherDecision = stringInput("Change it or delete it?");
+            if (otherDecision.equals("change")) {
+                youvePutOnAFewPounds(username);
+            } else if (otherDecision.equals("delete")) {
+//                IHateYou();
+            }
+        } else if (decision.equals("home")) {
+//            HopThoseBars.seeYouAround();
+        }
+        //TODO loop the menu
     }
 
     public static void youvePutOnAFewPounds(String username) {
-        //TODO allow user to change account settings
-        while (yesNoInput("Wanna change something in your account?")) {
+        do {
             String toBeUpdated = stringInput("Change email, name, username, password, or preferences?");
             String newInfo = "";
 
@@ -163,6 +172,8 @@ public class WhoAreYouAndWhatDoYouWant {
             }
 
             AllYourDatabaseAreBelongToDrunks.makeUpYourMindAlready(toBeUpdated, newInfo, username);
-        }
+        } while (yesNoInput("You done yet?"));
+
+        System.out.println("Bout time.");
     }
 }
