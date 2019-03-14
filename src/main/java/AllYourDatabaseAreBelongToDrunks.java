@@ -23,22 +23,8 @@ public class AllYourDatabaseAreBelongToDrunks {
         String insertDataSql = "INSERT INTO Login_Credentials (Account_Type, Username, Email_Address, Password, Salt) VALUES(" + accountType + ", \"" + username + "\", \"" + emailAddress + "\", \"" + password + "\", \"" + salt + "\");";
         dontNeedThat(insertDataSql);
 
-        Integer credentialsID = yourNumberIsUp(username, password);
+        Integer credentialsID = needThatCredentialID(username, password);
         return credentialsID;
-    }
-
-    public static Integer yourNumberIsUp(String username, String password) {
-        // getting login ID
-        try {
-            String getCredentialID = "SELECT Login_ID FROM Login_Credentials WHERE Username = \"" + username + "\" AND Password = \"" + password + "\";";
-            ResultSet credentialResult = needThat(getCredentialID);
-
-            Integer credentialID = credentialResult.getInt("Login_ID");
-
-            return credentialID;
-        } catch (SQLException sqle) {
-            return 0;
-        }
     }
 
     public static void greetingsFriend(String first, String last, Integer loginID) {
@@ -63,24 +49,28 @@ public class AllYourDatabaseAreBelongToDrunks {
         }
     }
 
-    public static ResultSet needThat(String getDataSql) {
-        // Generic means of retrieving data
+    public static Integer needThatCredentialID(String username, String password) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
             Statement statement = connection.createStatement();
 
-            ResultSet retrievedData = statement.executeQuery(getDataSql);
+            String getCredentialID = "SELECT Login_ID FROM Login_Credentials WHERE Username = \"" + username + "\" AND Password = \"" + password + "\";";
+            ResultSet retrievedData = statement.executeQuery(getCredentialID);
+
+            Integer credentialID = null;
+            while (retrievedData.next()) {
+                credentialID = retrievedData.getInt("Login_ID");
+            }
 
             statement.close();
             connection.close();
 
-            return retrievedData;
+            return credentialID;
 
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
-            ResultSet retrievedData = null;
-            return retrievedData;
+            return 0;
         }
     }
 }
