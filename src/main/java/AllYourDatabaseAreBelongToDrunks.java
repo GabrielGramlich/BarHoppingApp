@@ -1,10 +1,167 @@
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static input.InputUtils.yesNoInput;
 
 public class AllYourDatabaseAreBelongToDrunks {
     public static void main(String[] args) { }
+    //TODO make generic sql statement creation method
+
+    public static Integer needThatOwnerLoginID(String username) {
+        String sqlStatement = "SELECT Login_ID FROM Login_Credentials WHERE Username = \"" + username + "\';";
+        Integer loginID = needThatInteger("Login_ID", sqlStatement);
+        return loginID;
+    }
+
+    public static Integer needThatOwnerID(Integer loginID) {
+        String sqlStatement = "SELECT Owner_ID FROM Owners WHERE Login_Credentials_Login_ID = " + loginID + ";";
+        Integer ownerID = needThatInteger("Owner_ID", sqlStatement);
+        return ownerID;
+    }
+
+    public static ArrayList<String> needThoseLocations(Integer ownerID) {
+        String sqlStatement = "SELECT * FROM Locations WHERE Owners_Owner_ID = " + ownerID + ";";
+        ArrayList<String> locations = needThatArrayList("Name", sqlStatement);
+        return locations;
+    }
+
+    public static Integer needThatLocationID(String locationName) {
+        String sqlStatement = "SELECT Location_ID FROM Locations WHERE Name = \"" + locationName + "\";";
+        Integer locationID = needThatInteger("Location_ID", sqlStatement);
+        return locationID;
+    }
+
+    public static void thanksForKeepingUsMovingInt(String column, Integer newData, Integer locationID) {
+        String sqlStatement = "UPDATE Locations SET " + column + " = " + newData + " WHERE Location_ID = " + locationID + ";";
+        dontNeedThat(sqlStatement);
+    }
+
+    public static void thanksForKeepingUsMovingString(String column, String newData, Integer locationID) {
+        String sqlStatement = "UPDATE Locations SET " + column + " = \"" + newData + "\" WHERE Location_ID = " + locationID + ";";
+        dontNeedThat(sqlStatement);
+    }
+
+    public static void thanksForStayingOpen(String column, String newData, Integer locationID) {
+        String sqlStatement = "UPDATE Calendar SET " + column + " = \"" + newData + "\" WHERE Location_ID = " + locationID + ";";
+        dontNeedThat(sqlStatement);
+    }
+
+    public static void needThatLocationData(Integer locationID) {
+        String sqlStatement = "SELECT * FROM Locations WHERE Location_ID = " + locationID + ";";
+        displayLocationData(sqlStatement);
+    }
+
+    public static void needThatHourData(Integer locationID) {
+        String sqlStatement = "SELECT * FROM Locations WHERE Location_ID = " + locationID + ";";
+        displayHourData(sqlStatement);
+    }
+
+    public static void displayLocationData(String sqlStatement) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+            Statement statement = connection.createStatement();
+
+            ResultSet retrievedData = statement.executeQuery(sqlStatement);
+
+            String labelString = "Name\tPhone Number\tStreet\tCity\tState\tZip";
+            String infoString = "";
+
+            while (retrievedData.next()) {
+                String name = retrievedData.getString("Name");
+                String number = String.valueOf(retrievedData.getInt("Phone_Number"));
+                String street = retrievedData.getString("Street");
+                String city = retrievedData.getString("City");
+                String state = retrievedData.getString("State");
+                String zip = String.valueOf(retrievedData.getInt("Zip"));
+                infoString = name + "\t" + number + "\t" + street + "\t" + city  + "\t" + state  + "\t" + zip;
+            }
+
+            statement.close();
+            connection.close();
+
+            System.out.println(labelString);
+            System.out.println(infoString);
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void displayHourData(String sqlStatement) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+            Statement statement = connection.createStatement();
+
+            ResultSet retrievedData = statement.executeQuery(sqlStatement);
+
+            String labelString = "Day_of_Week\tTime_Open\tTime_Close\tSpecialty_Hour_Start\tSpecialty_Hour_End";
+            String infoString = "";
+
+            while (retrievedData.next()) {
+                String day = retrievedData.getString("Day_of_Week");
+                String open = String.valueOf(retrievedData.getDate("Time_Open"));
+                String close = String.valueOf(retrievedData.getDate("Time_Close"));
+                String start = String.valueOf(retrievedData.getDate("Specialty_Hour_Start"));
+                String end = String.valueOf(retrievedData.getDate("Specialty_Hour_End"));
+                infoString = day + "\t" + open + "\t" + close + "\t" + start  + "\t" + end;
+            }
+
+            statement.close();
+            connection.close();
+
+            System.out.println(labelString);
+            System.out.println(infoString);
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void helloBoss(Integer loginID, String first, String last, Double number, String email) {
+        // Creating a new user
+        String insertDataSql = "INSERT INTO Owners (First_Name, Last_Name, Contact_Number, Contact_Email, Login_Credentials_Login_ID) VALUES(\"" + first + "\", \"" + last + "\", " + number + ", \"" + email + "\", " + loginID + ");";
+        dontNeedThat(insertDataSql);
+    }
+
+    public static void itsAnHonorToGetToKnowYou(String column, String data, String username) {
+        String updateDataSql;
+        Integer loginID = needThatOwnerLoginID(username);
+        Integer ownerID = needThatOwnerID(loginID);
+
+        if (column.equals("name")) {
+            Integer spaceIndex = data.indexOf(" ");
+            String first = data.substring(0, spaceIndex);
+            String last = data.substring(spaceIndex + 1);
+
+            updateDataSql = "UPDATE Owners SET First_Name = \"" + first + "\" WHERE Owner_ID = " + ownerID + ";";
+            dontNeedThat(updateDataSql);
+
+            updateDataSql = "UPDATE Owners SET Last_Name = \"" + last + "\" WHERE Owner_ID = " + ownerID + ";";
+            dontNeedThat(updateDataSql);
+        } else if (column.equals("Contact_Number")) {
+            updateDataSql = "UPDATE Owners SET Contact_Number = " + Double.valueOf(data) + " WHERE Owner_ID = " + ownerID + ";";
+            dontNeedThat(updateDataSql);
+        } else if (column.equals("Contact_Email")) {
+            updateDataSql = "UPDATE Owners SET Contact_Email = \"" + data + "\" WHERE Owner_ID = " + ownerID + ";";
+            dontNeedThat(updateDataSql);
+        } else {
+            updateDataSql = "UPDATE Login_Credentials SET " + column + " = \"" + data + "\" WHERE Login_ID = " + loginID + ";";
+            dontNeedThat(updateDataSql);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
     public static Integer whoAreYou(Boolean accountType, String username, String emailAddress, String password, String salt) {
         // Storing log in credentials
@@ -167,12 +324,46 @@ public class AllYourDatabaseAreBelongToDrunks {
         }
     }
 
+    public static ArrayList<String> needThatArrayList(String column, String sqlStatement) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+            Statement statement = connection.createStatement();
+
+            ResultSet retrievedData = statement.executeQuery(sqlStatement);
+
+            ArrayList<String> returnArrayList = new ArrayList<>();
+
+            while (retrievedData.next()) {
+                returnArrayList.add(retrievedData.getString("Name"));
+            }
+
+            statement.close();
+            connection.close();
+
+            return returnArrayList;
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            ArrayList<String> returnArrayList = new ArrayList<>();
+            return returnArrayList;
+        }
+    }
+
     public static void throwThatInTheTrash(Integer loginID, Integer userID) {
-        String insertDataSql = "DELETE FROM Users WHERE User_ID = \"" + userID + "\";";
+        String insertDataSql = "DELETE FROM Users WHERE User_ID = " + userID + ";";
         dontNeedThat(insertDataSql);
 
-        insertDataSql = "DELETE FROM Login_Credentials WHERE Login_ID = \"" + loginID + "\";";
+        insertDataSql = "DELETE FROM Login_Credentials WHERE Login_ID = " + loginID + ";";
         dontNeedThat(insertDataSql);
+    }
+
+    public static void thanksForStoppingBy(Integer locationID) {
+        String deleteDataSql = "DELETE FROM Locations WHERE Location_ID + " + locationID + ";";
+        dontNeedThat(deleteDataSql);
+
+        deleteDataSql = "DELETE FROM Calendar WHERE Locations_Location_ID + " + locationID + ";";
+        dontNeedThat(deleteDataSql);
     }
 
     public static void youGotSomeWeirdKinks(String username, ArrayList allergies, String topShelf, String bottomShelf, boolean weakOrStrong, boolean deepPockets, boolean youFancy) {
