@@ -4,7 +4,7 @@ public class HopThoseBars {
     public static void main(String[] args) { }
 
 //    public static void letsGetLit() {
-//        //TODO check thereinput every new drink
+//        //TODO check there input every new drink
 //        int howMuchHaveYouHad;
 //        int tooMuch;
 //        if (howMuchHaveYouHad >= tooMuch) {

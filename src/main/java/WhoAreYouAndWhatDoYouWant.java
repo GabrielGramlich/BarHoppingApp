@@ -11,7 +11,6 @@ import static input.InputUtils.*;
 
 public class WhoAreYouAndWhatDoYouWant {
     //TODO create global variable for username. You're using that way too much, bruh.
-    //TODO lines 236 and 297
 
     public static void main(String[] args) {
         boolean weHave = DontHopUnlessISaySo.haveWeMet();
@@ -238,7 +237,6 @@ public class WhoAreYouAndWhatDoYouWant {
             days.add("Sunday");
 
             for (String day : days) {
-                //TODO figure out how to work with time
                 String openHoursInput;
                 String closeHoursInput;
                 String speHoursStartInput;
@@ -291,16 +289,13 @@ public class WhoAreYouAndWhatDoYouWant {
                         AllYourDatabaseAreBelongToDrunks.thanksForKeepingUsMovingString(informationType, newStringData, locationID);
                     }
                 } else if (otherDecision.equals("hours")) {
-                    //TODO figure out how to work with time
                     AllYourDatabaseAreBelongToDrunks.needThatHourData(locationID);
 
                     String informationType = stringInput("Would you like to update time_open, time_close, specialty_hour_start or specialty_hour_end?");
                     String dayData = stringInput("For which day of the week?");
                     String newData = "";
 
-                    newData = stringInput("New " + informationType + " in hours for " + dayData + "?");
-                    newData += ":";
-                    newData += stringInput("New " + informationType + " in minutes for " + dayData + "?");
+                    newData = stringInput("New " + informationType + " for " + dayData + "? (HH:MM)");
 
                     AllYourDatabaseAreBelongToDrunks.thanksForStayingOpen(dayData, informationType, newData, locationID);
                 }
