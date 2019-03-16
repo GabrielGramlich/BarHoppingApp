@@ -160,10 +160,9 @@ public class AllYourDatabaseAreBelongToDrunks {
         dontNeedThat(insertDataSql);
     }
 
-    public static void IDidntKnowKingdomsHadHours(Integer locationID, ArrayList<String> days, ArrayList<java.sql.Date> openHours, ArrayList<java.sql.Date> closeHours, ArrayList<java.sql.Date> speHoursStart, ArrayList<java.sql.Date> speHoursEnd) {
-        //TODO figure out time stuff
+    public static void IDidntKnowKingdomsHadHours(Integer locationID, ArrayList<String> days, ArrayList<String> openHours, ArrayList<String> closeHours, ArrayList<String> speHoursStart, ArrayList<String> speHoursEnd) {
         for (int i = 0; i < days.size(); i++) {
-            String insertDataSql = "INSERT INTO Calendar (Locations_Location_ID, Day_of_Week, Time_Open, Time_Close, Specialty_Hour_Start, Specialty_Hour_End) VALUES (" + locationID + ", \"" + days.get(i) + "\", " + openHours.get(i) + ", " + closeHours.get(i) + ", " + speHoursStart.get(i) + ", " + speHoursEnd.get(i) + ";";
+            String insertDataSql = "INSERT INTO Calendar (Locations_Location_ID, Day_of_Week, Time_Open, Time_Close, Specialty_Hour_Start, Specialty_Hour_End) VALUES (" + locationID + ", \"" + days.get(i) + "\", TIME_FORMAT(CONVERT(\"" + openHours.get(i) + "\", TIME), \"%H:%i\"), TIME_FORMAT(CONVERT(\"" + closeHours.get(i) + "\", TIME), \"%H:%i\"), TIME_FORMAT(CONVERT(\"" + speHoursStart.get(i) + "\", TIME), \"%H:%i\"), TIME_FORMAT(CONVERT(\"" + speHoursEnd.get(i) + "\", TIME), \"%H:%i\"));";
             dontNeedThat(insertDataSql);
         }
     }
