@@ -7,9 +7,10 @@ import static input.InputUtils.yesNoInput;
 public class AllYourDatabaseAreBelongToDrunks {
     public static void main(String[] args) { }
     //TODO make generic sql statement creation method
+    //TODO lines 47 and 164
 
     public static Integer needThatOwnerLoginID(String username) {
-        String sqlStatement = "SELECT Login_ID FROM Login_Credentials WHERE Username = \"" + username + "\';";
+        String sqlStatement = "SELECT Login_ID FROM Login_Credentials WHERE Username = \"" + username + "\";";
         Integer loginID = needThatInteger("Login_ID", sqlStatement);
         return loginID;
     }
@@ -43,6 +44,7 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
     public static void thanksForStayingOpen(String day, String column, String newData, Integer locationID) {
+        //TODO figure out time stuff
         String sqlStatement = "UPDATE Calendar SET " + column + " = STR_TO_DATE(\"" + newData + "\", \"%T\") WHERE Location_ID = " + locationID + " AND Day_of_Week = \"" + day + "\";";
         dontNeedThat(sqlStatement);
     }
@@ -153,14 +155,15 @@ public class AllYourDatabaseAreBelongToDrunks {
         }
     }
 
-    public static void welcomeToYourKingdom(String name, Double number, String street, String city, String state, Double zip) {
-        String insertDataSql = "INSERT INTO Locations (Name, Phone_Number, Street, City, State, Zip) VALUES (\"" + name + "\", " + number + ", \"" + street + "\", \"" + city + "\", \"" + state + "\", " + zip + ";";
+    public static void welcomeToYourKingdom(Integer ownerID, String name, Double number, String street, String city, String state, Double zip) {
+        String insertDataSql = "INSERT INTO Locations (Owners_Owner_ID, Name, Phone_Number, Street, City, State, Zip) VALUES (" + ownerID + ", \"" + name + "\", " + number + ", \"" + street + "\", \"" + city + "\", \"" + state + "\", " + zip + ");";
         dontNeedThat(insertDataSql);
     }
 
-    public static void IDidntKnowKingdomsHadHours(ArrayList<String> days, ArrayList<String> openHours, ArrayList<String> closeHours, ArrayList<String> speHoursStart, ArrayList<String> speHoursEnd) {
+    public static void IDidntKnowKingdomsHadHours(Integer locationID, ArrayList<String> days, ArrayList<java.sql.Date> openHours, ArrayList<java.sql.Date> closeHours, ArrayList<java.sql.Date> speHoursStart, ArrayList<java.sql.Date> speHoursEnd) {
+        //TODO figure out time stuff
         for (int i = 0; i < days.size(); i++) {
-            String insertDataSql = "INSERT INTO Calendar (Day_of_Week, Time_Open, Time_Close, Specialty_Hour_Start, Specialty_Hour_Close) VALUES (\"" + days.get(i) + "\", STR_TO_DATE(\"" + openHours.get(i) + "\", \"%T\"), STR_TO_DATE(\"" + closeHours.get(i) + "\", \"%T\"), STR_TO_DATE(\"" + speHoursStart.get(i) + "\", \"%T\"), STR_TO_DATE(\"" + speHoursEnd.get(i) + "\", \"%T\");";
+            String insertDataSql = "INSERT INTO Calendar (Locations_Location_ID, Day_of_Week, Time_Open, Time_Close, Specialty_Hour_Start, Specialty_Hour_End) VALUES (" + locationID + ", \"" + days.get(i) + "\", " + openHours.get(i) + ", " + closeHours.get(i) + ", " + speHoursStart.get(i) + ", " + speHoursEnd.get(i) + ";";
             dontNeedThat(insertDataSql);
         }
     }
