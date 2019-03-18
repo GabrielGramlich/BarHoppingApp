@@ -6,11 +6,12 @@ public class HopThoseBars {
 //    public static void letsGetLit() {
 //        //TODO check there input every new drink
 //        int howMuchHaveYouHad;
+//        int hoursDrinking;
 //        int tooMuch;
 //        if (howMuchHaveYouHad >= tooMuch) {
 //            cuttingYouOff();
 //        }
-
+//
 //        //TODO gather user input about what drink they'll be wanting
 //        //TODO get user preferences from user database
 //        pickingYourPoison();

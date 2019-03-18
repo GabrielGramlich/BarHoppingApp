@@ -6,7 +6,10 @@ import static input.InputUtils.yesNoInput;
 
 public class AllYourDatabaseAreBelongToDrunks {
     public static void main(String[] args) { }
-    //TODO make generic sql statement creation method
+    //TODO make generic sql insert statement creation method
+    //TODO make generic sql update statement creation method
+    //TODO make generic sql select statement creation method
+    //TODO make generic sql delete statement creation method
 
 
     /*******************
@@ -56,9 +59,14 @@ public class AllYourDatabaseAreBelongToDrunks {
     public static void whatsInItThough(ArrayList<String> ingredients, Integer drinkID) {
         for (String ingredient : ingredients) {
             Integer ingredientID = needThatIngredientID(ingredient);
-            String sqlStatement = "INSERT INTO Recipes (Drinks_Drink_ID, Ingredients_Ingredient_ID) VALUES(" + drinkID + ", " + ingredientID + ")";
+            String sqlStatement = "INSERT INTO Recipes (Drinks_Drink_ID, Ingredients_Ingredient_ID) VALUES(" + drinkID + ", " + ingredientID + ");";
             dontNeedThat(sqlStatement);
         }
+    }
+
+    public static void evenBetter(Integer drinkID, String newData) {
+        String sqlStatement = "INSERT INTO Recipes (Drinks_Drink_ID, Ingredients_Ingredient_ID) Values(" + drinkID + ", " + newData + ");";
+        dontNeedThat(sqlStatement);
     }
 
 
@@ -130,6 +138,53 @@ public class AllYourDatabaseAreBelongToDrunks {
         }
     }
 
+    public static void thatllTasteBetter(Integer drinkID, String oldIngredient, String newIngredient) {
+        Integer oldIngredientID = needThatIngredientID(oldIngredient);
+        Integer newIngredientID = needThatIngredientID(newIngredient);
+        String sqlStatement = "UPDATE Recipes SET Ingredients_Ingredient_ID = " + newIngredientID + " WHERE Drink_ID = " + drinkID + " AND Ingredients_Ingredient_ID = " + oldIngredientID + ";";
+        dontNeedThat(sqlStatement);
+    }
+
+    public static void thatsGonnaFuckMeUp(Integer drinkID, Integer newData) {
+        String sqlStatement = "UPDATE Drinks SET Alcohol_Content = " + newData + " WHERE Drink_ID = " + drinkID + ";";
+        dontNeedThat(sqlStatement);
+    }
+
+    public static void thatsSoExpensive(Integer drinkID, Double newData) {
+        String sqlStatement = "UPDATE Drinks SET Price = " + newData + " WHERE Drink_ID = " + drinkID + ";";
+        dontNeedThat(sqlStatement);
+    }
+
+    public static void thatsSoCheap(Integer drinkID, Double newData) {
+        String sqlStatement = "UPDATE Drinks SET Specialty_Price = " + newData + " WHERE Drink_ID = " + drinkID + ";";
+        dontNeedThat(sqlStatement);
+    }
+
+    public static void thatsSoComplex(Integer drinkID, Integer newData) {
+        String sqlStatement = "UPDATE Drinks SET Complexity = " + newData + " WHERE Drink_ID = " + drinkID + ";";
+        dontNeedThat(sqlStatement);
+    }
+
+    public static void thatsSoOneOrTheOther(Integer drinkID, boolean newData) {
+        String sqlStatement = "UPDATE Drinks SET Spirit_Forward_or_Refreshing = " + newData + " WHERE Drink_ID = " + drinkID + ";";
+        dontNeedThat(sqlStatement);
+    }
+
+    public static void thatsSoWhatThatIs(Integer drinkID, Integer newData) {
+        String sqlStatement = "UPDATE Drinks SET Type = " + newData + " WHERE Drink_ID = " + drinkID + ";";
+        dontNeedThat(sqlStatement);
+    }
+
+    public static void soThatsWhenYouStart(Integer drinkID, String newData) {
+        String sqlStatement = "UPDATE Drinks SET Availability_Start = STR_TO_DATE(\"" + newData + "\", \"%m/%d/%y\") WHERE Drink_ID = " + drinkID + ";";
+        dontNeedThat(sqlStatement);
+    }
+
+    public static void soThatsWhenYouEnd(Integer drinkID, String newData) {
+        String sqlStatement = "UPDATE Drinks SET Availability_End = STR_TO_DATE(\"" + newData + "\", \"%m/%d/%y\") WHERE Drink_ID = " + drinkID + ";";
+        dontNeedThat(sqlStatement);
+    }
+
 
     /****************************
     ***Data collection methods***
@@ -150,7 +205,7 @@ public class AllYourDatabaseAreBelongToDrunks {
 
     public static ArrayList<String> needThoseLocations(Integer ownerID) {
         String sqlStatement = "SELECT * FROM Locations WHERE Owners_Owner_ID = " + ownerID + ";";
-        ArrayList<String> locations = needThatArrayList("Name", sqlStatement);
+        ArrayList<String> locations = needThatArrayListString("Name", sqlStatement);
         return locations;
     }
 
@@ -214,10 +269,106 @@ public class AllYourDatabaseAreBelongToDrunks {
         return drinkID;
     }
 
+    public static ArrayList<String> needThoseDrinks(Integer locationID) {
+        String sqlStatement = "SELECT * FROM Drink_Locations WHERE Location_ID = " + locationID + ";";
+        ArrayList<Integer> drinks = needThatArrayListInteger("Drinks_Drink_ID", sqlStatement);
+
+        ArrayList<String> drinkNames = new ArrayList<>();
+
+        for (Integer drink : drinks) {
+            drinkNames.add(needThatDrinkName(drink));
+        }
+
+        return drinkNames;
+    }
+
+    public static String needThatDrinkName(Integer drinkID) {
+        String sqlStatement = "SELECT Name FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        String drink = needThatString("Name", sqlStatement);
+        return drink;
+    }
+
+    public static ArrayList<String> needThatRecipe(Integer drinkID) {
+        Integer recipeID = needThatRecipeID(drinkID);
+        String sqlStatement = "SELECT Ingredient_ID FROM Recipes WHERE Recipe_ID = " + recipeID + ";";
+        ArrayList<Integer> ingredientIDs = needThatArrayListInteger("Ingredient_ID", sqlStatement);
+        ArrayList<String> ingredients = new ArrayList<>();
+
+        for (Integer ID : ingredientIDs) {
+            ingredients.add(needThatIngredientName(ID));
+        }
+
+        return ingredients;
+    }
+
+    public static Integer needThatRecipeID(Integer drinkID) {
+        String sqlstatement = "SELECT Recipe_ID FROM Recipes WHERE Drink_ID = " + drinkID + ";";
+        Integer recipeID = needThatInteger("Recipe_ID", sqlstatement);
+        return recipeID;
+    }
+
+    public static String needThatIngredientName(Integer ingredientID) {
+        String sqlStatement = "SELECT Name FROM Ingredients WHERE Ingredient_ID = " + ingredientID + ";";
+        String ingredient = needThatString("Name", sqlStatement);
+        return ingredient;
+    }
+
+    public static Integer needThatAlcoholContent(Integer drinkID) {
+        String sqlStatement = "SELECT Alcohol_Content FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        Integer alcoholContent = needThatInteger("Alcohol_Content", sqlStatement);
+        return alcoholContent;
+    }
+
+    public static Double needThatPrice(Integer drinkID) {
+        String sqlStatement = "SELECT Price FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        Double price = needThatDouble("Price", sqlStatement);
+        return price;
+    }
+
+    public static Double needThatSpecialtyPrice(Integer drinkID) {
+        String sqlStatement = "SELECT Specialty_Price FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        Double specialtyPrice = needThatDouble("Specialty_Price", sqlStatement);
+        return specialtyPrice;
+    }
+
+    public static Integer needThatComplexity(Integer drinkID) {
+        String sqlStatement = "SELECT Complexity FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        Integer complexity = needThatInteger("Complexity", sqlStatement);
+        return complexity;
+    }
+
+    public static boolean needThatSpiritForwardOrRefreshing(Integer drinkID) {
+        String sqlStatement = "SELECT Spirit_Forward_or_Refreshing FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        Integer spiritForwardOrRefreshing = needThatBoolean("Spirit_Forward_or_Refreshing", sqlStatement);
+        boolean returnBool = false;
+        if (spiritForwardOrRefreshing == 2) {
+            returnBool = true;
+        }
+        return returnBool;
+    }
+
+    public static Integer needThatType(Integer drinkID) {
+        String sqlStatement = "SELECT Type FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        Integer Type = needThatInteger("Type", sqlStatement);
+        return Type;
+    }
+
+    public static String needThatAvailabilityStart(Integer drinkID) {
+        String sqlStatement = "SELECT Availability_Start FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        String startDate = needThatString("Availability_Start", sqlStatement);
+        return startDate;
+    }
+
+    public static String needThatAvailabilityEnd(Integer drinkID) {
+        String sqlStatement = "SELECT Availability_End FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        String endDate = needThatString("Availability_End", sqlStatement);
+        return endDate;
+    }
+
 
     /*********************
-    ***Deletion methods***
-    *********************/
+        ***Deletion methods***
+        *********************/
 
 
     public static void throwThatInTheTrash(Integer loginID, Integer userID) {
@@ -312,6 +463,30 @@ public class AllYourDatabaseAreBelongToDrunks {
         }
     }
 
+    public static Double needThatDouble(String column, String sqlStatement) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+            Statement statement = connection.createStatement();
+
+            ResultSet retrievedData = statement.executeQuery(sqlStatement);
+
+            Double returnDouble = 0.0;
+            while (retrievedData.next()) {
+                returnDouble = retrievedData.getDouble(column);
+            }
+
+            statement.close();
+            connection.close();
+
+
+            return returnDouble;
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            return 0.0;
+        }
+    }
+
     public static Integer needThatBoolean(String column, String sqlStatement) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -342,7 +517,7 @@ public class AllYourDatabaseAreBelongToDrunks {
         }
     }
 
-    public static ArrayList<String> needThatArrayList(String column, String sqlStatement) {
+    public static ArrayList<String> needThatArrayListString(String column, String sqlStatement) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
@@ -353,7 +528,7 @@ public class AllYourDatabaseAreBelongToDrunks {
             ArrayList<String> returnArrayList = new ArrayList<>();
 
             while (retrievedData.next()) {
-                returnArrayList.add(retrievedData.getString("Name"));
+                returnArrayList.add(retrievedData.getString(column));
             }
 
             statement.close();
@@ -364,6 +539,32 @@ public class AllYourDatabaseAreBelongToDrunks {
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
             ArrayList<String> returnArrayList = new ArrayList<>();
+            return returnArrayList;
+        }
+    }
+
+    public static ArrayList<Integer> needThatArrayListInteger(String column, String sqlStatement) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+            Statement statement = connection.createStatement();
+
+            ResultSet retrievedData = statement.executeQuery(sqlStatement);
+
+            ArrayList<Integer> returnArrayList = new ArrayList<>();
+
+            while (retrievedData.next()) {
+                returnArrayList.add(retrievedData.getInt(column));
+            }
+
+            statement.close();
+            connection.close();
+
+            return returnArrayList;
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            ArrayList<Integer> returnArrayList = new ArrayList<>();
             return returnArrayList;
         }
     }

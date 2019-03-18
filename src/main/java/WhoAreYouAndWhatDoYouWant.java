@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
 import static input.InputUtils.*;
 
 public class WhoAreYouAndWhatDoYouWant {
+    //TODO break methods down into more manageable units
+
     public static String USERNAME;
 
     public static void main(String[] args) {
@@ -157,6 +159,8 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     public static void whatCanIDoForYouMaster() {
+        Integer loginID = AllYourDatabaseAreBelongToDrunks.needThatOwnerLoginID(USERNAME);
+        Integer ownerID = AllYourDatabaseAreBelongToDrunks.needThatOwnerID(loginID);
         String decision = stringInput("Does master want the account, location or drink settings?");
         if (decision.equals("account")) {
             String otherDecision = stringInput("Delete or change account?");
@@ -166,9 +170,9 @@ public class WhoAreYouAndWhatDoYouWant {
                 youveLostWeight();
             }
         } else if (decision.equals("location")) {
-            whereAmI();
+            whereAmI(ownerID);
         } else if (decision.equals("drink")) {
-            whatWasThat();
+            whatWasThat(ownerID);
         }
     }
 
@@ -207,10 +211,8 @@ public class WhoAreYouAndWhatDoYouWant {
 
 
 
-    public static void whereAmI() {
+    public static void whereAmI(Integer ownerID) {
         String decision = stringInput("Create, update, delete or review locations?");
-        Integer loginID = AllYourDatabaseAreBelongToDrunks.needThatOwnerLoginID(USERNAME);
-        Integer ownerID = AllYourDatabaseAreBelongToDrunks.needThatOwnerID(loginID);
 
         if (decision.equals("create")) {
             locationCreation(ownerID);
@@ -317,7 +319,7 @@ public class WhoAreYouAndWhatDoYouWant {
         }
     }
 
-    public static void whatWasThat() {
+    public static void whatWasThat(Integer ownerID) {
         String decision = stringInput("Create, update, delete or review drinks?");
         if (decision.equals("create")) {
             String name = stringInput("What is this tasty concoction you have for us?");
@@ -359,11 +361,97 @@ public class WhoAreYouAndWhatDoYouWant {
             AllYourDatabaseAreBelongToDrunks.whatsInItThough(ingredients, drinkID);
         } else if (decision.equals("update")) {
             //TODO print all drinks
+            ArrayList<String> locations = AllYourDatabaseAreBelongToDrunks.needThoseLocations(ownerID);
+            for (String location : locations) {
+                System.out.println(location);
+            }
+            String locationName = stringInput("Which location would you like to update drinks for?");
+            Integer locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
             //TODO get drink selection
-            //TODO get decision for updating ingredients, description, or availability
-            //TODO print corresponding data
-            //TODO get new data
-            //TODO push new data
+            AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
+            ArrayList<String> drinks = AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
+            String drinkToUpdate = "";
+            boolean optionChosen = false;
+
+            for (String drink : drinks) {
+                boolean doIt = yesNoInput("Would you like to update the drink named " + drink + "?");
+                if (doIt) {
+                    drinkToUpdate = drink;
+                    optionChosen = true;
+                    break;
+                }
+            }
+
+            if (optionChosen) {
+                String otherDecision = stringInput("Would you like to update " + drinkToUpdate + "'s ingredients, description or availability?");
+                Integer drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(drinkToUpdate);
+                if (otherDecision.equals("ingredients")) {
+                    String finaldecision = stringInput("Would you like to change or add an ingredient)");
+                    if (finaldecision.equals("change")) {
+                        ArrayList<String> ingredients = AllYourDatabaseAreBelongToDrunks.needThatRecipe(drinkID);
+                        System.out.println("Drink contains:");
+                        for (String ingredient : ingredients) {
+                            System.out.println(ingredient);
+                        }
+                        String toUpdate = stringInput("Which ingredient would you like to change?");
+                        String newData = stringInput("What would you like to change it to?");
+                        AllYourDatabaseAreBelongToDrunks.thatllTasteBetter(drinkID, toUpdate, newData);
+                    } else if (finaldecision.equals("add")) {
+                        String newData = stringInput("What would you like to add to " + drinkToUpdate + "?");
+                        AllYourDatabaseAreBelongToDrunks.evenBetter(drinkID, newData);
+                    }
+
+                } else if (otherDecision.equals("description")) {
+                    System.out.println("Alcohol content, scale from 1-5: " + AllYourDatabaseAreBelongToDrunks.needThatAlcoholContent(drinkID));
+                    System.out.println("Price: " + AllYourDatabaseAreBelongToDrunks.needThatPrice(drinkID));
+                    System.out.println("Specialty Price: " + AllYourDatabaseAreBelongToDrunks.needThatSpecialtyPrice(drinkID));
+                    System.out.println("Complexity, scale from 1-5: " + AllYourDatabaseAreBelongToDrunks.needThatComplexity(drinkID));
+                    boolean spiritForwardOrRefreshing = AllYourDatabaseAreBelongToDrunks.needThatSpiritForwardOrRefreshing(drinkID);
+                    System.out.println("Spirit forward(false) or refreshing(true): " + spiritForwardOrRefreshing);
+                    if (spiritForwardOrRefreshing) {
+                        System.out.println("Drink type, type1 (1), type2 (2), type3 (3): " + AllYourDatabaseAreBelongToDrunks.needThatType(drinkID));
+                    } else {
+                        System.out.println("Drink type, type1 (1), type2 (2), type3 (3): " + AllYourDatabaseAreBelongToDrunks.needThatType(drinkID));
+                    }
+
+                    String finalDecision = stringInput("Update alcohol_content, price, specialty_price, complexity, spirit_forward_or_refreshing, or type?");
+                    if (finalDecision.equals("alcohol_content")) {
+                        Integer newData = intInput("Enter new strength on a scale of 1-5.");
+                        AllYourDatabaseAreBelongToDrunks.thatsGonnaFuckMeUp(drinkID, newData);
+                    } else if (finalDecision.equals("price")) {
+                        Double newData = doubleInput("Enter new price.");
+                        AllYourDatabaseAreBelongToDrunks.thatsSoExpensive(drinkID, newData);
+                    } else if (finalDecision.equals("specialty_price")) {
+                        Double newData = doubleInput("Enter new specialty price.");
+                        AllYourDatabaseAreBelongToDrunks.thatsSoCheap(drinkID, newData);
+                    } else if (finalDecision.equals("complexity")) {
+                        Integer newData = intInput("Enter new complexity on a scale of 1-5.");
+                        AllYourDatabaseAreBelongToDrunks.thatsSoComplex(drinkID, newData);
+                    } else if (finalDecision.equals("spirit_forward_or_refreshing")) {
+                        boolean newData = yesNoInput("Is it spirit forward (N), or refreshing (Y)?");
+                        AllYourDatabaseAreBelongToDrunks.thatsSoOneOrTheOther(drinkID, newData);
+                    } else if (finalDecision.equals("type")) {
+                        if (spiritForwardOrRefreshing) {
+                            Integer newData = intInput("Enter new drink type: type1 (1), type2 (2), type3 (3).");
+                            AllYourDatabaseAreBelongToDrunks.thatsSoWhatThatIs(drinkID, newData);
+                        } else {
+                            Integer newData = intInput("Enter new drink type: type1 (1), type2 (2), type3 (3).");
+                            AllYourDatabaseAreBelongToDrunks.thatsSoWhatThatIs(drinkID, newData);
+                        }
+                    }
+                } else if (otherDecision.equals("availability")) {
+                    System.out.println("Availability Start: " + AllYourDatabaseAreBelongToDrunks.needThatAvailabilityStart(drinkID));
+                    System.out.println("Availability End: " + AllYourDatabaseAreBelongToDrunks.needThatAvailabilityEnd(drinkID));
+                    String finalDecision = stringInput("Update availability_start or availability_end?");
+                    if (finalDecision.equals("availability_start")) {
+                        String newData = stringInput("Enter new start date (MM/DD/YY).");
+                        AllYourDatabaseAreBelongToDrunks.soThatsWhenYouStart(drinkID, newData);
+                    } else if (finalDecision.equals("availability_end")) {
+                        String newData = stringInput("Enter new start date (MM/DD/YY).");
+                        AllYourDatabaseAreBelongToDrunks.soThatsWhenYouEnd(drinkID, newData);
+                    }
+                }
+            }
         } else if (decision.equals("delete")) {
             //TODO print all drinks
             //TODO get drink selection
