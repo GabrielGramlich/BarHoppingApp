@@ -213,53 +213,7 @@ public class WhoAreYouAndWhatDoYouWant {
         Integer ownerID = AllYourDatabaseAreBelongToDrunks.needThatOwnerID(loginID);
 
         if (decision.equals("create")) {
-            String name = stringInput("Location name?");
-            Double number = Double.valueOf(stringInput("Location phone number?"));
-            String street = stringInput("Location street address?");
-            String city = stringInput("Location city?");
-            String state = stringInput("Location state?");
-            Double zip = Double.valueOf(stringInput("Location zip code?"));
-
-            AllYourDatabaseAreBelongToDrunks.welcomeToYourKingdom(ownerID, name, number, street, city, state, zip);
-
-            ArrayList<String> days = new ArrayList<>();
-            ArrayList<String> openHours = new ArrayList<>();
-            ArrayList<String> closeHours = new ArrayList<>();
-            ArrayList<String> speHoursStart = new ArrayList<>();
-            ArrayList<String> speHoursEnd = new ArrayList<>();
-            days.add("Monday");
-            days.add("Tuesday");
-            days.add("Wednesday");
-            days.add("Thursday");
-            days.add("Friday");
-            days.add("Saturday");
-            days.add("Sunday");
-
-            for (String day : days) {
-                String openHoursInput = stringInput("When do you open on " + day + "? (HH:MM)");
-                String closeHoursInput = stringInput("When do you close on " + day + "? (HH:MM)");
-                openHours.add(openHoursInput);
-                closeHours.add(closeHoursInput);
-
-                String speHoursStartInput;
-                String speHoursEndInput;
-                boolean go = yesNoInput("Do you have specialty hours on " + day + "?");
-                if (go) {
-                    speHoursStartInput = stringInput("When do they start? (HH:MM)");
-                    speHoursEndInput = stringInput("When do they end? (HH:MM)");
-                    speHoursStart.add(speHoursStartInput);
-                    speHoursEnd.add(speHoursEndInput);
-                } else {
-                    speHoursStartInput = "00:00";
-                    speHoursEndInput = "00:00";
-                    speHoursStart.add(speHoursStartInput);
-                    speHoursEnd.add(speHoursEndInput);
-                }
-            }
-
-            Integer locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(name);
-            AllYourDatabaseAreBelongToDrunks.IDidntKnowKingdomsHadHours(locationID, days, openHours, closeHours, speHoursStart, speHoursEnd);
-
+            locationCreation(ownerID);
         } else {
             String otherDecision = stringInput(decision + " location information or hours of operation (location or hours).");
             ArrayList<String> locations = AllYourDatabaseAreBelongToDrunks.needThoseLocations(ownerID);
@@ -270,32 +224,7 @@ public class WhoAreYouAndWhatDoYouWant {
             Integer locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
 
             if (decision.equals("update")) {
-
-                if (otherDecision.equals("location")) {
-                    AllYourDatabaseAreBelongToDrunks.needThatLocationData(locationID);
-
-                    String informationType = stringInput("Would you like to update, name, phone_number, street, city, state or zip?");
-                    String newStringData = stringInput("New " + informationType + "?");
-                    Double newDoubleData;
-
-                    if (informationType.equals("phone_number") || informationType.equals("zip")) {
-                        //TODO provide formatting if entering number or zip
-                        newDoubleData = Double.valueOf(newStringData);
-                        AllYourDatabaseAreBelongToDrunks.thanksForKeepingUsMovingDouble(informationType, newDoubleData, locationID);
-                    } else {
-                        AllYourDatabaseAreBelongToDrunks.thanksForKeepingUsMovingString(informationType, newStringData, locationID);
-                    }
-                } else if (otherDecision.equals("hours")) {
-                    AllYourDatabaseAreBelongToDrunks.needThatHourData(locationID);
-
-                    String informationType = stringInput("Would you like to update time_open, time_close, specialty_hour_start or specialty_hour_end?");
-                    String dayData = stringInput("For which day of the week?");
-                    String newData = "";
-
-                    newData = stringInput("New " + informationType + " for " + dayData + "? (HH:MM)");
-
-                    AllYourDatabaseAreBelongToDrunks.thanksForStayingOpen(dayData, informationType, newData, locationID);
-                }
+                locationUpdation(otherDecision, locationID);
             } else if (decision.equals("delete")) {
                 boolean confirmed = yesNoInput("Are you sure you want to delete this location and its corresponding data?");
                 if (confirmed) {
@@ -308,6 +237,83 @@ public class WhoAreYouAndWhatDoYouWant {
                     AllYourDatabaseAreBelongToDrunks.needThatHourData(locationID);
                 }
             }
+        }
+    }
+
+    public static void locationCreation(Integer ownerID) {
+        String name = stringInput("Location name?");
+        Double number = Double.valueOf(stringInput("Location phone number?"));
+        String street = stringInput("Location street address?");
+        String city = stringInput("Location city?");
+        String state = stringInput("Location state?");
+        Double zip = Double.valueOf(stringInput("Location zip code?"));
+
+        AllYourDatabaseAreBelongToDrunks.welcomeToYourKingdom(ownerID, name, number, street, city, state, zip);
+
+        ArrayList<String> days = new ArrayList<>();
+        ArrayList<String> openHours = new ArrayList<>();
+        ArrayList<String> closeHours = new ArrayList<>();
+        ArrayList<String> speHoursStart = new ArrayList<>();
+        ArrayList<String> speHoursEnd = new ArrayList<>();
+        days.add("Monday");
+        days.add("Tuesday");
+        days.add("Wednesday");
+        days.add("Thursday");
+        days.add("Friday");
+        days.add("Saturday");
+        days.add("Sunday");
+
+        for (String day : days) {
+            String openHoursInput = stringInput("When do you open on " + day + "? (HH:MM)");
+            String closeHoursInput = stringInput("When do you close on " + day + "? (HH:MM)");
+            openHours.add(openHoursInput);
+            closeHours.add(closeHoursInput);
+
+            String speHoursStartInput;
+            String speHoursEndInput;
+            boolean go = yesNoInput("Do you have specialty hours on " + day + "?");
+            if (go) {
+                speHoursStartInput = stringInput("When do they start? (HH:MM)");
+                speHoursEndInput = stringInput("When do they end? (HH:MM)");
+                speHoursStart.add(speHoursStartInput);
+                speHoursEnd.add(speHoursEndInput);
+            } else {
+                speHoursStartInput = "00:00";
+                speHoursEndInput = "00:00";
+                speHoursStart.add(speHoursStartInput);
+                speHoursEnd.add(speHoursEndInput);
+            }
+        }
+
+        Integer locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(name);
+        AllYourDatabaseAreBelongToDrunks.IDidntKnowKingdomsHadHours(locationID, days, openHours, closeHours, speHoursStart, speHoursEnd);
+    }
+
+    public static void locationUpdation(String otherDecision, Integer locationID) {
+        if (otherDecision.equals("location")) {
+            AllYourDatabaseAreBelongToDrunks.needThatLocationData(locationID);
+
+            String informationType = stringInput("Would you like to update, name, phone_number, street, city, state or zip?");
+            String newStringData = stringInput("New " + informationType + "?");
+            Double newDoubleData;
+
+            if (informationType.equals("phone_number") || informationType.equals("zip")) {
+                //TODO provide formatting if entering number or zip
+                newDoubleData = Double.valueOf(newStringData);
+                AllYourDatabaseAreBelongToDrunks.thanksForKeepingUsMovingDouble(informationType, newDoubleData, locationID);
+            } else {
+                AllYourDatabaseAreBelongToDrunks.thanksForKeepingUsMovingString(informationType, newStringData, locationID);
+            }
+        } else if (otherDecision.equals("hours")) {
+            AllYourDatabaseAreBelongToDrunks.needThatHourData(locationID);
+
+            String informationType = stringInput("Would you like to update time_open, time_close, specialty_hour_start or specialty_hour_end?");
+            String dayData = stringInput("For which day of the week?");
+            String newData = "";
+
+            newData = stringInput("New " + informationType + " for " + dayData + "? (HH:MM)");
+
+            AllYourDatabaseAreBelongToDrunks.thanksForStayingOpen(dayData, informationType, newData, locationID);
         }
     }
 
@@ -361,6 +367,9 @@ public class WhoAreYouAndWhatDoYouWant {
         } else if (decision.equals("delete")) {
             //TODO print all drinks
             //TODO get drink selection
+            //TODO get decision for updating ingredients, description, or availability
+            //TODO print corresponding data
+            //TODO get selection
             //TODO delete selection
         } else if (decision.equals("review")) {
             //TODO print all drinks
