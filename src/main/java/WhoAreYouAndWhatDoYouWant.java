@@ -360,14 +360,13 @@ public class WhoAreYouAndWhatDoYouWant {
             Integer drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(name);
             AllYourDatabaseAreBelongToDrunks.whatsInItThough(ingredients, drinkID);
         } else if (decision.equals("update")) {
-            //TODO print all drinks
             ArrayList<String> locations = AllYourDatabaseAreBelongToDrunks.needThoseLocations(ownerID);
             for (String location : locations) {
                 System.out.println(location);
             }
             String locationName = stringInput("Which location would you like to update drinks for?");
             Integer locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
-            //TODO get drink selection
+
             AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
             ArrayList<String> drinks = AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
             String drinkToUpdate = "";
@@ -453,12 +452,45 @@ public class WhoAreYouAndWhatDoYouWant {
                 }
             }
         } else if (decision.equals("delete")) {
-            //TODO print all drinks
-            //TODO get drink selection
-            //TODO get decision for updating ingredients, description, or availability
-            //TODO print corresponding data
-            //TODO get selection
-            //TODO delete selection
+            String otherDecision = stringInput("Would you like to delete entire drink, or ingredients (drink or ingredient)?");
+            ArrayList<String> locations = AllYourDatabaseAreBelongToDrunks.needThoseLocations(ownerID);
+            for (String location : locations) {
+                System.out.println(location);
+            }
+            String locationName = stringInput("Which location would you like to delete a drink from?");
+            Integer locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
+
+            AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
+            ArrayList<String> drinks = AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
+            String drinkToDelete = "";
+            boolean optionChosen = false;
+
+            for (String drink : drinks) {
+                boolean doIt = yesNoInput("Would you like to delete the " + otherDecision + " for " + drink + "?");
+                if (doIt) {
+                    drinkToDelete = drink;
+                    optionChosen = true;
+                    break;
+                }
+            }
+            Integer drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(drinkToDelete);
+
+            if (otherDecision.equals("drink")) {
+                if (optionChosen) {
+                    AllYourDatabaseAreBelongToDrunks.itWasDeliciousWhileItLasted(drinkID);
+                }
+            } else if (otherDecision.equals("ingredient")) {
+                if (optionChosen) {
+                    ArrayList<String> ingredients = AllYourDatabaseAreBelongToDrunks.needThatRecipe(drinkID);
+                    for (String ingredient : ingredients) {
+                        System.out.println(ingredient);
+                    }
+
+                    String toBeDeleted = stringInput("Which ingredient would you like to delete?");
+                    Integer ingredientID = AllYourDatabaseAreBelongToDrunks.needThatIngredientID(toBeDeleted);
+                    AllYourDatabaseAreBelongToDrunks.thatTastesGrossInThis(drinkID, ingredientID);
+                }
+            }
         } else if (decision.equals("review")) {
             //TODO print all drinks
             //TODO get drink selection

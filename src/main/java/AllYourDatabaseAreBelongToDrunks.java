@@ -380,11 +380,24 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
     public static void thanksForStoppingBy(Integer locationID) {
-        String deleteDataSql = "DELETE FROM Locations WHERE Location_ID + " + locationID + ";";
+        String deleteDataSql = "DELETE FROM Locations WHERE Location_ID = " + locationID + ";";
         dontNeedThat(deleteDataSql);
 
-        deleteDataSql = "DELETE FROM Calendar WHERE Locations_Location_ID + " + locationID + ";";
+        deleteDataSql = "DELETE FROM Calendar WHERE Locations_Location_ID = " + locationID + ";";
         dontNeedThat(deleteDataSql);
+    }
+
+    public static void itWasDeliciousWhileItLasted(Integer drinkID) {
+        String sqlStatement = "Delete FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        dontNeedThat(sqlStatement);
+
+        sqlStatement = "DELETE FROM Recipes WHERE Drinks_Drink_ID = " + drinkID + ";";
+        dontNeedThat(sqlStatement);
+    }
+
+    public static void thatTastesGrossInThis(Integer drinkID, Integer ingredientID) {
+        String sqlStatement = "Delete FROM Recipes WHERE Drinks_Drink_ID = " + drinkID + " AND Ingredients_Ingredient_ID = " + ingredientID + ";";
+        dontNeedThat(sqlStatement);
     }
 
 
