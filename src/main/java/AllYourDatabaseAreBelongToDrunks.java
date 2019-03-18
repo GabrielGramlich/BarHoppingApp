@@ -48,6 +48,19 @@ public class AllYourDatabaseAreBelongToDrunks {
         dontNeedThat(insertDataSql);
     }
 
+    public static void thatSoundsDelicious(String name, String startDate, String endDate, Integer strength, Double price, Double specialtyPrice, Integer complexity, boolean spiritForwardOrRefreshing, Integer type) {
+        String insertDataSql = "INSERT INTO Drinks (Name, Availability_Start, Availability_End, Alcohol_Content, Price, Specialty_Price, Complexity, Spirit_Forward_or_Refreshing, Type) VALUES(\"" + name + "\", STR_TO_DATE(\"" + startDate + "\", \"%m/%d/%y\"), STR_TO_DATE(\"" + endDate + "\", \"%m/%d/%y\"), " + strength + ", " + price + ", " + specialtyPrice + ", " + complexity + ", " + spiritForwardOrRefreshing + ", " + type + ");";
+        dontNeedThat(insertDataSql);
+    }
+
+    public static void whatsInItThough(ArrayList<String> ingredients, Integer drinkID) {
+        for (String ingredient : ingredients) {
+            Integer ingredientID = needThatIngredientID(ingredient);
+            String sqlStatement = "INSERT INTO Recipes (Drinks_Drink_ID, Ingredients_Ingredient_ID) VALUES(" + drinkID + ", " + ingredientID + ")";
+            dontNeedThat(sqlStatement);
+        }
+    }
+
 
     /*******************
     ***Update methods***
@@ -186,6 +199,19 @@ public class AllYourDatabaseAreBelongToDrunks {
         String sqlStatement = "SELECT User_ID FROM Users WHERE Login_Credentials_Login_ID = " + loginID + ";";
         Integer userID = needThatInteger("User_ID", sqlStatement);
         return userID;
+    }
+
+    public static Integer needThatIngredientID(String ingredient) {
+        String sqlStatement = "SELECT Ingredient_ID FROM Ingredients WHERE Name = \"" + ingredient + "\";";
+        Integer ingredientID = needThatInteger("Ingredient_ID", sqlStatement);
+        return ingredientID;
+    }
+
+    public static Integer needThatDrinkID(String name) {
+        //TODO add in locationID to database for drinks table as a combined key and add it to this method
+        String sqlStatement = "SELECT Drink_ID FROM Drinks WHERE Name = \"" + name + "\";";
+        Integer drinkID = needThatInteger("Drink_ID", sqlStatement);
+        return drinkID;
     }
 
 
