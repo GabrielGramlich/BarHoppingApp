@@ -157,22 +157,28 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     public static void userMenu() {
-        //TODO finish user menu
-        String decision = stringInput("What you want? Drink, account, home?");
-        if (decision.equals("drink")) {
-            Integer userID = AllYourDatabaseAreBelongToDrunks.selectInteger("User_ID", "Users", "Login_Credentials_Login_ID", loginID);
-            HopThoseBars.letsGetLit(userID);
-        } else if (decision.equals("account")) {
-            String otherDecision = stringInput("Change it or delete it?");
-            if (otherDecision.equals("change")) {
-                changeUserSettings();
-            } else if (otherDecision.equals("delete")) {
-                deleteAccount();
+        boolean go = true;
+        boolean leave = false;
+
+        while (go) {
+            String decision = stringInput("What you want? Drink or account?");
+            if (decision.equals("drink")) {
+                Integer userID = AllYourDatabaseAreBelongToDrunks.selectInteger("User_ID", "Users", "Login_Credentials_Login_ID", loginID);
+                HopThoseBars.letsGetLit(userID);
+            } else if (decision.equals("account")) {
+                String otherDecision = stringInput("Change it or delete it?");
+                if (otherDecision.equals("change")) {
+                    changeUserSettings();
+                } else if (otherDecision.equals("delete")) {
+                    deleteAccount();
+                }
+            } else {
+                leave = yesNoInput("You done yet?");
             }
-        } else if (decision.equals("home")) {
-//            HopThoseBars.seeYouAround();
+            if (leave) {
+                go = false;
+            }
         }
-        //TODO loop the menu
     }
 
     public static void changeUserSettings() {
@@ -218,20 +224,31 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     public static void ownerMenu() {
-        loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_ID", "Login_Credentials", "Username", username);
-        ownerID = AllYourDatabaseAreBelongToDrunks.selectInteger("Owner_ID", "Owners", "Login_Credentials_Login_ID", loginID);
-        String decision = stringInput("Does master want the account, location or drink settings?");
-        if (decision.equals("account")) {
-            String otherDecision = stringInput("Delete or change account?");
-            if (otherDecision.equals("delete")) {
-                deleteAccount();
-            } else if (otherDecision.equals("change")) {
-                changeOwnerSettings();
+        boolean go = true;
+        boolean leave = false;
+
+        while (go) {
+            loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_ID", "Login_Credentials", "Username", username);
+            ownerID = AllYourDatabaseAreBelongToDrunks.selectInteger("Owner_ID", "Owners", "Login_Credentials_Login_ID", loginID);
+            String decision = stringInput("Does master want the account, location or drink settings?");
+
+            if (decision.equals("account")) {
+                String otherDecision = stringInput("Delete or change account?");
+                if (otherDecision.equals("delete")) {
+                    deleteAccount();
+                } else if (otherDecision.equals("change")) {
+                    changeOwnerSettings();
+                }
+            } else if (decision.equals("location")) {
+                ownerLocationsMenu();
+            } else if (decision.equals("drink")) {
+                ownerDrinksMenu();
+            } else {
+                leave = yesNoInput("Would you like to leave?");
             }
-        } else if (decision.equals("location")) {
-            ownerLocationsMenu();
-        } else if (decision.equals("drink")) {
-            ownerDrinksMenu();
+            if (leave) {
+                go = false;
+            }
         }
     }
 
@@ -376,8 +393,12 @@ public class WhoAreYouAndWhatDoYouWant {
         String newStringData = stringInput("New " + finalDecision + "?");
         Double newDoubleData;
 
-        if (finalDecision.equals("phone_number") || finalDecision.equals("zip")) {
-            //TODO provide formatting if entering number or zip
+        if (finalDecision.equals("phone_number")) {
+            //TODO provide formatting for number
+            newDoubleData = Double.valueOf(newStringData);
+            AllYourDatabaseAreBelongToDrunks.updateDouble("Locations", finalDecision, newDoubleData, "Location_ID", locationID);
+        } else if (finalDecision.equals("zip")) {
+            //TODO provide formatting for zip
             newDoubleData = Double.valueOf(newStringData);
             AllYourDatabaseAreBelongToDrunks.updateDouble("Locations", finalDecision, newDoubleData, "Location_ID", locationID);
         } else {
