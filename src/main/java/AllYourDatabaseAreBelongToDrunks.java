@@ -3,10 +3,6 @@ import java.util.ArrayList;
 
 public class AllYourDatabaseAreBelongToDrunks {
     public static void main(String[] args) { }
-    //TODO make generic sql insert statement creation method
-    //TODO rework specific sql insert statement creation method
-
-    //TODO make generic sql select statement creation method
     //TODO rework specific sql select statement creation method
 
     //TODO make generic sql delete statement creation method
@@ -116,50 +112,64 @@ public class AllYourDatabaseAreBelongToDrunks {
     ***********************************************/
 
 
-    public static Integer needThatOwnerLoginID(String username) {
-        String sqlStatement = "SELECT Login_ID FROM Login_Credentials WHERE Username = \"" + username + "\";";
-        Integer loginID = needThatInteger("Login_ID", sqlStatement);
-        return loginID;
+    public static String selectString(String column, String table, String primaryKeyName, String primaryKeyID) {
+        String sqlStatement = "SELECT " + column + " FROM " + table + " WHERE " + primaryKeyName + " = " + primaryKeyID + ";";
+        String returnString = needThatString(column, sqlStatement);
+        return returnString;
     }
 
-    public static Integer needThatOwnerID(Integer loginID) {
-        String sqlStatement = "SELECT Owner_ID FROM Owners WHERE Login_Credentials_Login_ID = " + loginID + ";";
-        Integer ownerID = needThatInteger("Owner_ID", sqlStatement);
-        return ownerID;
+    public static Double selectDouble(String column, String table, String primaryKeyName, String primaryKeyID) {
+        String sqlStatement = "SELECT " + column + " FROM " + table + " WHERE " + primaryKeyName + " = " + primaryKeyID + ";";
+        Double returnDouble = needThatDouble(column, sqlStatement);
+        return returnDouble;
     }
 
-    public static ArrayList<String> needThoseLocations(Integer ownerID) {
-        String sqlStatement = "SELECT * FROM Locations WHERE Owners_Owner_ID = " + ownerID + ";";
-        ArrayList<String> locations = needThatArrayListString("Name", sqlStatement);
-        return locations;
+    public static Integer selectInteger(String column, String table, String primaryKeyName, String primaryKeyID) {
+        String sqlStatement = "SELECT " + column + " FROM " + table + " WHERE " + primaryKeyName + " = " + primaryKeyID + ";";
+        Integer returnInteger = needThatInteger(column, sqlStatement);
+        return returnInteger;
     }
 
-    public static Integer needThatLocationID(String locationName) {
-        String sqlStatement = "SELECT Location_ID FROM Locations WHERE Name = \"" + locationName + "\";";
-        Integer locationID = needThatInteger("Location_ID", sqlStatement);
-        return locationID;
+    public static Integer selectBoolean(String column, String table, String primaryKeyName, String primaryKeyID) {
+        String sqlStatement = "SELECT " + column + " FROM " + table + " WHERE " + primaryKeyName + " = " + primaryKeyID + ";";
+        Integer returnInteger = needThatBoolean(column, sqlStatement);
+        return returnInteger;
     }
 
-    public static void needThatLocationData(Integer locationID) {
-        String sqlStatement = "SELECT * FROM Locations WHERE Location_ID = " + locationID + ";";
-        displayLocationData(sqlStatement);
+    public static ArrayList<String> selectStringArrayList(String column, String table, String primaryKeyName, String primaryKeyID) {
+        String sqlStatement = "SELECT " + column + " FROM " + table + " WHERE " + primaryKeyName + " = " + primaryKeyID + ";";
+        ArrayList<String> returnArrayListString = needThatArrayListString(column, sqlStatement);
+        return returnArrayListString;
     }
 
-    public static void needThatHourData(Integer locationID) {
-        String sqlStatement = "SELECT * FROM Locations WHERE Location_ID = " + locationID + ";";
-        displayHourData(sqlStatement);
+
+    /***********************************************
+    ***Specific select statement creation methods***
+    ***********************************************/
+
+
+    public static String needThatDrinkName(Integer drinkID) {
+        String sqlStatement = "SELECT Name FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        String drink = needThatString("Name", sqlStatement);
+        return drink;
     }
 
-    public static Integer needThatAccountType(String username) {
-        String sqlStatement = "SELECT Account_Type FROM Login_Credentials WHERE Username = \"" + username + "\";";
-        Integer accountType = needThatBoolean("Account_Type", sqlStatement);
-        return accountType;
+    public static String needThatIngredientName(Integer ingredientID) {
+        String sqlStatement = "SELECT Name FROM Ingredients WHERE Ingredient_ID = " + ingredientID + ";";
+        String ingredient = needThatString("Name", sqlStatement);
+        return ingredient;
     }
 
-    public static Integer needThatCredentialID(String username) {
-        String sqlStatement = "SELECT Login_ID FROM Login_Credentials WHERE Username = \"" + username + "\";";
-        Integer loginID = needThatInteger("Login_ID", sqlStatement);
-        return loginID;
+    public static String needThatAvailabilityStart(Integer drinkID) {
+        String sqlStatement = "SELECT Availability_Start FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        String startDate = needThatString("Availability_Start", sqlStatement);
+        return startDate;
+    }
+
+    public static String needThatAvailabilityEnd(Integer drinkID) {
+        String sqlStatement = "SELECT Availability_End FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        String endDate = needThatString("Availability_End", sqlStatement);
+        return endDate;
     }
 
     public static String needThatSalt(String username) {
@@ -172,6 +182,72 @@ public class AllYourDatabaseAreBelongToDrunks {
         String sqlStatement = "SELECT Password FROM Login_Credentials WHERE Username = \"" + username + "\";";
         String password = needThatString("Password", sqlStatement);
         return password;
+    }
+
+    public static Double needThatPrice(Integer drinkID) {
+        String sqlStatement = "SELECT Price FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        Double price = needThatDouble("Price", sqlStatement);
+        return price;
+    }
+
+    public static Double needThatSpecialtyPrice(Integer drinkID) {
+        String sqlStatement = "SELECT Specialty_Price FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        Double specialtyPrice = needThatDouble("Specialty_Price", sqlStatement);
+        return specialtyPrice;
+    }
+
+    public static Integer needThatRecipeID(Integer drinkID) {
+        String sqlstatement = "SELECT Recipe_ID FROM Recipes WHERE Drink_ID = " + drinkID + ";";
+        Integer recipeID = needThatInteger("Recipe_ID", sqlstatement);
+        return recipeID;
+    }
+
+    public static Integer needThatAlcoholContent(Integer drinkID) {
+        String sqlStatement = "SELECT Alcohol_Content FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        Integer alcoholContent = needThatInteger("Alcohol_Content", sqlStatement);
+        return alcoholContent;
+    }
+
+    public static Integer needThatComplexity(Integer drinkID) {
+        String sqlStatement = "SELECT Complexity FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        Integer complexity = needThatInteger("Complexity", sqlStatement);
+        return complexity;
+    }
+
+    public static Integer needThatType(Integer drinkID) {
+        String sqlStatement = "SELECT Type FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        Integer Type = needThatInteger("Type", sqlStatement);
+        return Type;
+    }
+
+    public static Integer needThatOwnerLoginID(String username) {
+        String sqlStatement = "SELECT Login_ID FROM Login_Credentials WHERE Username = \"" + username + "\";";
+        Integer loginID = needThatInteger("Login_ID", sqlStatement);
+        return loginID;
+    }
+
+    public static Integer needThatOwnerID(Integer loginID) {
+        String sqlStatement = "SELECT Owner_ID FROM Owners WHERE Login_Credentials_Login_ID = " + loginID + ";";
+        Integer ownerID = needThatInteger("Owner_ID", sqlStatement);
+        return ownerID;
+    }
+
+    public static Integer needThatLocationID(String locationName) {
+        String sqlStatement = "SELECT Location_ID FROM Locations WHERE Name = \"" + locationName + "\";";
+        Integer locationID = needThatInteger("Location_ID", sqlStatement);
+        return locationID;
+    }
+
+    public static Integer needThatAccountType(String username) {
+        String sqlStatement = "SELECT Account_Type FROM Login_Credentials WHERE Username = \"" + username + "\";";
+        Integer accountType = needThatBoolean("Account_Type", sqlStatement);
+        return accountType;
+    }
+
+    public static Integer needThatCredentialID(String username) {
+        String sqlStatement = "SELECT Login_ID FROM Login_Credentials WHERE Username = \"" + username + "\";";
+        Integer loginID = needThatInteger("Login_ID", sqlStatement);
+        return loginID;
     }
 
     public static Integer needThatUserID(String username) {
@@ -194,6 +270,22 @@ public class AllYourDatabaseAreBelongToDrunks {
         return drinkID;
     }
 
+    public static boolean needThatSpiritForwardOrRefreshing(Integer drinkID) {
+        String sqlStatement = "SELECT Spirit_Forward_or_Refreshing FROM Drinks WHERE Drink_ID = " + drinkID + ";";
+        Integer spiritForwardOrRefreshing = needThatBoolean("Spirit_Forward_or_Refreshing", sqlStatement);
+        boolean returnBool = false;
+        if (spiritForwardOrRefreshing == 2) {
+            returnBool = true;
+        }
+        return returnBool;
+    }
+
+    public static ArrayList<String> needThoseLocations(Integer ownerID) {
+        String sqlStatement = "SELECT * FROM Locations WHERE Owners_Owner_ID = " + ownerID + ";";
+        ArrayList<String> locations = needThatArrayListString("Name", sqlStatement);
+        return locations;
+    }
+
     public static ArrayList<String> needThoseDrinks(Integer locationID) {
         String sqlStatement = "SELECT * FROM Drink_Locations WHERE Location_ID = " + locationID + ";";
         ArrayList<Integer> drinks = needThatArrayListInteger("Drinks_Drink_ID", sqlStatement);
@@ -207,12 +299,6 @@ public class AllYourDatabaseAreBelongToDrunks {
         return drinkNames;
     }
 
-    public static String needThatDrinkName(Integer drinkID) {
-        String sqlStatement = "SELECT Name FROM Drinks WHERE Drink_ID = " + drinkID + ";";
-        String drink = needThatString("Name", sqlStatement);
-        return drink;
-    }
-
     public static ArrayList<String> needThatRecipe(Integer drinkID) {
         Integer recipeID = needThatRecipeID(drinkID);
         String sqlStatement = "SELECT Ingredient_ID FROM Recipes WHERE Recipe_ID = " + recipeID + ";";
@@ -224,70 +310,6 @@ public class AllYourDatabaseAreBelongToDrunks {
         }
 
         return ingredients;
-    }
-
-    public static Integer needThatRecipeID(Integer drinkID) {
-        String sqlstatement = "SELECT Recipe_ID FROM Recipes WHERE Drink_ID = " + drinkID + ";";
-        Integer recipeID = needThatInteger("Recipe_ID", sqlstatement);
-        return recipeID;
-    }
-
-    public static String needThatIngredientName(Integer ingredientID) {
-        String sqlStatement = "SELECT Name FROM Ingredients WHERE Ingredient_ID = " + ingredientID + ";";
-        String ingredient = needThatString("Name", sqlStatement);
-        return ingredient;
-    }
-
-    public static Integer needThatAlcoholContent(Integer drinkID) {
-        String sqlStatement = "SELECT Alcohol_Content FROM Drinks WHERE Drink_ID = " + drinkID + ";";
-        Integer alcoholContent = needThatInteger("Alcohol_Content", sqlStatement);
-        return alcoholContent;
-    }
-
-    public static Double needThatPrice(Integer drinkID) {
-        String sqlStatement = "SELECT Price FROM Drinks WHERE Drink_ID = " + drinkID + ";";
-        Double price = needThatDouble("Price", sqlStatement);
-        return price;
-    }
-
-    public static Double needThatSpecialtyPrice(Integer drinkID) {
-        String sqlStatement = "SELECT Specialty_Price FROM Drinks WHERE Drink_ID = " + drinkID + ";";
-        Double specialtyPrice = needThatDouble("Specialty_Price", sqlStatement);
-        return specialtyPrice;
-    }
-
-    public static Integer needThatComplexity(Integer drinkID) {
-        String sqlStatement = "SELECT Complexity FROM Drinks WHERE Drink_ID = " + drinkID + ";";
-        Integer complexity = needThatInteger("Complexity", sqlStatement);
-        return complexity;
-    }
-
-    public static boolean needThatSpiritForwardOrRefreshing(Integer drinkID) {
-        String sqlStatement = "SELECT Spirit_Forward_or_Refreshing FROM Drinks WHERE Drink_ID = " + drinkID + ";";
-        Integer spiritForwardOrRefreshing = needThatBoolean("Spirit_Forward_or_Refreshing", sqlStatement);
-        boolean returnBool = false;
-        if (spiritForwardOrRefreshing == 2) {
-            returnBool = true;
-        }
-        return returnBool;
-    }
-
-    public static Integer needThatType(Integer drinkID) {
-        String sqlStatement = "SELECT Type FROM Drinks WHERE Drink_ID = " + drinkID + ";";
-        Integer Type = needThatInteger("Type", sqlStatement);
-        return Type;
-    }
-
-    public static String needThatAvailabilityStart(Integer drinkID) {
-        String sqlStatement = "SELECT Availability_Start FROM Drinks WHERE Drink_ID = " + drinkID + ";";
-        String startDate = needThatString("Availability_Start", sqlStatement);
-        return startDate;
-    }
-
-    public static String needThatAvailabilityEnd(Integer drinkID) {
-        String sqlStatement = "SELECT Availability_End FROM Drinks WHERE Drink_ID = " + drinkID + ";";
-        String endDate = needThatString("Availability_End", sqlStatement);
-        return endDate;
     }
 
 
@@ -326,9 +348,9 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
 
-    /*************************************************
-    ***Generic input/update/delete execution method***
-    *************************************************/
+    /***********************************************************
+    ***Generic input/update/delete statement execution method***
+    ***********************************************************/
 
 
     public static void dontNeedThat(String sqlStatement) {
@@ -348,9 +370,9 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
 
-    /*************************************
-    ***Generic select execution methods***
-    *************************************/
+    /***********************************************
+    ***Generic select statement execution methods***
+    ***********************************************/
 
 
     public static String needThatString(String column, String sqlStatement) {
@@ -513,11 +535,13 @@ public class AllYourDatabaseAreBelongToDrunks {
     ********************/
 
 
-    public static void displayLocationData(String sqlStatement) {
+    public static void displayLocationData(Integer locationID) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
             Statement statement = connection.createStatement();
+
+            String sqlStatement = "SELECT * FROM Locations WHERE Location_ID = " + locationID + ";";
 
             ResultSet retrievedData = statement.executeQuery(sqlStatement);
 
@@ -545,12 +569,13 @@ public class AllYourDatabaseAreBelongToDrunks {
         }
     }
 
-    public static void displayHourData(String sqlStatement) {
+    public static void displayHourData(Integer locationID) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
             Statement statement = connection.createStatement();
 
+            String sqlStatement = "SELECT * FROM Locations WHERE Location_ID = " + locationID + ";";
             ResultSet retrievedData = statement.executeQuery(sqlStatement);
 
             String labelString = "Day_of_Week\tTime_Open\tTime_Close\tSpecialty_Hour_Start\tSpecialty_Hour_End";

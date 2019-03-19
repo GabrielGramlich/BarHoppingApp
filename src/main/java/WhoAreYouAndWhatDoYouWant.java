@@ -367,7 +367,7 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     private static void updateLocation() {
-        AllYourDatabaseAreBelongToDrunks.needThatLocationData(locationID);
+        AllYourDatabaseAreBelongToDrunks.displayLocationData(locationID);
 
         String finalDecision = stringInput("Would you like to update, name, phone_number, street, city, state or zip?");
         String newStringData = stringInput("New " + finalDecision + "?");
@@ -383,7 +383,7 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     private static void updateHours() {
-        AllYourDatabaseAreBelongToDrunks.needThatHourData(locationID);
+        AllYourDatabaseAreBelongToDrunks.displayHourData(locationID);
 
         String finalDecision = stringInput("Would you like to update time_open, time_close, specialty_hour_start or specialty_hour_end?");
         String dayOfWeek = stringInput("For which day of the week?");
@@ -401,9 +401,9 @@ public class WhoAreYouAndWhatDoYouWant {
 
     private static void reviewLocationData(String otherDecision) {
         if (otherDecision.equals("location")) {
-            AllYourDatabaseAreBelongToDrunks.needThatLocationData(locationID);
+            AllYourDatabaseAreBelongToDrunks.displayLocationData(locationID);
         } else if (otherDecision.equals("hours")) {
-            AllYourDatabaseAreBelongToDrunks.needThatHourData(locationID);
+            AllYourDatabaseAreBelongToDrunks.displayHourData(locationID);
         }
     }
 
