@@ -201,7 +201,7 @@ public class AllYourDatabaseAreBelongToDrunks {
         try {
             if (doIt()) {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
                 Statement statement = connection.createStatement();
                 statement.execute(sqlStatement);
 
@@ -222,7 +222,7 @@ public class AllYourDatabaseAreBelongToDrunks {
     public static String needThatString(String column, String sqlStatement) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
             Statement statement = connection.createStatement();
 
             ResultSet retrievedData = statement.executeQuery(sqlStatement);
@@ -245,7 +245,7 @@ public class AllYourDatabaseAreBelongToDrunks {
     public static Integer needThatInteger(String column, String sqlStatement) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
             Statement statement = connection.createStatement();
 
             ResultSet retrievedData = statement.executeQuery(sqlStatement);
@@ -268,7 +268,7 @@ public class AllYourDatabaseAreBelongToDrunks {
     public static Double needThatDouble(String column, String sqlStatement) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
             Statement statement = connection.createStatement();
 
             ResultSet retrievedData = statement.executeQuery(sqlStatement);
@@ -291,7 +291,7 @@ public class AllYourDatabaseAreBelongToDrunks {
     public static Integer needThatBoolean(String column, String sqlStatement) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
             Statement statement = connection.createStatement();
 
             ResultSet retrievedData = statement.executeQuery(sqlStatement);
@@ -320,7 +320,7 @@ public class AllYourDatabaseAreBelongToDrunks {
     public static ArrayList<String> needThatArrayListString(String column, String sqlStatement) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
             Statement statement = connection.createStatement();
 
             ResultSet retrievedData = statement.executeQuery(sqlStatement);
@@ -345,7 +345,7 @@ public class AllYourDatabaseAreBelongToDrunks {
     public static ArrayList<Integer> needThatArrayListInteger(String column, String sqlStatement) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
             Statement statement = connection.createStatement();
 
             ResultSet retrievedData = statement.executeQuery(sqlStatement);

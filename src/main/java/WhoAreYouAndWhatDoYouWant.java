@@ -22,13 +22,13 @@ public class WhoAreYouAndWhatDoYouWant {
         password = "";
         // TODO get username and password if already signed in
 
+        boolean newUser = yesNoInput("Are you a new member?");
+
+        if (newUser) {
+            quit = createAccountLogin();
+        }
 
         while (!weHave) {
-            boolean newUser = yesNoInput("Are you a new member?");
-            if (newUser) {
-                quit = createAccountLogin();
-            }
-
             if (quit) {
                 username = stringInput("Enter your username:");
                 password = stringInput("Enter your password:");

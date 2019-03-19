@@ -126,7 +126,6 @@ public class HopThoseBars {
 
 
     public static void keepEmComingBarkeep() {
-        //TODO allow the user to choose a next round
         //TODO determine if last results were faulty
 
         boolean keepEmComing = yesNoInput("Another round?");
