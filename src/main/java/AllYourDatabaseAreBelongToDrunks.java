@@ -1,8 +1,5 @@
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import static input.InputUtils.yesNoInput;
 
 public class AllYourDatabaseAreBelongToDrunks {
     public static void main(String[] args) { }

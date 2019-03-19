@@ -1,9 +1,6 @@
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
-
-import static input.InputUtils.stringInput;
 
 public class DontHopUnlessISaySo {
     public static void main(String[] args) { }
