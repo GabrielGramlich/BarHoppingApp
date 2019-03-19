@@ -1,12 +1,10 @@
 import java.sql.*;
 import java.util.ArrayList;
 
+import static input.InputUtils.yesNoInput;
+
 public class AllYourDatabaseAreBelongToDrunks {
     public static void main(String[] args) { }
-    //TODO make generic sql delete statement creation method
-    //TODO rework specific sql delete statement creation method
-
-    //TODO rework display methods
 
 
     /***********************************************
@@ -166,37 +164,18 @@ public class AllYourDatabaseAreBelongToDrunks {
 
 
     /***********************************************
-    ***Specific delete statement creation methods***
+    ***Generic delete statement creation methods***
     ***********************************************/
 
 
-    public static void throwThatInTheTrash(Integer loginID, Integer userID) {
-        String insertDataSql = "DELETE FROM Users WHERE User_ID = " + userID + ";";
-        dontNeedThat(insertDataSql);
-
-        insertDataSql = "DELETE FROM Login_Credentials WHERE Login_ID = " + loginID + ";";
+    public static void delete(String table, String primaryKeyName, Integer primaryKeyID) {
+        String insertDataSql = "DELETE FROM " + table + " WHERE " + primaryKeyName + " = " + primaryKeyID + ";";
         dontNeedThat(insertDataSql);
     }
 
-    public static void thanksForStoppingBy(Integer locationID) {
-        String deleteDataSql = "DELETE FROM Locations WHERE Location_ID = " + locationID + ";";
-        dontNeedThat(deleteDataSql);
-
-        deleteDataSql = "DELETE FROM Calendar WHERE Locations_Location_ID = " + locationID + ";";
-        dontNeedThat(deleteDataSql);
-    }
-
-    public static void itWasDeliciousWhileItLasted(Integer drinkID) {
-        String sqlStatement = "Delete FROM Drinks WHERE Drink_ID = " + drinkID + ";";
-        dontNeedThat(sqlStatement);
-
-        sqlStatement = "DELETE FROM Recipes WHERE Drinks_Drink_ID = " + drinkID + ";";
-        dontNeedThat(sqlStatement);
-    }
-
-    public static void thatTastesGrossInThis(Integer drinkID, Integer ingredientID) {
-        String sqlStatement = "Delete FROM Recipes WHERE Drinks_Drink_ID = " + drinkID + " AND Ingredients_Ingredient_ID = " + ingredientID + ";";
-        dontNeedThat(sqlStatement);
+    public static void deleteWithSecondKey(String table, String primaryKeyName, Integer primaryKeyID, String secondaryKeyName, Integer secondaryKeyID) {
+        String insertDataSql = "DELETE FROM " + table + " WHERE " + primaryKeyName + " = " + primaryKeyID + " AND " + secondaryKeyName + " = " + secondaryKeyID + ";";
+        dontNeedThat(insertDataSql);
     }
 
 
@@ -208,14 +187,15 @@ public class AllYourDatabaseAreBelongToDrunks {
     public static void dontNeedThat(String sqlStatement) {
         // Generic means of pushing data
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
-            Statement statement = connection.createStatement();
-            statement.execute(sqlStatement);
+            if (doIt()) {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
+                Statement statement = connection.createStatement();
+                statement.execute(sqlStatement);
 
-            statement.close();
-            connection.close();
-
+                statement.close();
+                connection.close();
+            }
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
@@ -243,7 +223,6 @@ public class AllYourDatabaseAreBelongToDrunks {
             statement.close();
             connection.close();
 
-
             return returnString;
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
@@ -267,7 +246,6 @@ public class AllYourDatabaseAreBelongToDrunks {
             statement.close();
             connection.close();
 
-
             return returnInteger;
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
@@ -290,7 +268,6 @@ public class AllYourDatabaseAreBelongToDrunks {
 
             statement.close();
             connection.close();
-
 
             return returnDouble;
         } catch (SQLException | ClassNotFoundException e) {
@@ -322,7 +299,6 @@ public class AllYourDatabaseAreBelongToDrunks {
             connection.close();
 
             return returnInteger;
-
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
             return 0;
@@ -347,7 +323,6 @@ public class AllYourDatabaseAreBelongToDrunks {
             connection.close();
 
             return returnArrayList;
-
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
             ArrayList<String> returnArrayList = new ArrayList<>();
@@ -373,83 +348,10 @@ public class AllYourDatabaseAreBelongToDrunks {
             connection.close();
 
             return returnArrayList;
-
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
             ArrayList<Integer> returnArrayList = new ArrayList<>();
             return returnArrayList;
-        }
-    }
-
-
-    /********************
-    ***Display methods***
-    ********************/
-
-
-    public static void displayLocationData(Integer locationID) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
-            Statement statement = connection.createStatement();
-
-            String sqlStatement = "SELECT * FROM Locations WHERE Location_ID = " + locationID + ";";
-
-            ResultSet retrievedData = statement.executeQuery(sqlStatement);
-
-            String labelString = "Name\tPhone Number\tStreet\tCity\tState\tZip";
-            String infoString = "";
-
-            while (retrievedData.next()) {
-                String name = retrievedData.getString("Name");
-                String number = String.valueOf(retrievedData.getInt("Phone_Number"));
-                String street = retrievedData.getString("Street");
-                String city = retrievedData.getString("City");
-                String state = retrievedData.getString("State");
-                String zip = String.valueOf(retrievedData.getInt("Zip"));
-                infoString = name + "\t" + number + "\t" + street + "\t" + city  + "\t" + state  + "\t" + zip;
-            }
-
-            statement.close();
-            connection.close();
-
-            System.out.println(labelString);
-            System.out.println(infoString);
-
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public static void displayHourData(Integer locationID) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Bar_DB?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false", "root", "whopps666");
-            Statement statement = connection.createStatement();
-
-            String sqlStatement = "SELECT * FROM Locations WHERE Location_ID = " + locationID + ";";
-            ResultSet retrievedData = statement.executeQuery(sqlStatement);
-
-            String labelString = "Day_of_Week\tTime_Open\tTime_Close\tSpecialty_Hour_Start\tSpecialty_Hour_End";
-            String infoString = "";
-
-            while (retrievedData.next()) {
-                String day = retrievedData.getString("Day_of_Week");
-                String open = String.valueOf(retrievedData.getDate("Time_Open"));
-                String close = String.valueOf(retrievedData.getDate("Time_Close"));
-                String start = String.valueOf(retrievedData.getDate("Specialty_Hour_Start"));
-                String end = String.valueOf(retrievedData.getDate("Specialty_Hour_End"));
-                infoString = day + "\t" + open + "\t" + close + "\t" + start  + "\t" + end;
-            }
-
-            statement.close();
-            connection.close();
-
-            System.out.println(labelString);
-            System.out.println(infoString);
-
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
         }
     }
 
@@ -463,8 +365,8 @@ public class AllYourDatabaseAreBelongToDrunks {
         //TODO put user defined preferences in database
     }
 
-//    public static void nevermind() {
-//        //TODO discard changes or save to database
-//        boolean response = yesNoInput("Are you sure you want to save your changes?");
-//    }
+    public static boolean doIt() {
+        boolean response = yesNoInput("Are you sure you want to save your changes?");
+        return response;
+    }
 }

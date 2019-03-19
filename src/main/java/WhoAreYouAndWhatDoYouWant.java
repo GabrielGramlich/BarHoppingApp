@@ -54,7 +54,8 @@ public class WhoAreYouAndWhatDoYouWant {
         Integer userID = AllYourDatabaseAreBelongToDrunks.selectInteger("User_ID", "Users", "Login_Credentials_Login_ID", loginID);
         boolean response = yesNoInput("Awh, you wanna leave? Big baby got his feewings hurt?");
         if (response) {
-            AllYourDatabaseAreBelongToDrunks.throwThatInTheTrash(loginID, userID);
+            AllYourDatabaseAreBelongToDrunks.delete("Users", "User_ID", userID);
+            AllYourDatabaseAreBelongToDrunks.delete("Login_Credentials", "Login_ID", loginID);
         }
     }
 
@@ -369,7 +370,7 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     private static void updateLocation() {
-        AllYourDatabaseAreBelongToDrunks.displayLocationData(locationID);
+        displayLocationData();
 
         String finalDecision = stringInput("Would you like to update, name, phone_number, street, city, state or zip?");
         String newStringData = stringInput("New " + finalDecision + "?");
@@ -385,7 +386,7 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     private static void updateHours() {
-        AllYourDatabaseAreBelongToDrunks.displayHourData(locationID);
+        displayHours();
 
         String finalDecision = stringInput("Would you like to update time_open, time_close, specialty_hour_start or specialty_hour_end?");
         String dayOfWeek = stringInput("For which day of the week?");
@@ -397,16 +398,27 @@ public class WhoAreYouAndWhatDoYouWant {
     private static void deleteLocation() {
         boolean confirmed = yesNoInput("Are you sure you want to delete this location and its corresponding data?");
         if (confirmed) {
-            AllYourDatabaseAreBelongToDrunks.thanksForStoppingBy(locationID);
+            AllYourDatabaseAreBelongToDrunks.delete("Locations", "Location_ID", locationID);
+            AllYourDatabaseAreBelongToDrunks.delete("Calendar", "Locations_Location_ID", locationID);
+
         }
     }
 
     private static void reviewLocationData(String otherDecision) {
         if (otherDecision.equals("location")) {
-            AllYourDatabaseAreBelongToDrunks.displayLocationData(locationID);
+            displayLocationData();
         } else if (otherDecision.equals("hours")) {
-            AllYourDatabaseAreBelongToDrunks.displayHourData(locationID);
+            displayHours();
         }
+    }
+
+    private static void displayLocationData() {
+        System.out.println("Name:\t" + AllYourDatabaseAreBelongToDrunks.selectString("Name", "Locations","Location_ID", locationID));
+        System.out.println("Number:\t" + AllYourDatabaseAreBelongToDrunks.selectString("Phone_Number", "Locations","Location_ID", locationID));
+        System.out.println("Street:\t" + AllYourDatabaseAreBelongToDrunks.selectString("Street", "Locations","Location_ID", locationID));
+        System.out.println("City:\t" + AllYourDatabaseAreBelongToDrunks.selectString("City", "Locations","Location_ID", locationID));
+        System.out.println("State:\t" + AllYourDatabaseAreBelongToDrunks.selectString("State", "Locations","Location_ID", locationID));
+        System.out.println("Zip:\t" + AllYourDatabaseAreBelongToDrunks.selectString("Zip", "Locations","Location_ID", locationID));
     }
 
     private static void ownerDrinksMenu() {
@@ -546,7 +558,8 @@ public class WhoAreYouAndWhatDoYouWant {
 
         if (otherDecision.equals("drink")) {
             if (optionChosen) {
-                AllYourDatabaseAreBelongToDrunks.itWasDeliciousWhileItLasted(drinkID);
+                AllYourDatabaseAreBelongToDrunks.delete("Drinks", "Drink_ID", drinkID);
+                AllYourDatabaseAreBelongToDrunks.delete("Recipes", "Drinks_Drink_ID", drinkID);
             }
         } else if (otherDecision.equals("ingredient")) {
             if (optionChosen) {
@@ -554,7 +567,7 @@ public class WhoAreYouAndWhatDoYouWant {
 
                 String toBeDeleted = stringInput("Which ingredient would you like to delete?");
                 Integer ingredientID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Ingredient_Name", "Ingredients", "Name", toBeDeleted);
-                AllYourDatabaseAreBelongToDrunks.thatTastesGrossInThis(drinkID, ingredientID);
+                AllYourDatabaseAreBelongToDrunks.deleteWithSecondKey("Recipes", "Drinks_Drink_ID", drinkID, "Ingredients_Ingredient_ID", ingredientID);
             }
         }
     }
@@ -574,6 +587,20 @@ public class WhoAreYouAndWhatDoYouWant {
         }
     }
 
+    private static void displayDrinkData() {
+        System.out.println("Alcohol content, scale from 1-5: " + AllYourDatabaseAreBelongToDrunks.selectInteger("Alcohol_Content", "Drinks", "Drink_ID", drinkID));
+        System.out.println("Price: " + AllYourDatabaseAreBelongToDrunks.selectDouble("Price", "Drinks", "Drink_ID", drinkID));
+        System.out.println("Specialty Price: " + AllYourDatabaseAreBelongToDrunks.selectDouble("Specialty_Price", "Drinks", "Drink_ID", drinkID));
+        System.out.println("Complexity, scale from 1-5: " + AllYourDatabaseAreBelongToDrunks.selectInteger("Complexity", "Drinks", "Drink_ID", drinkID));
+        boolean spiritForwardOrRefreshing = AllYourDatabaseAreBelongToDrunks.selectBoolean("Spirit_Forward_or_Refreshing", "Drinks", "Drink_ID", drinkID);
+        System.out.println("Spirit forward(false) or refreshing(true): " + spiritForwardOrRefreshing);
+        if (spiritForwardOrRefreshing) {
+            System.out.println("Drink type, type1 (1), type2 (2), type3 (3): " + AllYourDatabaseAreBelongToDrunks.selectInteger("Type", "Drinks", "Drink_ID", drinkID));
+        } else {
+            System.out.println("Drink type, type1 (1), type2 (2), type3 (3): " + AllYourDatabaseAreBelongToDrunks.selectInteger("Type", "Drinks", "Drink_ID", drinkID));
+        }
+    }
+
     private static void displayRecipe() {
         Integer recipeID = AllYourDatabaseAreBelongToDrunks.selectInteger("Recipe_ID", "Recipes", "Drink_ID", drinkID);
         ArrayList<Integer> ingredientIDs = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Ingredient_ID", "Recipes", "Recipe_ID", recipeID);
@@ -587,6 +614,14 @@ public class WhoAreYouAndWhatDoYouWant {
         for (String ingredient : ingredients) {
             System.out.println(ingredient);
         }
+    }
+
+    private static void displayHours() {
+        System.out.println("Day of week:\t\t" + AllYourDatabaseAreBelongToDrunks.selectString("Day_of_Week", "Locations", "Location_ID", locationID));
+        System.out.println("Time open:\t\t" + AllYourDatabaseAreBelongToDrunks.selectString("Time_Open", "Locations", "Location_ID", locationID));
+        System.out.println("Time close:\t\t" + AllYourDatabaseAreBelongToDrunks.selectString("Time_Close", "Locations", "Location_ID", locationID));
+        System.out.println("Specialty hour start:\t" + AllYourDatabaseAreBelongToDrunks.selectString("Specialty_Hour_Start", "Locations", "Location_ID", locationID));
+        System.out.println("Specialty hour end:\t" + AllYourDatabaseAreBelongToDrunks.selectString("Specialty_Hour_End", "Locations", "Location_ID", locationID));
     }
 
     private static boolean getDrinkChoice() {
@@ -616,19 +651,5 @@ public class WhoAreYouAndWhatDoYouWant {
         }
 
         return optionChosen;
-    }
-
-    private static void displayDrinkData() {
-        System.out.println("Alcohol content, scale from 1-5: " + AllYourDatabaseAreBelongToDrunks.selectInteger("Alcohol_Content", "Drinks", "Drink_ID", drinkID));
-        System.out.println("Price: " + AllYourDatabaseAreBelongToDrunks.selectDouble("Price", "Drinks", "Drink_ID", drinkID));
-        System.out.println("Specialty Price: " + AllYourDatabaseAreBelongToDrunks.selectDouble("Specialty_Price", "Drinks", "Drink_ID", drinkID));
-        System.out.println("Complexity, scale from 1-5: " + AllYourDatabaseAreBelongToDrunks.selectInteger("Complexity", "Drinks", "Drink_ID", drinkID));
-        boolean spiritForwardOrRefreshing = AllYourDatabaseAreBelongToDrunks.selectBoolean("Spirit_Forward_or_Refreshing", "Drinks", "Drink_ID", drinkID);
-        System.out.println("Spirit forward(false) or refreshing(true): " + spiritForwardOrRefreshing);
-        if (spiritForwardOrRefreshing) {
-            System.out.println("Drink type, type1 (1), type2 (2), type3 (3): " + AllYourDatabaseAreBelongToDrunks.selectInteger("Type", "Drinks", "Drink_ID", drinkID));
-        } else {
-            System.out.println("Drink type, type1 (1), type2 (2), type3 (3): " + AllYourDatabaseAreBelongToDrunks.selectInteger("Type", "Drinks", "Drink_ID", drinkID));
-        }
     }
 }
