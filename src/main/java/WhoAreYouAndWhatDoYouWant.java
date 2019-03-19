@@ -1,5 +1,3 @@
-import java.awt.*;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -24,20 +22,19 @@ public class WhoAreYouAndWhatDoYouWant {
         password = "";
         // TODO get username and password if already signed in
 
-        boolean newUser = yesNoInput("Are you a new member?");
 
-        if (newUser) {
-            quit = createAccountLogin();
-        }
+        while (!weHave) {
+            boolean newUser = yesNoInput("Are you a new member?");
+            if (newUser) {
+                quit = createAccountLogin();
+            }
 
-        if (quit) {
-            while (!weHave) {
+            if (quit) {
                 username = stringInput("Enter your username:");
                 password = stringInput("Enter your password:");
                 weHave = DontHopUnlessISaySo.whosThere(username, password);
             }
         }
-
         userOrOwner();
     }
 
