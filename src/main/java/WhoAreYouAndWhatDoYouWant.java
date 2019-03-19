@@ -493,9 +493,50 @@ public class WhoAreYouAndWhatDoYouWant {
             }
         } else if (decision.equals("review")) {
             //TODO print all drinks
-            //TODO get drink selection
-            //TODO get decision for reviewing ingredients, description, or availability
-            //TODO print corresponding data
+            ArrayList<String> locations = AllYourDatabaseAreBelongToDrunks.needThoseLocations(ownerID);
+            for (String location : locations) {
+                System.out.println(location);
+            }
+            String locationName = stringInput("Which location would you like to delete a drink from?");
+            Integer locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
+
+            AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
+            ArrayList<String> drinks = AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
+            String drinkToReview = "";
+            boolean optionChosen = false;
+
+            for (String drink : drinks) {
+                boolean doIt = yesNoInput("Would you like to review the drink named " + drink + "?");
+                if (doIt) {
+                    drinkToReview = drink;
+                    optionChosen = true;
+                    break;
+                }
+            }
+            Integer drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(drinkToReview);
+            if (optionChosen) {
+                String finalDecision = stringInput("Would you like to review ingredients or data?");
+                if (finalDecision.equals("ingredients")) {
+                    ArrayList<String> ingredients = AllYourDatabaseAreBelongToDrunks.needThatRecipe(drinkID);
+                    System.out.println("Ingredients in " + drinkToReview + ":");
+                    for (String ingredient : ingredients) {
+                        System.out.println(ingredient);
+                    }
+                } else if (finalDecision.equals("data")) {
+                    System.out.println("Drink data for " + drinkToReview + ":");
+                    System.out.println("Alcohol content, scale from 1-5: " + AllYourDatabaseAreBelongToDrunks.needThatAlcoholContent(drinkID));
+                    System.out.println("Price: " + AllYourDatabaseAreBelongToDrunks.needThatPrice(drinkID));
+                    System.out.println("Specialty Price: " + AllYourDatabaseAreBelongToDrunks.needThatSpecialtyPrice(drinkID));
+                    System.out.println("Complexity, scale from 1-5: " + AllYourDatabaseAreBelongToDrunks.needThatComplexity(drinkID));
+                    boolean spiritForwardOrRefreshing = AllYourDatabaseAreBelongToDrunks.needThatSpiritForwardOrRefreshing(drinkID);
+                    System.out.println("Spirit forward(false) or refreshing(true): " + spiritForwardOrRefreshing);
+                    if (spiritForwardOrRefreshing) {
+                        System.out.println("Drink type, type1 (1), type2 (2), type3 (3): " + AllYourDatabaseAreBelongToDrunks.needThatType(drinkID));
+                    } else {
+                        System.out.println("Drink type, type1 (1), type2 (2), type3 (3): " + AllYourDatabaseAreBelongToDrunks.needThatType(drinkID));
+                    }
+                }
+            }
         }
     }
 
