@@ -40,7 +40,7 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     private static void userOrOwner() {
-        Integer accountType = AllYourDatabaseAreBelongToDrunks.needThatAccountType(username);
+        Integer accountType = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Account_Type", "Login_Credentials", "Username", username);
 
         if (accountType == 2) {
             ownerMenu();
@@ -50,8 +50,8 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     private static void deleteAccount() {
-        loginID = AllYourDatabaseAreBelongToDrunks.needThatCredentialID(username);
-        Integer userID = AllYourDatabaseAreBelongToDrunks.needThatUserID(username);
+        loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_ID", "Login_Credentials", "Username", username);
+        Integer userID = AllYourDatabaseAreBelongToDrunks.selectInteger("User_ID", "Users", "Login_Credentials_Login_ID", loginID);
         boolean response = yesNoInput("Awh, you wanna leave? Big baby got his feewings hurt?");
         if (response) {
             AllYourDatabaseAreBelongToDrunks.throwThatInTheTrash(loginID, userID);
@@ -67,7 +67,7 @@ public class WhoAreYouAndWhatDoYouWant {
         while (alreadyChosen != 0) {
             username = stringInput("Username. Gimme.");
             password = stringInput("Oy. Password, guvna!");
-            alreadyChosen = AllYourDatabaseAreBelongToDrunks.needThatAccountType(username);
+            alreadyChosen = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Account_Type", "Login_Credentials", "Username", username);
             if (alreadyChosen != 0) {
                 boolean decision = yesNoInput("Username already chosen. Would you like to sign in?");
                 if (decision) {
@@ -193,12 +193,14 @@ public class WhoAreYouAndWhatDoYouWant {
                 newInfo = stringInput("New username?");
             } else if (toBeUpdated.equals("password")) {
                 String newPassword = stringInput("New password?");
-                salt = AllYourDatabaseAreBelongToDrunks.needThatSalt(username);
+
+                salt = AllYourDatabaseAreBelongToDrunks.selectStringWithString("Salt", "Login_Credentials", "Username", username);
                 newInfo = DontHopUnlessISaySo.nothingCuresAHangoverLikeATastyPassword(newPassword, salt);
             }
 
             if (toBeUpdated.equals("name")) {
-                Integer userID = AllYourDatabaseAreBelongToDrunks.needThatUserID(username);
+                loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_ID", "Login_Credentials", "Username", username);
+                Integer userID = AllYourDatabaseAreBelongToDrunks.selectInteger("User_ID", "Users", "Login_Credentials_Login_ID", loginID);
                 Integer spaceIndex = newInfo.indexOf(" ");
                 String first = newInfo.substring(0, spaceIndex);
                 String last = newInfo.substring(spaceIndex + 1);
@@ -206,7 +208,7 @@ public class WhoAreYouAndWhatDoYouWant {
                 AllYourDatabaseAreBelongToDrunks.updateString("Users", "First_Name", first, "User_ID", userID);
                 AllYourDatabaseAreBelongToDrunks.updateString("Users", "Last_Name", last, "User_ID", userID);
             } else {
-                Integer loginID = AllYourDatabaseAreBelongToDrunks.needThatCredentialID(username);
+                Integer loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_ID", "Login_Credentials", "Username", username);
                 AllYourDatabaseAreBelongToDrunks.updateString("Login_Credentials", toBeUpdated, newInfo, "Login_ID", loginID);
             }
         } while (!yesNoInput("You done yet?"));
@@ -215,8 +217,8 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     private static void ownerMenu() {
-        loginID = AllYourDatabaseAreBelongToDrunks.needThatOwnerLoginID(username);
-        ownerID = AllYourDatabaseAreBelongToDrunks.needThatOwnerID(loginID);
+        loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_ID", "Login_Credentials", "Username", username);
+        ownerID = AllYourDatabaseAreBelongToDrunks.selectInteger("Owner_ID", "Owners", "Login_Credentials_Login_ID", loginID);
         String decision = stringInput("Does master want the account, location or drink settings?");
         if (decision.equals("account")) {
             String otherDecision = stringInput("Delete or change account?");
@@ -244,7 +246,7 @@ public class WhoAreYouAndWhatDoYouWant {
                 newInfo = stringInput("New username?");
             } else if (toBeUpdated.equals("password")) {
                 String newPassword = stringInput("New password?");
-                salt = AllYourDatabaseAreBelongToDrunks.needThatSalt(username);
+                salt = AllYourDatabaseAreBelongToDrunks.selectStringWithString("Salt", "Login_Credentials", "Username", username);
                 newInfo = DontHopUnlessISaySo.nothingCuresAHangoverLikeATastyPassword(newPassword, salt);
             } else if (toBeUpdated.equals("name")) {
                 newInfo = stringInput("New name?");
@@ -259,8 +261,8 @@ public class WhoAreYouAndWhatDoYouWant {
                 }
             }
 
-            loginID = AllYourDatabaseAreBelongToDrunks.needThatOwnerLoginID(username);
-            Integer ownerID = AllYourDatabaseAreBelongToDrunks.needThatOwnerID(loginID);
+            loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_ID", "Login_Credentials", "Username", username);
+            Integer ownerID = AllYourDatabaseAreBelongToDrunks.selectInteger("Owner_ID", "Owners", "Login_Credentials_Login_ID", loginID);
 
             if (toBeUpdated.equals("name")) {
                 Integer spaceIndex = newInfo.indexOf(" ");
@@ -294,12 +296,12 @@ public class WhoAreYouAndWhatDoYouWant {
             createLocationCalendar();
         } else {
             String otherDecision = stringInput("Would you like to " + decision + " location information or hours of operation (location or hours).");
-            ArrayList<String> locations = AllYourDatabaseAreBelongToDrunks.needThoseLocations(ownerID);
+            ArrayList<String> locations = AllYourDatabaseAreBelongToDrunks.selectStringArrayList("Name", "Locations", "Owners_Owner_ID", ownerID);
             for (String location : locations) {
                 System.out.println(location);
             }
             locationName = stringInput("Which location would you like to " + decision + "?");
-            locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
+            locationID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Location_ID", "Locations", "Name", locationName);
 
             if (decision.equals("update")) {
                 if (otherDecision.equals("location")) {
@@ -362,7 +364,7 @@ public class WhoAreYouAndWhatDoYouWant {
             }
         }
 
-        locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
+        locationID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Location_ID", "Locations", "Name", locationName);
         AllYourDatabaseAreBelongToDrunks.IDidntKnowKingdomsHadHours(locationID, days, openHours, closeHours, speHoursStart, speHoursEnd);
     }
 
@@ -456,7 +458,7 @@ public class WhoAreYouAndWhatDoYouWant {
         } while (yesNoInput("Is there another ingredient?"));
 
         AllYourDatabaseAreBelongToDrunks.thatSoundsDelicious(name, startDate, endDate, strength, price, specialtyPrice, complexity, spiritForwardOrRefreshing, type);
-        drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(name);
+        drinkID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Drink_ID", "Drinks", "Name", name);
         AllYourDatabaseAreBelongToDrunks.whatsInItThough(ingredients, drinkID);
     }
 
@@ -465,20 +467,17 @@ public class WhoAreYouAndWhatDoYouWant {
 
         if (optionChosen) {
             String otherDecision = stringInput("Would you like to update " + drinkSelection + "'s ingredients, description or availability?");
-            drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(drinkSelection);
+            drinkID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Drink_ID", "Drinks", "Name", drinkSelection);
             if (otherDecision.equals("ingredients")) {
                 String finalDecision = stringInput("Would you like to change or add an ingredient)");
                 if (finalDecision.equals("change")) {
-                    ArrayList<String> ingredients = AllYourDatabaseAreBelongToDrunks.needThatRecipe(drinkID);
-                    System.out.println("Drink contains:");
-                    for (String ingredient : ingredients) {
-                        System.out.println(ingredient);
-                    }
+                    displayRecipe();
+
                     String toUpdate = stringInput("Which ingredient would you like to change?");
                     String newData = stringInput("What would you like to change it to?");
 
-                    Integer oldIngredientID = AllYourDatabaseAreBelongToDrunks.needThatIngredientID(toUpdate);
-                    Integer newIngredientID = AllYourDatabaseAreBelongToDrunks.needThatIngredientID(newData);
+                    Integer oldIngredientID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Ingredient_Name", "Ingredients", "Name", toUpdate);
+                    Integer newIngredientID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Ingredient_Name", "Ingredients", "Name", newData);
 
                     AllYourDatabaseAreBelongToDrunks.updateIntegerWithSecondaryID("Recipes", "Ingredients_Ingredient_ID", newIngredientID, "Drink_ID", drinkID, "Ingredients_Ingredient_ID", oldIngredientID);
                 } else if (finalDecision.equals("add")) {
@@ -515,7 +514,7 @@ public class WhoAreYouAndWhatDoYouWant {
             boolean newData = yesNoInput("Is it spirit forward (N), or refreshing (Y)?");
             AllYourDatabaseAreBelongToDrunks.updateBoolean("Drinks", finalDecision, newData, "Drink_ID", drinkID);
         } else if (finalDecision.equals("type")) {
-            boolean spiritForwardOrRefreshing = AllYourDatabaseAreBelongToDrunks.needThatSpiritForwardOrRefreshing(drinkID);
+            boolean spiritForwardOrRefreshing = AllYourDatabaseAreBelongToDrunks.selectBoolean("Spirit_Forward_or_Refreshing", "Drinks", "Drink_ID", drinkID);
             if (spiritForwardOrRefreshing) {
                 Integer newData = intInput("Enter new drink type: type1 (1), type2 (2), type3 (3).");
                 AllYourDatabaseAreBelongToDrunks.updateInteger("Drinks", finalDecision, newData, "Drink_ID", drinkID);
@@ -527,8 +526,8 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     private static void updateDrinkAvailability() {
-        System.out.println("Availability Start: " + AllYourDatabaseAreBelongToDrunks.needThatAvailabilityStart(drinkID));
-        System.out.println("Availability End: " + AllYourDatabaseAreBelongToDrunks.needThatAvailabilityEnd(drinkID));
+        System.out.println("Availability Start: " + AllYourDatabaseAreBelongToDrunks.selectString("Availability_Start", "Drinks", "Drink_ID", drinkID));
+        System.out.println("Availability End: " + AllYourDatabaseAreBelongToDrunks.selectString("Availability_End", "Drinks", "Drink_ID", drinkID));
         String finalDecision = stringInput("Update availability_start or availability_end?");
         if (finalDecision.equals("availability_start")) {
             String newData = stringInput("Enter new start date (MM/DD/YY).");
@@ -543,7 +542,7 @@ public class WhoAreYouAndWhatDoYouWant {
         String otherDecision = stringInput("Would you like to delete entire drink, or ingredients (drink or ingredient)?");
         boolean optionChosen = getDrinkChoice();
 
-        drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(drinkSelection);
+        drinkID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Drink_ID", "Drinks", "Name", drinkSelection);
 
         if (otherDecision.equals("drink")) {
             if (optionChosen) {
@@ -551,13 +550,10 @@ public class WhoAreYouAndWhatDoYouWant {
             }
         } else if (otherDecision.equals("ingredient")) {
             if (optionChosen) {
-                ArrayList<String> ingredients = AllYourDatabaseAreBelongToDrunks.needThatRecipe(drinkID);
-                for (String ingredient : ingredients) {
-                    System.out.println(ingredient);
-                }
+                displayRecipe();
 
                 String toBeDeleted = stringInput("Which ingredient would you like to delete?");
-                Integer ingredientID = AllYourDatabaseAreBelongToDrunks.needThatIngredientID(toBeDeleted);
+                Integer ingredientID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Ingredient_Name", "Ingredients", "Name", toBeDeleted);
                 AllYourDatabaseAreBelongToDrunks.thatTastesGrossInThis(drinkID, ingredientID);
             }
         }
@@ -566,15 +562,11 @@ public class WhoAreYouAndWhatDoYouWant {
     private static void reviewDrink() {
         boolean optionChosen = getDrinkChoice();
 
-        drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(drinkSelection);
+        drinkID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Drink_ID", "Drinks", "Name", drinkSelection);
         if (optionChosen) {
             String finalDecision = stringInput("Would you like to review ingredients or data?");
             if (finalDecision.equals("ingredients")) {
-                ArrayList<String> ingredients = AllYourDatabaseAreBelongToDrunks.needThatRecipe(drinkID);
-                System.out.println("Ingredients in " + drinkSelection + ":");
-                for (String ingredient : ingredients) {
-                    System.out.println(ingredient);
-                }
+                displayRecipe();
             } else if (finalDecision.equals("data")) {
                 System.out.println("Drink data for " + drinkSelection + ":");
                 displayDrinkData();
@@ -582,22 +574,42 @@ public class WhoAreYouAndWhatDoYouWant {
         }
     }
 
+    private static void displayRecipe() {
+        Integer recipeID = AllYourDatabaseAreBelongToDrunks.selectInteger("Recipe_ID", "Recipes", "Drink_ID", drinkID);
+        ArrayList<Integer> ingredientIDs = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Ingredient_ID", "Recipes", "Recipe_ID", recipeID);
+        ArrayList<String> ingredients = new ArrayList<>();
+
+        for (Integer ID : ingredientIDs) {
+            ingredients.add(AllYourDatabaseAreBelongToDrunks.selectString("Name", "Ingredients", "Ingredient_ID", ID));
+        }
+
+        System.out.println("Ingredients in " + drinkSelection + ":");
+        for (String ingredient : ingredients) {
+            System.out.println(ingredient);
+        }
+    }
+
     private static boolean getDrinkChoice() {
-        ArrayList<String> locations = AllYourDatabaseAreBelongToDrunks.needThoseLocations(ownerID);
+        ArrayList<String> locations = AllYourDatabaseAreBelongToDrunks.selectStringArrayList("Name", "Locations", "Owners_Owner_ID", ownerID);
         for (String location : locations) {
             System.out.println(location);
         }
         locationName = stringInput("Which location would you like?");
-        locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
+        locationID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Location_ID", "Locations", "Name", locationName);
 
-        AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
-        ArrayList<String> drinks = AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
+        ArrayList<Integer> drinks = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Drinks_Drink_ID", "Drink_Locations", "Location_ID", locationID);
+        ArrayList<String> drinkNames = new ArrayList<>();
+
+        for (Integer drink : drinks) {
+            drinkNames.add(AllYourDatabaseAreBelongToDrunks.selectString("Name", "Drinks", "Drink_ID", drink));
+        }
+
         boolean optionChosen = false;
 
-        for (String drink : drinks) {
-            boolean doIt = yesNoInput("Would you like the drink named " + drink + "?");
+        for (String drinkName : drinkNames) {
+            boolean doIt = yesNoInput("Would you like the drink named " + drinkName + "?");
             if (doIt) {
-                drinkSelection = drink;
+                drinkSelection = drinkName;
                 optionChosen = true;
                 break;
             }
@@ -607,16 +619,16 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     private static void displayDrinkData() {
-        System.out.println("Alcohol content, scale from 1-5: " + AllYourDatabaseAreBelongToDrunks.needThatAlcoholContent(drinkID));
-        System.out.println("Price: " + AllYourDatabaseAreBelongToDrunks.needThatPrice(drinkID));
-        System.out.println("Specialty Price: " + AllYourDatabaseAreBelongToDrunks.needThatSpecialtyPrice(drinkID));
-        System.out.println("Complexity, scale from 1-5: " + AllYourDatabaseAreBelongToDrunks.needThatComplexity(drinkID));
-        boolean spiritForwardOrRefreshing = AllYourDatabaseAreBelongToDrunks.needThatSpiritForwardOrRefreshing(drinkID);
+        System.out.println("Alcohol content, scale from 1-5: " + AllYourDatabaseAreBelongToDrunks.selectInteger("Alcohol_Content", "Drinks", "Drink_ID", drinkID));
+        System.out.println("Price: " + AllYourDatabaseAreBelongToDrunks.selectDouble("Price", "Drinks", "Drink_ID", drinkID));
+        System.out.println("Specialty Price: " + AllYourDatabaseAreBelongToDrunks.selectDouble("Specialty_Price", "Drinks", "Drink_ID", drinkID));
+        System.out.println("Complexity, scale from 1-5: " + AllYourDatabaseAreBelongToDrunks.selectInteger("Complexity", "Drinks", "Drink_ID", drinkID));
+        boolean spiritForwardOrRefreshing = AllYourDatabaseAreBelongToDrunks.selectBoolean("Spirit_Forward_or_Refreshing", "Drinks", "Drink_ID", drinkID);
         System.out.println("Spirit forward(false) or refreshing(true): " + spiritForwardOrRefreshing);
         if (spiritForwardOrRefreshing) {
-            System.out.println("Drink type, type1 (1), type2 (2), type3 (3): " + AllYourDatabaseAreBelongToDrunks.needThatType(drinkID));
+            System.out.println("Drink type, type1 (1), type2 (2), type3 (3): " + AllYourDatabaseAreBelongToDrunks.selectInteger("Type", "Drinks", "Drink_ID", drinkID));
         } else {
-            System.out.println("Drink type, type1 (1), type2 (2), type3 (3): " + AllYourDatabaseAreBelongToDrunks.needThatType(drinkID));
+            System.out.println("Drink type, type1 (1), type2 (2), type3 (3): " + AllYourDatabaseAreBelongToDrunks.selectInteger("Type", "Drinks", "Drink_ID", drinkID));
         }
     }
 }

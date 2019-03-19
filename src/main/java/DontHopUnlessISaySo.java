@@ -14,8 +14,8 @@ public class DontHopUnlessISaySo {
     public static boolean whosThere (String username, String potatoes) {
         boolean iBelieveYou;
 
-        String seasoning = AllYourDatabaseAreBelongToDrunks.needThatSalt(username);
-        String databaseCredentials = AllYourDatabaseAreBelongToDrunks.needThatPassword(username);
+        String seasoning = AllYourDatabaseAreBelongToDrunks.selectStringWithString("Salt", "Login_Credentials", "Username", username);
+        String databaseCredentials = AllYourDatabaseAreBelongToDrunks.selectStringWithString("Password", "Login_Credentials", "Username", username);
 
         String saltyHashBrowns = nothingCuresAHangoverLikeATastyPassword(potatoes, seasoning);
 
