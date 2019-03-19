@@ -1,3 +1,5 @@
+import java.awt.*;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -87,20 +89,26 @@ public class HopThoseBars {
     }
 
     public static void letMeCheckInTheBack(String name, Integer ID) {
-        //TODO use result of pickingYourPoison to pull the right drink from drink database
         Integer locationID = AllYourDatabaseAreBelongToDrunks.selectInteger("Locations_Location_ID", "Drink_Locations", "Drinks_Drink_ID", ID);
         String street = AllYourDatabaseAreBelongToDrunks.selectString("Street", "Locations", "Location_ID", locationID);
         String city = AllYourDatabaseAreBelongToDrunks.selectString("City", "Locations", "Location_ID", locationID);
         String state = AllYourDatabaseAreBelongToDrunks.selectString("State", "Locations", "Location_ID", locationID);
         String zip = AllYourDatabaseAreBelongToDrunks.selectString("Zip", "Locations", "Location_ID", locationID);
-        String drinkAddress = street + " " + city + ", " + state + " " + zip;
+        String drinkAddress = street + ", " + city + ", " + state + " " + zip;
 
         turnLeftAtTheOakTree(drinkAddress, name);
     }
 
     public static void turnLeftAtTheOakTree(String address, String name) {
-        //TODO pull location from drink database
-        //TODO find it via GPS or send to google maps
+        System.out.println("Here's your drink: " + name);
+
+        String map = "http://maps.google.co.in/maps?q=" + address;
+        map = map.replace(" ", "+");
+        try {
+            Desktop.getDesktop().browse(new URL(map).toURI());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 //    public static void seeYouAround() {
