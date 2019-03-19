@@ -1,22 +1,39 @@
-import static input.InputUtils.stringInput;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class HopThoseBars {
+    public static Integer howMuchHaveYouHad = 0;
+    public static LocalDateTime startGettingDrunkTime = null;
+
     public static void main(String[] args) { }
 
-//    public static void letsGetLit() {
-//        //TODO check there input every new drink
-//        int howMuchHaveYouHad;
-//        int hoursDrinking;
-//        int tooMuch;
-//        if (howMuchHaveYouHad >= tooMuch) {
-//            cuttingYouOff();
-//        }
-//
-//        //TODO gather user input about what drink they'll be wanting
-//        //TODO get user preferences from user database
-//        pickingYourPoison();
-//        AllYourDatabaseAreBelongToDrunks.thisOrThat();
-//    }
+    public static void letsGetLit() {
+        boolean go = checkingYourIntake();
+
+        if (go) {
+            //TODO gather user input about what drink they'll be wanting
+//            pickingYourPoison();
+            //TODO get user preferences from user database
+            howMuchHaveYouHad++;
+        }
+    }
+
+    public static boolean checkingYourIntake() {
+        if (startGettingDrunkTime == null) {
+            startGettingDrunkTime = LocalDateTime.now();
+        }
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        double hours = startGettingDrunkTime.until(currentTime, ChronoUnit.HOURS);
+
+        double howMuchHaveYouReallyHad = howMuchHaveYouHad / hours;
+        if (howMuchHaveYouReallyHad >= 3) {
+            cuttingYouOff();
+            return false;
+        } else {
+            return true;
+        }
+    }
 
 //    public static void pickingYourPoison() {
 //        //TODO create algorithm for finding the right drink
@@ -61,9 +78,9 @@ public class HopThoseBars {
 //        }
 //    }
 
-//    public static void cuttingYouOff() {
-//        //TODO keep track of user's alcohol intake and recommend a ride service #this will be for a future update
-//    }
+    public static void cuttingYouOff() {
+        //TODO keep track of user's alcohol intake and recommend a ride service #this will be for a future update
+    }
 
 //    public static void theHangoverThisAppEdition() {
 //        //TODO display the course of the user's night #this will be for a future update.
