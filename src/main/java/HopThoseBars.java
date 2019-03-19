@@ -88,16 +88,20 @@ public class HopThoseBars {
 
     public static void letMeCheckInTheBack(String name, Integer ID) {
         //TODO use result of pickingYourPoison to pull the right drink from drink database
-//        String IGotThis;
-//        turnLeftAtTheOakTree(IGotThis);
-//        AllYourDatabaseAreBelongToDrunks.thisOrThat();
+        Integer locationID = AllYourDatabaseAreBelongToDrunks.selectInteger("Locations_Location_ID", "Drink_Locations", "Drinks_Drink_ID", ID);
+        String street = AllYourDatabaseAreBelongToDrunks.selectString("Street", "Locations", "Location_ID", locationID);
+        String city = AllYourDatabaseAreBelongToDrunks.selectString("City", "Locations", "Location_ID", locationID);
+        String state = AllYourDatabaseAreBelongToDrunks.selectString("State", "Locations", "Location_ID", locationID);
+        String zip = AllYourDatabaseAreBelongToDrunks.selectString("Zip", "Locations", "Location_ID", locationID);
+        String drinkAddress = street + " " + city + ", " + state + " " + zip;
+
+        turnLeftAtTheOakTree(drinkAddress, name);
     }
 
-//    public static void turnLeftAtTheOakTree(String directions) {
-//        //TODO pull location from drink database
-//        //TODO find it via GPS or send to google maps
-//        AllYourDatabaseAreBelongToDrunks.thisOrThat();
-//    }
+    public static void turnLeftAtTheOakTree(String address, String name) {
+        //TODO pull location from drink database
+        //TODO find it via GPS or send to google maps
+    }
 
 //    public static void seeYouAround() {
 //        //TODO store users last trip
@@ -109,13 +113,11 @@ public class HopThoseBars {
 
 //    public static void checkPlease() {
 //        //TODO get results from user and send them to ML database
-//        AllYourDatabaseAreBelongToDrunks.thisOrThat();
 //    }
 
 //    public static void keepEmComingBarkeep() {
 //        //TODO allow the user to choose a next round
 //        //TODO determine if last results were faulty
-//        AllYourDatabaseAreBelongToDrunks.thisOrThat();
 //        if (keepGoing) {
 //            letsGetLit();
 //        } else {
