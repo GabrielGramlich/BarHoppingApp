@@ -140,6 +140,12 @@ public class AllYourDatabaseAreBelongToDrunks {
         return returnInteger;
     }
 
+    public static Integer selectIntegerWithSecondKey(String column, String table, String primaryKeyName, Integer primaryKeyID, String secondaryKeyName, Integer secondaryKeyData) {
+        String sqlStatement = "SELECT " + column + " FROM " + table + " WHERE " + primaryKeyName + " = " + primaryKeyID + " AND " + secondaryKeyName + " = " + secondaryKeyData + ";";
+        Integer returnInteger = needThatInteger(column, sqlStatement);
+        return returnInteger;
+    }
+
     public static boolean selectBoolean(String column, String table, String primaryKeyName, Integer primaryKeyID) {
         String sqlStatement = "SELECT " + column + " FROM " + table + " WHERE " + primaryKeyName + " = " + primaryKeyID + ";";
         Integer returnInteger = needThatBoolean(column, sqlStatement);
@@ -158,6 +164,12 @@ public class AllYourDatabaseAreBelongToDrunks {
 
     public static ArrayList<Integer> selectIntegerArrayList(String column, String table, String primaryKeyName, Integer primaryKeyID) {
         String sqlStatement = "SELECT " + column + " FROM " + table + " WHERE " + primaryKeyName + " = " + primaryKeyID + ";";
+        ArrayList<Integer> returnArrayListInteger = needThatArrayListInteger(column, sqlStatement);
+        return returnArrayListInteger;
+    }
+
+    public static ArrayList<Integer> selectIntegerArrayListWithBoolean(String column, String table, String primaryKeyName, boolean primaryKeyBool) {
+        String sqlStatement = "SELECT " + column + " FROM " + table + " WHERE " + primaryKeyName + " = " + primaryKeyBool + ";";
         ArrayList<Integer> returnArrayListInteger = needThatArrayListInteger(column, sqlStatement);
         return returnArrayListInteger;
     }

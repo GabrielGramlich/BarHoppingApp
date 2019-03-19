@@ -1,5 +1,7 @@
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Random;
 
 import static input.InputUtils.intInput;
 import static input.InputUtils.yesNoInput;
@@ -66,17 +68,30 @@ public class HopThoseBars {
     }
 
     public static void pickingYourPoison() {
-        //TODO create algorithm for finding the right drink
-        //TODO confer with user database
-//        letMeCheckInTheBack();
+        //TODO figure out how you want to add in user preferences
+
+        ArrayList<Integer> almostRightDrinks = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayListWithBoolean("Drink_ID", "Drinks", "Spirit_Forward_or_Refreshing", spiritForwardOrRefreshing);
+        ArrayList<Integer> rightDrinks = new ArrayList<>();
+
+        for (Integer drink : almostRightDrinks) {
+            rightDrinks.add(AllYourDatabaseAreBelongToDrunks.selectIntegerWithSecondKey("Drink_ID", "Drinks", "Drink_ID", drink, "Type", type));
+        }
+
+        Random rand = new Random();
+        int randInt = rand.nextInt(rightDrinks.size());
+
+        Integer drinkID = rightDrinks.get(randInt);
+        String drinkName = AllYourDatabaseAreBelongToDrunks.selectString("Name", "Drinks", "Drink_ID", drinkID);
+
+        letMeCheckInTheBack(drinkName, drinkID);
     }
 
-//    public static void letMeCheckInTheBack() {
-//        //TODO use result of pickingYourPoison to pull the right drink from drink database
+    public static void letMeCheckInTheBack(String name, Integer ID) {
+        //TODO use result of pickingYourPoison to pull the right drink from drink database
 //        String IGotThis;
 //        turnLeftAtTheOakTree(IGotThis);
 //        AllYourDatabaseAreBelongToDrunks.thisOrThat();
-//    }
+    }
 
 //    public static void turnLeftAtTheOakTree(String directions) {
 //        //TODO pull location from drink database
