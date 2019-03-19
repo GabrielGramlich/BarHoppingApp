@@ -161,7 +161,8 @@ public class WhoAreYouAndWhatDoYouWant {
         //TODO finish user menu
         String decision = stringInput("What you want? Drink, account, home?");
         if (decision.equals("drink")) {
-            HopThoseBars.letsGetLit();
+            Integer userID = AllYourDatabaseAreBelongToDrunks.selectInteger("User_ID", "Users", "Login_Credentials_Login_ID", loginID);
+            HopThoseBars.letsGetLit(userID);
         } else if (decision.equals("account")) {
             String otherDecision = stringInput("Change it or delete it?");
             if (otherDecision.equals("change")) {

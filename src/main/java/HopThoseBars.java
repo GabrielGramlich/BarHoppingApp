@@ -1,21 +1,51 @@
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import static input.InputUtils.intInput;
+import static input.InputUtils.yesNoInput;
+
 public class HopThoseBars {
     public static Integer howMuchHaveYouHad = 0;
     public static LocalDateTime startGettingDrunkTime = null;
+    public static Integer LIMIT = 3;
+
+    public static Integer userID;
+    public static String preferredLiquor;
+    public static String nonpreferredLiquor;
+    public static boolean strongPreferrence;
+    public static boolean priceyPreferrence;
+    public static boolean complexPreferrence;
+
+    public static boolean spiritForwardOrRefreshing;
+    public static Integer type;
 
     public static void main(String[] args) { }
 
-    public static void letsGetLit() {
+    public static void letsGetLit(Integer ID) {
+        userID = ID;
         boolean go = checkingYourIntake();
 
         if (go) {
-            //TODO gather user input about what drink they'll be wanting
-//            pickingYourPoison();
-            //TODO get user preferences from user database
+            getUserPreferrences();
+
+            spiritForwardOrRefreshing = yesNoInput("Would you like something spirit forward (N), or refreshing (Y)?");
+            if (spiritForwardOrRefreshing) {
+                type = intInput("Would you prefer type (1), type2 (2), or type3 (3)?");
+            } else {
+                type = intInput("Would you prefer type (1), type2 (2), or type3 (3)?");
+            }
+
+            pickingYourPoison();
             howMuchHaveYouHad++;
         }
+    }
+
+    public static void getUserPreferrences() {
+        preferredLiquor = AllYourDatabaseAreBelongToDrunks.selectString("Preferred_Liquor", "User_Defined_Preferences", "Users_User_ID", userID);
+        nonpreferredLiquor = AllYourDatabaseAreBelongToDrunks.selectString("Nonpreferred_Liquor", "User_Defined_Preferences", "Users_User_ID", userID);
+        strongPreferrence = AllYourDatabaseAreBelongToDrunks.selectBoolean("Weak_or_Strong", "User_Defined_Preferences", "Users_User_ID", userID);
+        priceyPreferrence = AllYourDatabaseAreBelongToDrunks.selectBoolean("Cheap_or_Pricey", "User_Defined_Preferences", "Users_User_ID", userID);
+        complexPreferrence = AllYourDatabaseAreBelongToDrunks.selectBoolean("Simple_or_Complex", "User_Defined_Preferences", "Users_User_ID", userID);
     }
 
     public static boolean checkingYourIntake() {
@@ -27,7 +57,7 @@ public class HopThoseBars {
         double hours = startGettingDrunkTime.until(currentTime, ChronoUnit.HOURS);
 
         double howMuchHaveYouReallyHad = howMuchHaveYouHad / hours;
-        if (howMuchHaveYouReallyHad >= 3) {
+        if (hours >= 2 && howMuchHaveYouReallyHad >= LIMIT) {
             cuttingYouOff();
             return false;
         } else {
@@ -35,11 +65,11 @@ public class HopThoseBars {
         }
     }
 
-//    public static void pickingYourPoison() {
-//        //TODO create algorithm for finding the right drink
-//        //TODO confer with user database
+    public static void pickingYourPoison() {
+        //TODO create algorithm for finding the right drink
+        //TODO confer with user database
 //        letMeCheckInTheBack();
-//    }
+    }
 
 //    public static void letMeCheckInTheBack() {
 //        //TODO use result of pickingYourPoison to pull the right drink from drink database
