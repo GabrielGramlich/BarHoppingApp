@@ -14,11 +14,14 @@ public class HopThoseBars {
     public static Integer LIMIT = 3;
 
     public static Integer userID;
+    public static ArrayList<String> drinks = new ArrayList<>();
+    public static ArrayList<Integer> locations = new ArrayList<>();
+
     public static String preferredLiquor;
     public static String nonpreferredLiquor;
-    public static boolean strongPreferrence;
-    public static boolean priceyPreferrence;
-    public static boolean complexPreferrence;
+    public static boolean strongPreference;
+    public static boolean priceyPreference;
+    public static boolean complexPreference;
 
     public static boolean spiritForwardOrRefreshing;
     public static Integer type;
@@ -47,9 +50,9 @@ public class HopThoseBars {
     public static void getUserPreferrences() {
         preferredLiquor = AllYourDatabaseAreBelongToDrunks.selectString("Preferred_Liquor", "User_Defined_Preferences", "Users_User_ID", userID);
         nonpreferredLiquor = AllYourDatabaseAreBelongToDrunks.selectString("Nonpreferred_Liquor", "User_Defined_Preferences", "Users_User_ID", userID);
-        strongPreferrence = AllYourDatabaseAreBelongToDrunks.selectBoolean("Weak_or_Strong", "User_Defined_Preferences", "Users_User_ID", userID);
-        priceyPreferrence = AllYourDatabaseAreBelongToDrunks.selectBoolean("Cheap_or_Pricey", "User_Defined_Preferences", "Users_User_ID", userID);
-        complexPreferrence = AllYourDatabaseAreBelongToDrunks.selectBoolean("Simple_or_Complex", "User_Defined_Preferences", "Users_User_ID", userID);
+        strongPreference = AllYourDatabaseAreBelongToDrunks.selectBoolean("Weak_or_Strong", "User_Defined_Preferences", "Users_User_ID", userID);
+        priceyPreference = AllYourDatabaseAreBelongToDrunks.selectBoolean("Cheap_or_Pricey", "User_Defined_Preferences", "Users_User_ID", userID);
+        complexPreference = AllYourDatabaseAreBelongToDrunks.selectBoolean("Simple_or_Complex", "User_Defined_Preferences", "Users_User_ID", userID);
     }
 
     public static boolean checkingYourIntake() {
@@ -96,10 +99,10 @@ public class HopThoseBars {
         String zip = AllYourDatabaseAreBelongToDrunks.selectString("Zip", "Locations", "Location_ID", locationID);
         String drinkAddress = street + ", " + city + ", " + state + " " + zip;
 
-        turnLeftAtTheOakTree(drinkAddress, name);
+        turnLeftAtTheOakTree(drinkAddress, name, locationID);
     }
 
-    public static void turnLeftAtTheOakTree(String address, String name) {
+    public static void turnLeftAtTheOakTree(String address, String name, Integer locationID) {
         System.out.println("Here's your drink: " + name);
 
         String map = "http://maps.google.co.in/maps?q=" + address;
@@ -109,35 +112,43 @@ public class HopThoseBars {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        checkPlease(name, locationID);
     }
 
-//    public static void seeYouAround() {
-//        //TODO store users last trip
-//        //TODO wait for users return
-//        checkPlease();
-//        keepEmComingBarkeep();
-//        theHangoverThisAppEdition();
-//    }
+    public static void checkPlease(String name, Integer locationID) {
+        drinks.add(name);
+        locations.add(locationID);
 
-//    public static void checkPlease() {
-//        //TODO get results from user and send them to ML database
-//    }
+        //TODO wait for users return
+        keepEmComingBarkeep();
+    }
 
-//    public static void keepEmComingBarkeep() {
-//        //TODO allow the user to choose a next round
-//        //TODO determine if last results were faulty
-//        if (keepGoing) {
-//            letsGetLit();
-//        } else {
-//            cuttingYouOff();
-//        }
-//    }
+
+    public static void keepEmComingBarkeep() {
+        //TODO allow the user to choose a next round
+        //TODO determine if last results were faulty
+
+        boolean keepEmComing = yesNoInput("Another round?");
+        if (keepEmComing) {
+            letsGetLit(userID);
+        } else {
+            cuttingYouOff();
+        }
+    }
 
     public static void cuttingYouOff() {
-        //TODO keep track of user's alcohol intake and recommend a ride service #this will be for a future update
+        //TODO recommend a ride service #this will be for a future update
+        try {
+            Desktop.getDesktop().browse(new URL("uber.com").toURI());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        theHangoverThisAppEdition();
     }
 
-//    public static void theHangoverThisAppEdition() {
-//        //TODO display the course of the user's night #this will be for a future update.
-//    }
+    public static void theHangoverThisAppEdition() {
+        //TODO display the course of the user's night #this will be for a future update.
+    }
 }
