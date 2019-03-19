@@ -197,7 +197,18 @@ public class WhoAreYouAndWhatDoYouWant {
                 newInfo = DontHopUnlessISaySo.nothingCuresAHangoverLikeATastyPassword(newPassword, salt);
             }
 
-            AllYourDatabaseAreBelongToDrunks.makeUpYourMindAlready(toBeUpdated, newInfo, username);
+            if (toBeUpdated.equals("name")) {
+                Integer userID = AllYourDatabaseAreBelongToDrunks.needThatUserID(username);
+                Integer spaceIndex = newInfo.indexOf(" ");
+                String first = newInfo.substring(0, spaceIndex);
+                String last = newInfo.substring(spaceIndex + 1);
+
+                AllYourDatabaseAreBelongToDrunks.updateString("Users", "First_Name", first, "User_ID", userID);
+                AllYourDatabaseAreBelongToDrunks.updateString("Users", "Last_Name", last, "User_ID", userID);
+            } else {
+                Integer loginID = AllYourDatabaseAreBelongToDrunks.needThatCredentialID(username);
+                AllYourDatabaseAreBelongToDrunks.updateString("Login_Credentials", toBeUpdated, newInfo, "Login_ID", loginID);
+            }
         } while (!yesNoInput("You done yet?"));
 
         System.out.println("Bout time.");
@@ -248,7 +259,26 @@ public class WhoAreYouAndWhatDoYouWant {
                 }
             }
 
-            AllYourDatabaseAreBelongToDrunks.itsAnHonorToGetToKnowYou(toBeUpdated, newInfo, username);
+            loginID = AllYourDatabaseAreBelongToDrunks.needThatOwnerLoginID(username);
+            Integer ownerID = AllYourDatabaseAreBelongToDrunks.needThatOwnerID(loginID);
+
+            if (toBeUpdated.equals("name")) {
+                Integer spaceIndex = newInfo.indexOf(" ");
+                String first = newInfo.substring(0, spaceIndex);
+                String last = newInfo.substring(spaceIndex + 1);
+
+                AllYourDatabaseAreBelongToDrunks.updateString("Owners", "First_Name", first, "Owner_ID", ownerID);
+                AllYourDatabaseAreBelongToDrunks.updateString("Owners", "Last_Name", last, "Owner_ID", ownerID);
+            } else if (toBeUpdated.equals("Contact_Number")) {
+                AllYourDatabaseAreBelongToDrunks.updateString("Owners", "Contact_Number", newInfo, "Owner_ID", ownerID);
+            } else if (toBeUpdated.equals("Contact_Email")) {
+                AllYourDatabaseAreBelongToDrunks.updateString("Owners", "Contact_Email", newInfo, "Owner_ID", ownerID);
+            } else {
+                AllYourDatabaseAreBelongToDrunks.updateString("Owners", toBeUpdated, newInfo, "Owner_ID", ownerID);
+            }
+
+
+
         } while (yesNoInput("Do you still require assistance, sir?"));
 
         System.out.println("It's been a pleasure.");
@@ -346,9 +376,9 @@ public class WhoAreYouAndWhatDoYouWant {
         if (finalDecision.equals("phone_number") || finalDecision.equals("zip")) {
             //TODO provide formatting if entering number or zip
             newDoubleData = Double.valueOf(newStringData);
-            AllYourDatabaseAreBelongToDrunks.thanksForKeepingUsMovingDouble(finalDecision, newDoubleData, locationID);
+            AllYourDatabaseAreBelongToDrunks.updateDouble("Locations", finalDecision, newDoubleData, "Location_ID", locationID);
         } else {
-            AllYourDatabaseAreBelongToDrunks.thanksForKeepingUsMovingString(finalDecision, newStringData, locationID);
+            AllYourDatabaseAreBelongToDrunks.updateString("Locations", finalDecision, newStringData, "Location_ID", locationID);
         }
     }
 
@@ -359,7 +389,7 @@ public class WhoAreYouAndWhatDoYouWant {
         String dayOfWeek = stringInput("For which day of the week?");
         String newData = stringInput("New " + finalDecision + " for " + dayOfWeek + "? (HH:MM)");
 
-        AllYourDatabaseAreBelongToDrunks.thanksForStayingOpen(dayOfWeek, finalDecision, newData, locationID);
+        AllYourDatabaseAreBelongToDrunks.updateTime("Calendar", finalDecision, newData, "Location_ID", locationID, "Day_of_Week", dayOfWeek);
     }
 
     private static void deleteLocation() {
@@ -446,7 +476,11 @@ public class WhoAreYouAndWhatDoYouWant {
                     }
                     String toUpdate = stringInput("Which ingredient would you like to change?");
                     String newData = stringInput("What would you like to change it to?");
-                    AllYourDatabaseAreBelongToDrunks.thatllTasteBetter(drinkID, toUpdate, newData);
+
+                    Integer oldIngredientID = AllYourDatabaseAreBelongToDrunks.needThatIngredientID(toUpdate);
+                    Integer newIngredientID = AllYourDatabaseAreBelongToDrunks.needThatIngredientID(newData);
+
+                    AllYourDatabaseAreBelongToDrunks.updateIntegerWithSecondaryID("Recipes", "Ingredients_Ingredient_ID", newIngredientID, "Drink_ID", drinkID, "Ingredients_Ingredient_ID", oldIngredientID);
                 } else if (finalDecision.equals("add")) {
                     String newData = stringInput("What would you like to add to " + drinkSelection + "?");
                     AllYourDatabaseAreBelongToDrunks.evenBetter(drinkID, newData);
@@ -467,27 +501,27 @@ public class WhoAreYouAndWhatDoYouWant {
 
         if (finalDecision.equals("alcohol_content")) {
             Integer newData = intInput("Enter new strength on a scale of 1-5.");
-            AllYourDatabaseAreBelongToDrunks.thatsGonnaFuckMeUp(drinkID, newData);
+            AllYourDatabaseAreBelongToDrunks.updateInteger("Drinks", finalDecision, newData, "Drink_ID", drinkID);
         } else if (finalDecision.equals("price")) {
             Double newData = doubleInput("Enter new price.");
-            AllYourDatabaseAreBelongToDrunks.thatsSoExpensive(drinkID, newData);
+            AllYourDatabaseAreBelongToDrunks.updateDouble("Drinks", finalDecision, newData, "Drink_ID", drinkID);
         } else if (finalDecision.equals("specialty_price")) {
             Double newData = doubleInput("Enter new specialty price.");
-            AllYourDatabaseAreBelongToDrunks.thatsSoCheap(drinkID, newData);
+            AllYourDatabaseAreBelongToDrunks.updateDouble("Drinks", finalDecision, newData, "Drink_ID", drinkID);
         } else if (finalDecision.equals("complexity")) {
             Integer newData = intInput("Enter new complexity on a scale of 1-5.");
-            AllYourDatabaseAreBelongToDrunks.thatsSoComplex(drinkID, newData);
+            AllYourDatabaseAreBelongToDrunks.updateInteger("Drinks", finalDecision, newData, "Drink_ID", drinkID);
         } else if (finalDecision.equals("spirit_forward_or_refreshing")) {
             boolean newData = yesNoInput("Is it spirit forward (N), or refreshing (Y)?");
-            AllYourDatabaseAreBelongToDrunks.thatsSoOneOrTheOther(drinkID, newData);
+            AllYourDatabaseAreBelongToDrunks.updateBoolean("Drinks", finalDecision, newData, "Drink_ID", drinkID);
         } else if (finalDecision.equals("type")) {
             boolean spiritForwardOrRefreshing = AllYourDatabaseAreBelongToDrunks.needThatSpiritForwardOrRefreshing(drinkID);
             if (spiritForwardOrRefreshing) {
                 Integer newData = intInput("Enter new drink type: type1 (1), type2 (2), type3 (3).");
-                AllYourDatabaseAreBelongToDrunks.thatsSoWhatThatIs(drinkID, newData);
+                AllYourDatabaseAreBelongToDrunks.updateInteger("Drinks", finalDecision, newData, "Drink_ID", drinkID);
             } else {
                 Integer newData = intInput("Enter new drink type: type1 (1), type2 (2), type3 (3).");
-                AllYourDatabaseAreBelongToDrunks.thatsSoWhatThatIs(drinkID, newData);
+                AllYourDatabaseAreBelongToDrunks.updateInteger("Drinks", finalDecision, newData, "Drink_ID", drinkID);
             }
         }
     }
@@ -498,10 +532,10 @@ public class WhoAreYouAndWhatDoYouWant {
         String finalDecision = stringInput("Update availability_start or availability_end?");
         if (finalDecision.equals("availability_start")) {
             String newData = stringInput("Enter new start date (MM/DD/YY).");
-            AllYourDatabaseAreBelongToDrunks.soThatsWhenYouStart(drinkID, newData);
+            AllYourDatabaseAreBelongToDrunks.updateDate("Drinks", finalDecision, newData, "Drink_ID", drinkID);
         } else if (finalDecision.equals("availability_end")) {
             String newData = stringInput("Enter new start date (MM/DD/YY).");
-            AllYourDatabaseAreBelongToDrunks.soThatsWhenYouEnd(drinkID, newData);
+            AllYourDatabaseAreBelongToDrunks.updateDate("Drinks", finalDecision, newData, "Drink_ID", drinkID);
         }
     }
 

@@ -4,15 +4,18 @@ import java.util.ArrayList;
 public class AllYourDatabaseAreBelongToDrunks {
     public static void main(String[] args) { }
     //TODO make generic sql insert statement creation method
-    //TODO make generic sql update statement creation method
+    //TODO rework specific sql insert statement creation method
+
     //TODO make generic sql select statement creation method
+    //TODO rework specific sql select statement creation method
+
     //TODO make generic sql delete statement creation method
+    //TODO rework specific sql delete statement creation method
 
 
-    /*******************
-    ***Insert methods***
-    *******************/
-
+    /***********************************************
+    ***Specific insert statement creation methods***
+    ***********************************************/
 
 
     public static void helloBoss(Integer loginID, String first, String last, Double number, String email) {
@@ -67,125 +70,50 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
 
-    /*******************
-    ***Update methods***
-    *******************/
+    /**********************************************
+    ***Generic update statement creation methods***
+    **********************************************/
 
 
-    public static void thanksForKeepingUsMovingDouble(String column, Double newData, Integer locationID) {
-        String sqlStatement = "UPDATE Locations SET " + column + " = " + newData + " WHERE Location_ID = " + locationID + ";";
+    public static void updateString(String table, String column, String newData, String primaryKeyName, Integer primaryKeyID) {
+        String sqlStatement = "UPDATE " + table + " SET " + column + " = \"" + newData + "\" WHERE \"" + primaryKeyName + "\" = " + primaryKeyID + ";";
         dontNeedThat(sqlStatement);
     }
 
-    public static void thanksForKeepingUsMovingString(String column, String newData, Integer locationID) {
-        String sqlStatement = "UPDATE Locations SET " + column + " = \"" + newData + "\" WHERE Location_ID = " + locationID + ";";
+    public static void updateTime(String table, String column, String newData, String primaryKeyName, Integer primaryKeyID, String secondaryKeyName, String secondaryKeyData) {
+        String sqlStatement = "UPDATE " + table + " SET " + column + " = TIME_FORMAT(CONVERT(\"" + newData + "\", TIME), \"%H:%i\") WHERE \"" + primaryKeyName + "\" = " + primaryKeyID + " AND \"" + secondaryKeyName + "\" = " + secondaryKeyData + ";";
         dontNeedThat(sqlStatement);
     }
 
-    public static void thanksForStayingOpen(String day, String column, String newData, Integer locationID) {
-        String sqlStatement = "UPDATE Calendar SET " + column + " = TIME_FORMAT(CONVERT(\"" + newData + "\", TIME), \"%H:%i\") WHERE Location_ID = " + locationID + " AND Day_of_Week = \"" + day + "\";";
+    public static void updateDate(String table, String column, String newData, String primaryKeyName, Integer primaryKeyID) {
+        String sqlStatement = "UPDATE " + table + " SET " + column + " = STR_TO_DATE(\"" + newData + "\", \"%m/%d/%y\") WHERE \"" + primaryKeyName + "\" = " + primaryKeyID + ";";
         dontNeedThat(sqlStatement);
     }
 
-    public static void makeUpYourMindAlready(String column, String data, String username) {
-        String updateDataSql;
-
-        if (column.equals("name")) {
-            Integer userID = needThatUserID(username);
-            Integer spaceIndex = data.indexOf(" ");
-            String first = data.substring(0, spaceIndex);
-            String last = data.substring(spaceIndex + 1);
-
-            updateDataSql = "UPDATE Users SET First_Name = \"" + first + "\" WHERE User_ID = " + userID + ";";
-            dontNeedThat(updateDataSql);
-
-            updateDataSql = "UPDATE Users SET Last_Name = \"" + last + "\" WHERE User_ID = " + userID + ";";
-            dontNeedThat(updateDataSql);
-        } else {
-            Integer loginID = needThatCredentialID(username);
-            updateDataSql = "UPDATE Login_Credentials SET " + column + " = \"" + data + "\" WHERE Login_ID = " + loginID + ";";
-            dontNeedThat(updateDataSql);
-        }
-    }
-
-    public static void itsAnHonorToGetToKnowYou(String column, String data, String username) {
-        String updateDataSql;
-        Integer loginID = needThatOwnerLoginID(username);
-        Integer ownerID = needThatOwnerID(loginID);
-
-        if (column.equals("name")) {
-            Integer spaceIndex = data.indexOf(" ");
-            String first = data.substring(0, spaceIndex);
-            String last = data.substring(spaceIndex + 1);
-
-            updateDataSql = "UPDATE Owners SET First_Name = \"" + first + "\" WHERE Owner_ID = " + ownerID + ";";
-            dontNeedThat(updateDataSql);
-
-            updateDataSql = "UPDATE Owners SET Last_Name = \"" + last + "\" WHERE Owner_ID = " + ownerID + ";";
-            dontNeedThat(updateDataSql);
-        } else if (column.equals("Contact_Number")) {
-            updateDataSql = "UPDATE Owners SET Contact_Number = " + Double.valueOf(data) + " WHERE Owner_ID = " + ownerID + ";";
-            dontNeedThat(updateDataSql);
-        } else if (column.equals("Contact_Email")) {
-            updateDataSql = "UPDATE Owners SET Contact_Email = \"" + data + "\" WHERE Owner_ID = " + ownerID + ";";
-            dontNeedThat(updateDataSql);
-        } else {
-            updateDataSql = "UPDATE Login_Credentials SET " + column + " = \"" + data + "\" WHERE Login_ID = " + loginID + ";";
-            dontNeedThat(updateDataSql);
-        }
-    }
-
-    public static void thatllTasteBetter(Integer drinkID, String oldIngredient, String newIngredient) {
-        Integer oldIngredientID = needThatIngredientID(oldIngredient);
-        Integer newIngredientID = needThatIngredientID(newIngredient);
-        String sqlStatement = "UPDATE Recipes SET Ingredients_Ingredient_ID = " + newIngredientID + " WHERE Drink_ID = " + drinkID + " AND Ingredients_Ingredient_ID = " + oldIngredientID + ";";
+    public static void updateDouble(String table, String column, Double newData, String primaryKeyName, Integer primaryKeyID) {
+        String sqlStatement = "UPDATE " + table + " SET " + column + " = " + newData + " WHERE \"" + primaryKeyName + "\" = " + primaryKeyID + ";";
         dontNeedThat(sqlStatement);
     }
 
-    public static void thatsGonnaFuckMeUp(Integer drinkID, Integer newData) {
-        String sqlStatement = "UPDATE Drinks SET Alcohol_Content = " + newData + " WHERE Drink_ID = " + drinkID + ";";
+    public static void updateInteger(String table, String column, Integer newData, String primaryKeyName, Integer primaryKeyID) {
+        String sqlStatement = "UPDATE " + table + " SET " + column + " = " + newData + " WHERE \"" + primaryKeyName + "\" = " + primaryKeyID + ";";
         dontNeedThat(sqlStatement);
     }
 
-    public static void thatsSoExpensive(Integer drinkID, Double newData) {
-        String sqlStatement = "UPDATE Drinks SET Price = " + newData + " WHERE Drink_ID = " + drinkID + ";";
+    public static void updateIntegerWithSecondaryID(String table, String column, Integer newData, String primaryKeyName, Integer primaryKeyID, String secondaryKeyName, Integer secondaryKeyID) {
+        String sqlStatement = "UPDATE " + table + " SET " + column + " = " + newData + " WHERE \"" + primaryKeyName + "\" = " + primaryKeyID + " AND \"" + secondaryKeyName + "\" = " + secondaryKeyID + ";";
         dontNeedThat(sqlStatement);
     }
 
-    public static void thatsSoCheap(Integer drinkID, Double newData) {
-        String sqlStatement = "UPDATE Drinks SET Specialty_Price = " + newData + " WHERE Drink_ID = " + drinkID + ";";
-        dontNeedThat(sqlStatement);
-    }
-
-    public static void thatsSoComplex(Integer drinkID, Integer newData) {
-        String sqlStatement = "UPDATE Drinks SET Complexity = " + newData + " WHERE Drink_ID = " + drinkID + ";";
-        dontNeedThat(sqlStatement);
-    }
-
-    public static void thatsSoOneOrTheOther(Integer drinkID, boolean newData) {
-        String sqlStatement = "UPDATE Drinks SET Spirit_Forward_or_Refreshing = " + newData + " WHERE Drink_ID = " + drinkID + ";";
-        dontNeedThat(sqlStatement);
-    }
-
-    public static void thatsSoWhatThatIs(Integer drinkID, Integer newData) {
-        String sqlStatement = "UPDATE Drinks SET Type = " + newData + " WHERE Drink_ID = " + drinkID + ";";
-        dontNeedThat(sqlStatement);
-    }
-
-    public static void soThatsWhenYouStart(Integer drinkID, String newData) {
-        String sqlStatement = "UPDATE Drinks SET Availability_Start = STR_TO_DATE(\"" + newData + "\", \"%m/%d/%y\") WHERE Drink_ID = " + drinkID + ";";
-        dontNeedThat(sqlStatement);
-    }
-
-    public static void soThatsWhenYouEnd(Integer drinkID, String newData) {
-        String sqlStatement = "UPDATE Drinks SET Availability_End = STR_TO_DATE(\"" + newData + "\", \"%m/%d/%y\") WHERE Drink_ID = " + drinkID + ";";
+    public static void updateBoolean(String table, String column, boolean newData, String primaryKeyName, Integer primaryKeyID) {
+        String sqlStatement = "UPDATE " + table + " SET " + column + " = " + newData + " WHERE \"" + primaryKeyName + "\" = " + primaryKeyID + ";";
         dontNeedThat(sqlStatement);
     }
 
 
-    /****************************
-    ***Data collection methods***
-    ****************************/
+    /***********************************************
+    ***Specific select statement creation methods***
+    ***********************************************/
 
 
     public static Integer needThatOwnerLoginID(String username) {
@@ -363,9 +291,9 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
 
-    /*********************
-        ***Deletion methods***
-        *********************/
+    /***********************************************
+    ***Specific delete statement creation methods***
+    ***********************************************/
 
 
     public static void throwThatInTheTrash(Integer loginID, Integer userID) {
@@ -398,9 +326,9 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
 
-    /*********************************
-    ***Generic data storage methods***
-    *********************************/
+    /*************************************************
+    ***Generic input/update/delete execution method***
+    *************************************************/
 
 
     public static void dontNeedThat(String sqlStatement) {
@@ -420,9 +348,9 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
 
-    /************************************
-    ***Generic data collection methods***
-    ************************************/
+    /*************************************
+    ***Generic select execution methods***
+    *************************************/
 
 
     public static String needThatString(String column, String sqlStatement) {
