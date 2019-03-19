@@ -1,10 +1,4 @@
-import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import static input.InputUtils.*;
@@ -12,72 +6,72 @@ import static input.InputUtils.*;
 public class WhoAreYouAndWhatDoYouWant {
     //TODO break methods down into more manageable units
 
-    public static String USERNAME;
+    private static String username;
+    private static Integer loginID;
+    private static Integer userID;
+    private static Integer ownerID;
+    private static String password;
+    private static String salt;
+    private static String hashedPassword;
+    private static String email;
+    private static String locationName;
+    private static Integer locationID;
+    private static Integer drinkID;
+    private static Integer ingredientID;
 
     public static void main(String[] args) {
         boolean weHave = DontHopUnlessISaySo.haveWeMet();
         boolean quit = true;
-        USERNAME = "";
-        String password = "";
+        username = "";
+        password = "";
         // TODO get username and password if already signed in
 
         boolean newUser = yesNoInput("Are you a new member?");
 
         if (newUser) {
-            quit = pullUpAStool();
+            quit = createAccountLogin();
         }
 
         if (quit) {
             while (!weHave) {
-                USERNAME = stringInput("Enter your username:");
+                username = stringInput("Enter your username:");
                 password = stringInput("Enter your password:");
-                weHave = DontHopUnlessISaySo.whosThere(USERNAME, password);
+                weHave = DontHopUnlessISaySo.whosThere(username, password);
             }
         }
 
-        whatreYouHaving();
+        userOrOwner();
     }
 
-    public static void whatreYouHaving() {
-        String pubCrawl = doINeedATie();
-        if (pubCrawl.equals("pub")) {
-            whatCanIDoForYouMaster();
-        } else if (pubCrawl.equals("crawl")) {
-            whatDoYouWantPeasant();
+    private static void userOrOwner() {
+        Integer accountType = AllYourDatabaseAreBelongToDrunks.needThatAccountType(username);
+
+        if (accountType == 2) {
+            ownerMenu();
+        } else if (accountType == 1) {
+            userMenu();
         }
     }
 
-    public static String doINeedATie() {
-        Integer pubcrawl = AllYourDatabaseAreBelongToDrunks.needThatAccountType(USERNAME);
-
-        if (pubcrawl == 2) {
-            return "pub";
-        } else if (pubcrawl == 1) {
-            return "crawl";
-        } else {
-            return "failureasfsdf";
-        }
-    }
-
-    public static void IHateYou() {
-        Integer loginID = AllYourDatabaseAreBelongToDrunks.needThatCredentialID(USERNAME);
-        Integer userID = AllYourDatabaseAreBelongToDrunks.needThatUserID(USERNAME);
+    private static void deleteAccount() {
+        loginID = AllYourDatabaseAreBelongToDrunks.needThatCredentialID(username);
+        userID = AllYourDatabaseAreBelongToDrunks.needThatUserID(username);
         boolean response = yesNoInput("Awh, you wanna leave? Big baby got his feewings hurt?");
         if (response) {
             AllYourDatabaseAreBelongToDrunks.throwThatInTheTrash(loginID, userID);
         }
     }
 
-    public static boolean pullUpAStool() {
+    private static boolean createAccountLogin() {
         Integer alreadyChosen = 666;
-        String potatoes = "";
-        boolean hotOrCold = yesNoInput("You a corporate fat cat?");
+        password = "";
+        boolean owner = yesNoInput("You a corporate fat cat?");
         boolean quit = false;
 
         while (alreadyChosen != 0) {
-            USERNAME = stringInput("Username. Gimme.");
-            potatoes = stringInput("Oy. Password, guvna!");
-            alreadyChosen = AllYourDatabaseAreBelongToDrunks.needThatAccountType(USERNAME);
+            username = stringInput("Username. Gimme.");
+            password = stringInput("Oy. Password, guvna!");
+            alreadyChosen = AllYourDatabaseAreBelongToDrunks.needThatAccountType(username);
             if (alreadyChosen != 0) {
                 boolean decision = yesNoInput("Username already chosen. Would you like to sign in?");
                 if (decision) {
@@ -88,44 +82,52 @@ public class WhoAreYouAndWhatDoYouWant {
         }
 
         if (!quit) {
-            String email = stringInput("Now the email.");
+            email = stringInput("Now the email.");
 
-            while (!itsCalledEmailGrandpa(email)) {
+            while (!isValidEmail(email)) {
                 email = stringInput("Wrong. Try again.");
             }
 
-            String seasoning = DontHopUnlessISaySo.worthYourWeightInEncryption();
-            String saltyHashBrowns = DontHopUnlessISaySo.nothingCuresAHangoverLikeATastyPassword(potatoes, seasoning);
+            salt = DontHopUnlessISaySo.worthYourWeightInEncryption();
+            hashedPassword = DontHopUnlessISaySo.nothingCuresAHangoverLikeATastyPassword(password, salt);
 
-            Integer ID = AllYourDatabaseAreBelongToDrunks.whoAreYou(hotOrCold, USERNAME, email, saltyHashBrowns, seasoning);
+            loginID = AllYourDatabaseAreBelongToDrunks.whoAreYou(owner, username, email, hashedPassword, salt);
 
-            if (!hotOrCold) {
-                String firstName = stringInput("What's your first name? It's Douche, isn't it?");
-                String lastName = stringInput("Last name, Bag.");
-
-                AllYourDatabaseAreBelongToDrunks.greetingsFriend(firstName, lastName, ID);
-
-                yourePrettyPickyArentYou(true);
+            if (owner) {
+                createOwnerAccount();
             } else {
-                String firstName = stringInput("What's your first, sir");
-                String lastName = stringInput("And your surname?");
-                Double contactNumber = Double.valueOf(stringInput(("What number can we contact you at? (0005550000)")));
-                String contactEmail = email;
-                if (!yesNoInput("Can we contact you at the email address previously provided?")) {
-                    contactEmail = stringInput("What email address would you like to use for correspondence?");
-                    while (!itsCalledEmailGrandpa(contactEmail)) {
-                        contactEmail = stringInput("Invalid email address. Please enter another.");
-                    }
-                }
-                AllYourDatabaseAreBelongToDrunks.helloBoss(ID, firstName, lastName, contactNumber, contactEmail);
-
-                whatCanIDoForYouMaster();
+                createUserAccount();
             }
         }
         return quit;
     }
 
-    public static boolean itsCalledEmailGrandpa(String email) {
+    private static void createUserAccount() {
+        String firstName = stringInput("What's your first name? It's Douche, isn't it?");
+        String lastName = stringInput("Last name, Bag.");
+
+        AllYourDatabaseAreBelongToDrunks.greetingsFriend(firstName, lastName, loginID);
+
+        getUserPreferences(true);
+    }
+
+    private static void createOwnerAccount() {
+        String firstName = stringInput("What's your first, sir");
+        String lastName = stringInput("And your surname?");
+        Double contactNumber = Double.valueOf(stringInput(("What number can we contact you at? (0005550000)")));
+        String contactEmail = email;
+        if (!yesNoInput("Can we contact you at the email address previously provided?")) {
+            contactEmail = stringInput("What email address would you like to use for correspondence?");
+            while (!isValidEmail(contactEmail)) {
+                contactEmail = stringInput("Invalid email address. Please enter another.");
+            }
+        }
+        AllYourDatabaseAreBelongToDrunks.helloBoss(loginID, firstName, lastName, contactNumber, contactEmail);
+
+        ownerMenu();
+    }
+
+    private static boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
@@ -137,7 +139,7 @@ public class WhoAreYouAndWhatDoYouWant {
         return pat.matcher(email).matches();
     }
 
-    public static void yourePrettyPickyArentYou(boolean firstTime) {
+    private static void getUserPreferences(boolean firstTime) {
         ArrayList<String> allergies = new ArrayList<>();
 
         if (firstTime) {
@@ -155,28 +157,75 @@ public class WhoAreYouAndWhatDoYouWant {
         boolean deepPockets = !yesNoInput("You broke, homie?");
         boolean youFancy = yesNoInput("You a fan of mixology?");
 
-        AllYourDatabaseAreBelongToDrunks.youGotSomeWeirdKinks(USERNAME, allergies, topShelf, bottomShelf, weakOrStrong, deepPockets, youFancy);
+        AllYourDatabaseAreBelongToDrunks.youGotSomeWeirdKinks(username, allergies, topShelf, bottomShelf, weakOrStrong, deepPockets, youFancy);
     }
 
-    public static void whatCanIDoForYouMaster() {
-        Integer loginID = AllYourDatabaseAreBelongToDrunks.needThatOwnerLoginID(USERNAME);
-        Integer ownerID = AllYourDatabaseAreBelongToDrunks.needThatOwnerID(loginID);
+    private static void userMenu() {
+        //TODO finish user menu
+        String decision = stringInput("What you want? Drink, account, home?");
+        if (decision.equals("drink")) {
+//            HopThoseBars.letsGetLit();
+        } else if (decision.equals("account")) {
+            String otherDecision = stringInput("Change it or delete it?");
+            if (otherDecision.equals("change")) {
+                changeUserSettings();
+            } else if (otherDecision.equals("delete")) {
+                deleteAccount();
+            }
+        } else if (decision.equals("home")) {
+//            HopThoseBars.seeYouAround();
+        }
+        //TODO loop the menu
+    }
+
+    private static void changeUserSettings() {
+        do {
+            String toBeUpdated = stringInput("Change email, name, username, password, or preferences?");
+            String newInfo = "";
+
+            if (toBeUpdated.equals("preferences")) {
+                getUserPreferences(false);
+            } else if (toBeUpdated.equals("email")) {
+                newInfo = stringInput("New email?");
+                while (!isValidEmail(newInfo)) {
+                    newInfo = stringInput("Wrong. Try again.");
+                }
+                toBeUpdated = "Email_Address";
+            } else if (toBeUpdated.equals("name")) {
+                newInfo = stringInput("New name?");
+            } else if (toBeUpdated.equals("username")) {
+                newInfo = stringInput("New username?");
+            } else if (toBeUpdated.equals("password")) {
+                String newPassword = stringInput("New password?");
+                String salt = AllYourDatabaseAreBelongToDrunks.needThatSalt(username);
+                newInfo = DontHopUnlessISaySo.nothingCuresAHangoverLikeATastyPassword(newPassword, salt);
+            }
+
+            AllYourDatabaseAreBelongToDrunks.makeUpYourMindAlready(toBeUpdated, newInfo, username);
+        } while (!yesNoInput("You done yet?"));
+
+        System.out.println("Bout time.");
+    }
+
+    private static void ownerMenu() {
+        loginID = AllYourDatabaseAreBelongToDrunks.needThatOwnerLoginID(username);
+        ownerID = AllYourDatabaseAreBelongToDrunks.needThatOwnerID(loginID);
         String decision = stringInput("Does master want the account, location or drink settings?");
         if (decision.equals("account")) {
             String otherDecision = stringInput("Delete or change account?");
             if (otherDecision.equals("delete")) {
-                IHateYou();
+                deleteAccount();
             } else if (otherDecision.equals("change")) {
-                youveLostWeight();
+                changeOwnerSettings();
             }
         } else if (decision.equals("location")) {
-            whereAmI(ownerID);
+            ownerLocationsMenu();
         } else if (decision.equals("drink")) {
-            whatWasThat(ownerID);
+            ownerDrinksMenu();
         }
     }
 
-    public static void youveLostWeight() {
+    private static void changeOwnerSettings() {
         do {
             String toBeUpdated = stringInput("Change email, username, password, name, contact number or contact email?");
             String newInfo = "";
@@ -188,7 +237,7 @@ public class WhoAreYouAndWhatDoYouWant {
                 newInfo = stringInput("New username?");
             } else if (toBeUpdated.equals("password")) {
                 String newPassword = stringInput("New password?");
-                String salt = AllYourDatabaseAreBelongToDrunks.needThatSalt(USERNAME);
+                String salt = AllYourDatabaseAreBelongToDrunks.needThatSalt(username);
                 newInfo = DontHopUnlessISaySo.nothingCuresAHangoverLikeATastyPassword(newPassword, salt);
             } else if (toBeUpdated.equals("name")) {
                 newInfo = stringInput("New name?");
@@ -198,12 +247,12 @@ public class WhoAreYouAndWhatDoYouWant {
             } else if (toBeUpdated.equals("contact email")) {
                 newInfo = stringInput("New contact email?");
                 toBeUpdated = "Contact_Email";
-                while (!itsCalledEmailGrandpa(newInfo)) {
+                while (!isValidEmail(newInfo)) {
                     newInfo = stringInput("Invalid email address. Please enter another.");
                 }
             }
 
-            AllYourDatabaseAreBelongToDrunks.itsAnHonorToGetToKnowYou(toBeUpdated, newInfo, USERNAME);
+            AllYourDatabaseAreBelongToDrunks.itsAnHonorToGetToKnowYou(toBeUpdated, newInfo, username);
         } while (yesNoInput("Do you still require assistance, sir?"));
 
         System.out.println("It's been a pleasure.");
@@ -211,47 +260,47 @@ public class WhoAreYouAndWhatDoYouWant {
 
 
 
-    public static void whereAmI(Integer ownerID) {
+    private static void ownerLocationsMenu() {
         String decision = stringInput("Create, update, delete or review locations?");
 
         if (decision.equals("create")) {
-            locationCreation(ownerID);
+            createLocation();
+            createLocationCalendar();
         } else {
-            String otherDecision = stringInput(decision + " location information or hours of operation (location or hours).");
+            String otherDecision = stringInput("Would you like to " + decision + " location information or hours of operation (location or hours).");
             ArrayList<String> locations = AllYourDatabaseAreBelongToDrunks.needThoseLocations(ownerID);
             for (String location : locations) {
                 System.out.println(location);
             }
-            String locationName = stringInput("Which location would you like to " + decision + "?");
-            Integer locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
+            locationName = stringInput("Which location would you like to " + decision + "?");
+            locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
 
             if (decision.equals("update")) {
-                locationUpdation(otherDecision, locationID);
-            } else if (decision.equals("delete")) {
-                boolean confirmed = yesNoInput("Are you sure you want to delete this location and its corresponding data?");
-                if (confirmed) {
-                    AllYourDatabaseAreBelongToDrunks.thanksForStoppingBy(locationID);
-                }
-            } else if (decision.equals("review")) {
                 if (otherDecision.equals("location")) {
-                    AllYourDatabaseAreBelongToDrunks.needThatLocationData(locationID);
+                    updateLocation();
                 } else if (otherDecision.equals("hours")) {
-                    AllYourDatabaseAreBelongToDrunks.needThatHourData(locationID);
+                    updateHours();
                 }
+            } else if (decision.equals("delete")) {
+                deleteLocation();
+            } else if (decision.equals("review")) {
+                reviewLocationData(otherDecision);
             }
         }
     }
 
-    public static void locationCreation(Integer ownerID) {
-        String name = stringInput("Location name?");
+    private static void createLocation() {
+        locationName = stringInput("Location name?");
         Double number = Double.valueOf(stringInput("Location phone number?"));
         String street = stringInput("Location street address?");
         String city = stringInput("Location city?");
         String state = stringInput("Location state?");
         Double zip = Double.valueOf(stringInput("Location zip code?"));
 
-        AllYourDatabaseAreBelongToDrunks.welcomeToYourKingdom(ownerID, name, number, street, city, state, zip);
+        AllYourDatabaseAreBelongToDrunks.welcomeToYourKingdom(ownerID, locationName, number, street, city, state, zip);
+    }
 
+    private static void createLocationCalendar() {
         ArrayList<String> days = new ArrayList<>();
         ArrayList<String> openHours = new ArrayList<>();
         ArrayList<String> closeHours = new ArrayList<>();
@@ -287,39 +336,52 @@ public class WhoAreYouAndWhatDoYouWant {
             }
         }
 
-        Integer locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(name);
+        locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
         AllYourDatabaseAreBelongToDrunks.IDidntKnowKingdomsHadHours(locationID, days, openHours, closeHours, speHoursStart, speHoursEnd);
     }
 
-    public static void locationUpdation(String otherDecision, Integer locationID) {
-        if (otherDecision.equals("location")) {
-            AllYourDatabaseAreBelongToDrunks.needThatLocationData(locationID);
+    private static void updateLocation() {
+        AllYourDatabaseAreBelongToDrunks.needThatLocationData(locationID);
 
-            String informationType = stringInput("Would you like to update, name, phone_number, street, city, state or zip?");
-            String newStringData = stringInput("New " + informationType + "?");
-            Double newDoubleData;
+        String finalDecision = stringInput("Would you like to update, name, phone_number, street, city, state or zip?");
+        String newStringData = stringInput("New " + finalDecision + "?");
+        Double newDoubleData;
 
-            if (informationType.equals("phone_number") || informationType.equals("zip")) {
-                //TODO provide formatting if entering number or zip
-                newDoubleData = Double.valueOf(newStringData);
-                AllYourDatabaseAreBelongToDrunks.thanksForKeepingUsMovingDouble(informationType, newDoubleData, locationID);
-            } else {
-                AllYourDatabaseAreBelongToDrunks.thanksForKeepingUsMovingString(informationType, newStringData, locationID);
-            }
-        } else if (otherDecision.equals("hours")) {
-            AllYourDatabaseAreBelongToDrunks.needThatHourData(locationID);
-
-            String informationType = stringInput("Would you like to update time_open, time_close, specialty_hour_start or specialty_hour_end?");
-            String dayData = stringInput("For which day of the week?");
-            String newData = "";
-
-            newData = stringInput("New " + informationType + " for " + dayData + "? (HH:MM)");
-
-            AllYourDatabaseAreBelongToDrunks.thanksForStayingOpen(dayData, informationType, newData, locationID);
+        if (finalDecision.equals("phone_number") || finalDecision.equals("zip")) {
+            //TODO provide formatting if entering number or zip
+            newDoubleData = Double.valueOf(newStringData);
+            AllYourDatabaseAreBelongToDrunks.thanksForKeepingUsMovingDouble(finalDecision, newDoubleData, locationID);
+        } else {
+            AllYourDatabaseAreBelongToDrunks.thanksForKeepingUsMovingString(finalDecision, newStringData, locationID);
         }
     }
 
-    public static void whatWasThat(Integer ownerID) {
+    private static void updateHours() {
+        AllYourDatabaseAreBelongToDrunks.needThatHourData(locationID);
+
+        String finalDecision = stringInput("Would you like to update time_open, time_close, specialty_hour_start or specialty_hour_end?");
+        String dayOfWeek = stringInput("For which day of the week?");
+        String newData = stringInput("New " + finalDecision + " for " + dayOfWeek + "? (HH:MM)");
+
+        AllYourDatabaseAreBelongToDrunks.thanksForStayingOpen(dayOfWeek, finalDecision, newData, locationID);
+    }
+
+    private static void deleteLocation() {
+        boolean confirmed = yesNoInput("Are you sure you want to delete this location and its corresponding data?");
+        if (confirmed) {
+            AllYourDatabaseAreBelongToDrunks.thanksForStoppingBy(locationID);
+        }
+    }
+
+    private static void reviewLocationData(String otherDecision) {
+        if (otherDecision.equals("location")) {
+            AllYourDatabaseAreBelongToDrunks.needThatLocationData(locationID);
+        } else if (otherDecision.equals("hours")) {
+            AllYourDatabaseAreBelongToDrunks.needThatHourData(locationID);
+        }
+    }
+
+    private static void ownerDrinksMenu() {
         String decision = stringInput("Create, update, delete or review drinks?");
         if (decision.equals("create")) {
             String name = stringInput("What is this tasty concoction you have for us?");
@@ -357,15 +419,15 @@ public class WhoAreYouAndWhatDoYouWant {
             } while (yesNoInput("Is there another ingredient?"));
 
             AllYourDatabaseAreBelongToDrunks.thatSoundsDelicious(name, startDate, endDate, strength, price, specialtyPrice, complexity, spiritForwardOrRefreshing, type);
-            Integer drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(name);
+            drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(name);
             AllYourDatabaseAreBelongToDrunks.whatsInItThough(ingredients, drinkID);
         } else if (decision.equals("update")) {
             ArrayList<String> locations = AllYourDatabaseAreBelongToDrunks.needThoseLocations(ownerID);
             for (String location : locations) {
                 System.out.println(location);
             }
-            String locationName = stringInput("Which location would you like to update drinks for?");
-            Integer locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
+            locationName = stringInput("Which location would you like to update drinks for?");
+            locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
 
             AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
             ArrayList<String> drinks = AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
@@ -383,7 +445,7 @@ public class WhoAreYouAndWhatDoYouWant {
 
             if (optionChosen) {
                 String otherDecision = stringInput("Would you like to update " + drinkToUpdate + "'s ingredients, description or availability?");
-                Integer drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(drinkToUpdate);
+                drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(drinkToUpdate);
                 if (otherDecision.equals("ingredients")) {
                     String finaldecision = stringInput("Would you like to change or add an ingredient)");
                     if (finaldecision.equals("change")) {
@@ -457,8 +519,8 @@ public class WhoAreYouAndWhatDoYouWant {
             for (String location : locations) {
                 System.out.println(location);
             }
-            String locationName = stringInput("Which location would you like to delete a drink from?");
-            Integer locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
+            locationName = stringInput("Which location would you like to delete a drink from?");
+            locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
 
             AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
             ArrayList<String> drinks = AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
@@ -473,7 +535,7 @@ public class WhoAreYouAndWhatDoYouWant {
                     break;
                 }
             }
-            Integer drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(drinkToDelete);
+            drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(drinkToDelete);
 
             if (otherDecision.equals("drink")) {
                 if (optionChosen) {
@@ -487,7 +549,7 @@ public class WhoAreYouAndWhatDoYouWant {
                     }
 
                     String toBeDeleted = stringInput("Which ingredient would you like to delete?");
-                    Integer ingredientID = AllYourDatabaseAreBelongToDrunks.needThatIngredientID(toBeDeleted);
+                    ingredientID = AllYourDatabaseAreBelongToDrunks.needThatIngredientID(toBeDeleted);
                     AllYourDatabaseAreBelongToDrunks.thatTastesGrossInThis(drinkID, ingredientID);
                 }
             }
@@ -497,8 +559,8 @@ public class WhoAreYouAndWhatDoYouWant {
             for (String location : locations) {
                 System.out.println(location);
             }
-            String locationName = stringInput("Which location would you like to delete a drink from?");
-            Integer locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
+            locationName = stringInput("Which location would you like to delete a drink from?");
+            locationID = AllYourDatabaseAreBelongToDrunks.needThatLocationID(locationName);
 
             AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
             ArrayList<String> drinks = AllYourDatabaseAreBelongToDrunks.needThoseDrinks(locationID);
@@ -513,7 +575,7 @@ public class WhoAreYouAndWhatDoYouWant {
                     break;
                 }
             }
-            Integer drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(drinkToReview);
+            drinkID = AllYourDatabaseAreBelongToDrunks.needThatDrinkID(drinkToReview);
             if (optionChosen) {
                 String finalDecision = stringInput("Would you like to review ingredients or data?");
                 if (finalDecision.equals("ingredients")) {
@@ -538,52 +600,5 @@ public class WhoAreYouAndWhatDoYouWant {
                 }
             }
         }
-    }
-
-    public static void whatDoYouWantPeasant() {
-        //TODO finish user menu
-        String decision = stringInput("What you want? Drink, account, home?");
-        if (decision.equals("drink")) {
-//            HopThoseBars.letsGetLit();
-        } else if (decision.equals("account")) {
-            String otherDecision = stringInput("Change it or delete it?");
-            if (otherDecision.equals("change")) {
-                youvePutOnAFewPounds();
-            } else if (otherDecision.equals("delete")) {
-                IHateYou();
-            }
-        } else if (decision.equals("home")) {
-//            HopThoseBars.seeYouAround();
-        }
-        //TODO loop the menu
-    }
-
-    public static void youvePutOnAFewPounds() {
-        do {
-            String toBeUpdated = stringInput("Change email, name, username, password, or preferences?");
-            String newInfo = "";
-
-            if (toBeUpdated.equals("preferences")) {
-                yourePrettyPickyArentYou(false);
-            } else if (toBeUpdated.equals("email")) {
-                newInfo = stringInput("New email?");
-                while (!itsCalledEmailGrandpa(newInfo)) {
-                    newInfo = stringInput("Wrong. Try again.");
-                }
-                toBeUpdated = "Email_Address";
-            } else if (toBeUpdated.equals("name")) {
-                newInfo = stringInput("New name?");
-            } else if (toBeUpdated.equals("username")) {
-                newInfo = stringInput("New username?");
-            } else if (toBeUpdated.equals("password")) {
-                String newPassword = stringInput("New password?");
-                String salt = AllYourDatabaseAreBelongToDrunks.needThatSalt(USERNAME);
-                newInfo = DontHopUnlessISaySo.nothingCuresAHangoverLikeATastyPassword(newPassword, salt);
-            }
-
-            AllYourDatabaseAreBelongToDrunks.makeUpYourMindAlready(toBeUpdated, newInfo, USERNAME);
-        } while (!yesNoInput("You done yet?"));
-
-        System.out.println("Bout time.");
     }
 }
