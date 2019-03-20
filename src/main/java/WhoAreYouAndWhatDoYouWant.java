@@ -109,6 +109,7 @@ public class WhoAreYouAndWhatDoYouWant {
         AllYourDatabaseAreBelongToDrunks.greetingsFriend(firstName, lastName, loginID);
 
         getUserPreferences(true);
+        setBaseUserPreferences();
     }
 
     public static void createOwnerAccount() {
@@ -161,6 +162,33 @@ public class WhoAreYouAndWhatDoYouWant {
                 "Login_Credentials", "Username", username);
         AllYourDatabaseAreBelongToDrunks.youGotSomeWeirdKinks(userID, allergies, topShelf, bottomShelf, weakOrStrong,
                 deepPockets, youFancy);
+    }
+
+    public static void setBaseUserPreferences() {
+        checkPreferenceSetup();
+        Integer userID = AllYourDatabaseAreBelongToDrunks.selectInteger("User_ID", "Users",
+                "Login_Credential_ID", loginID);
+        for (int i = 1; i < 12; i++) {
+            AllYourDatabaseAreBelongToDrunks.youHaveNoPersonalityWhatsoever(i, userID);
+        }
+    }
+
+    public static void checkPreferenceSetup() {
+        Integer preferenceID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Preference_ID",
+                "Preferences", "Type", "drink");
+        if (preferenceID == 0) {
+            AllYourDatabaseAreBelongToDrunks.youreSayingPeopleLikeThat("Alcohol content", "drink");
+            AllYourDatabaseAreBelongToDrunks.youreSayingPeopleLikeThat("Price", "drink");
+            AllYourDatabaseAreBelongToDrunks.youreSayingPeopleLikeThat("Complexity", "drink");
+            AllYourDatabaseAreBelongToDrunks.youreSayingPeopleLikeThat("Spirit forward", "drink");
+            AllYourDatabaseAreBelongToDrunks.youreSayingPeopleLikeThat("Refreshing", "drink");
+            AllYourDatabaseAreBelongToDrunks.youreSayingPeopleLikeThat("Type 1.1", "drink");
+            AllYourDatabaseAreBelongToDrunks.youreSayingPeopleLikeThat("Type 1.2", "drink");
+            AllYourDatabaseAreBelongToDrunks.youreSayingPeopleLikeThat("Type 1.3", "drink");
+            AllYourDatabaseAreBelongToDrunks.youreSayingPeopleLikeThat("Type 2.1", "drink");
+            AllYourDatabaseAreBelongToDrunks.youreSayingPeopleLikeThat("Type 2.2", "drink");
+            AllYourDatabaseAreBelongToDrunks.youreSayingPeopleLikeThat("Type 2.3", "drink");
+        }
     }
 
     public static void userMenu() {

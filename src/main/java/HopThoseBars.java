@@ -176,8 +176,6 @@ public class HopThoseBars {
         Integer type = AllYourDatabaseAreBelongToDrunks.selectInteger("Type", "Drinks",
                 "Drink_ID", drinkID);
 
-        //TODO check if drink data is already defined by system
-        //TODO if not defined, add with base value to the system defined preferences table
         //TODO alter system values
     }
 

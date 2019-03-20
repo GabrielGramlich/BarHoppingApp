@@ -135,6 +135,12 @@ public class AllYourDatabaseAreBelongToDrunks {
         dontNeedThat(sqlStatement);
     }
 
+    public static void youHaveNoPersonalityWhatsoever(Integer preferenceID, Integer userID) {
+        String sqlStatement = "INSERT INTO System_Defined_Preferences (Preference_ID, User_ID, Variable) VALUES("
+                + preferenceID + ", " + userID + ", 5;";
+        dontNeedThat(sqlStatement);
+    }
+
 
     /**********************************************
     ***Generic update statement creation methods***
