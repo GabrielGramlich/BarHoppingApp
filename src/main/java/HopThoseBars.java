@@ -118,29 +118,32 @@ public class HopThoseBars {
     public static ArrayList<Integer> getAllergenFreeDrinks(ArrayList<Integer> startingDrinks) {
         ArrayList<Integer> allergenFreeDrinks = new ArrayList<>();
         ArrayList<Integer> allergies = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Allergy_ID", "User_Allergies", "User_ID", userID);
-        ArrayList<String> allergens = new ArrayList<>();
+        if (!allergies.isEmpty()) {
+            ArrayList<String> allergens = new ArrayList<>();
 
-        for (Integer allergy : allergies) {
-            allergens.add(AllYourDatabaseAreBelongToDrunks.selectString("Name", "Allergies", "Allergy_ID", allergy));
-        }
+            for (Integer allergy : allergies) {
+                allergens.add(AllYourDatabaseAreBelongToDrunks.selectString("Name", "Allergies", "Allergy_ID", allergy));
+            }
 
-        for (Integer drink : startingDrinks) {
-            boolean hasAllergen = false;
-            ArrayList<Integer> recipe = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Ingredient_ID", "Recipes", "Drink_ID", drink);
-            for (Integer ingredient : recipe ) {
-                String name = AllYourDatabaseAreBelongToDrunks.selectString("Name", "Ingredients", "Ingredient_ID", ingredient);
-                for (String allergen : allergens) {
-                    if (name.equals(allergen)) {
-                        hasAllergen = true;
+            for (Integer drink : startingDrinks) {
+                boolean hasAllergen = false;
+                ArrayList<Integer> recipe = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Ingredient_ID", "Recipes", "Drink_ID", drink);
+                for (Integer ingredient : recipe) {
+                    String name = AllYourDatabaseAreBelongToDrunks.selectString("Name", "Ingredients", "Ingredient_ID", ingredient);
+                    for (String allergen : allergens) {
+                        if (name.equals(allergen)) {
+                            hasAllergen = true;
+                        }
                     }
                 }
+                if (!hasAllergen) {
+                    allergenFreeDrinks.add(drink);
+                }
             }
-            if (!hasAllergen) {
-                allergenFreeDrinks.add(drink);
-            }
+            return allergenFreeDrinks;
+        } else {
+            return startingDrinks;
         }
-
-        return allergenFreeDrinks;
     }
 
     public static ArrayList<Integer> getAlmostRightDrinks(ArrayList<Integer> allergenFreeDrinks) {
