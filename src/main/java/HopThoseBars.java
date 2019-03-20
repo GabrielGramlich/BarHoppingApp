@@ -84,7 +84,7 @@ public class HopThoseBars {
         ArrayList<Integer> rightDrinks = getRightDrinks(almostRightDrinks);
 
         Random rand = new Random();
-        int randInt = rand.nextInt(rightDrinks.size());
+        int randInt = rand.nextInt(rightDrinks.size() - 1);
 
         drinkID = rightDrinks.get(randInt);
         String drinkName = AllYourDatabaseAreBelongToDrunks.selectString("Name", "Drinks",

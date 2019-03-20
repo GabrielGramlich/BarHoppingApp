@@ -13,7 +13,7 @@ public class DontHopUnlessISaySo {
     }
 
     public static boolean whosThere (String username, String potatoes) {
-        boolean iBelieveYou;
+        boolean youLiar;
 
         String seasoning = AllYourDatabaseAreBelongToDrunks.selectStringWithString("Salt",
                 "Login_Credentials", "Username", username);
@@ -23,12 +23,12 @@ public class DontHopUnlessISaySo {
         String saltyHashBrowns = nothingCuresAHangoverLikeATastyPassword(potatoes, seasoning);
 
         if (saltyHashBrowns.equals(databaseCredentials)) {
-            iBelieveYou = true;
+            youLiar = false;
         } else {
-            iBelieveYou = false;
+            youLiar = true;
         }
 
-        return iBelieveYou;
+        return youLiar;
     }
 
     public static String nothingCuresAHangoverLikeATastyPassword(String potatoes, String seasoning) {

@@ -53,7 +53,7 @@ public class AllYourDatabaseAreBelongToDrunks {
                 + "\", \"" + salt + "\");";
         dontNeedThat(insertDataSql);
 
-        Integer credentialsID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_ID",
+        Integer credentialsID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_Credential_ID",
                 "Login_Credentials", "Username", username);
         return credentialsID;
     }
@@ -95,47 +95,50 @@ public class AllYourDatabaseAreBelongToDrunks {
 
     public static void youGotSomeWeirdKinks(Integer userID, ArrayList<String> allergies, String topShelf,
                                             boolean weakOrStrong, boolean deepPockets, boolean youFancy) {
-        for (String allergy : allergies) {
-            Integer allergyID = selectIntegerWithString("Allergy_ID", "Allergies",
-                    "Name", allergy);
-
-            if (allergyID == 0) {
-                String sqlStatement = "INSERT INTO Allergies (Name) VALUES(\"" + allergy + "\");";
-                dontNeedThat(sqlStatement);
-                allergyID = selectIntegerWithString("Allergy_ID", "Allergies",
+        if (!allergies.isEmpty()) {
+            for (String allergy : allergies) {
+                Integer allergyID = selectIntegerWithString("Allergy_ID", "Allergies",
                         "Name", allergy);
-            }
 
-            String sqlStatement = "INSERT INTO User_Allergies (Allergy_ID, User_ID) VALUES(" + allergyID + ", "
-                    + userID + ");";
-            dontNeedThat(sqlStatement);
+                if (allergyID == 0) {
+                    String sqlStatement = "INSERT INTO Allergies (Name) VALUES(\"" + allergy + "\");";
+                    dontNeedThat(sqlStatement);
+                    allergyID = selectIntegerWithString("Allergy_ID", "Allergies",
+                            "Name", allergy);
+                }
+
+                String sqlStatement = "INSERT INTO User_Allergies (Allergy_ID, User_ID) VALUES(" + allergyID + ", "
+                        + userID + ");";
+                dontNeedThat(sqlStatement);
+            }
         }
 
         String sqlStatement = "INSERT INTO User_Defined_Preferences (User_ID, Preferred_Liquor, " +
-                "Weak_or_Strong, Cheap_or_Pricey, Simple_or_Complex) VALUES(" + userID + ", \"" + topShelf + "\", " + weakOrStrong + ", " + deepPockets + ", " + youFancy + ");";
+                "Weak_or_Strong, Cheap_or_Pricey, Simple_or_Complex) VALUES(" + userID + ", \"" + topShelf + "\", "
+                + weakOrStrong + ", " + deepPockets + ", " + youFancy + ");";
         dontNeedThat(sqlStatement);
     }
 
     public static void wasItGood(Integer userID, Integer drinkID, Integer rating) {
         String sqlStatement = "INSERT INTO Drink_Preferences (User_ID, Drink_ID, Rating) VALUES(" + userID + ", "
-                + drinkID + ", " + rating + ";";
+                + drinkID + ", " + rating + ");";
         dontNeedThat(sqlStatement);
     }
 
     public static void youreSayingPeopleLikeThat(String name, String type) {
-        String sqlStatement = "INSERT INTO Preferences (Name, Type) VALUES(\"" + name + "\", \"" + type + "\";";
+        String sqlStatement = "INSERT INTO Preferences (Name, Type) VALUES(\"" + name + "\", \"" + type + "\");";
         dontNeedThat(sqlStatement);
     }
 
     public static void youreOpinionIsWrong(Integer preferenceID, Integer userID, Double variable) {
         String sqlStatement = "INSERT INTO System_Defined_Preferences (Preference_ID, User_ID, Variable) VALUES("
-                + preferenceID + ", " + userID + ", " + variable + ";";
+                + preferenceID + ", " + userID + ", " + variable + ");";
         dontNeedThat(sqlStatement);
     }
 
     public static void youHaveNoPersonalityWhatsoever(Integer preferenceID, Integer userID) {
         String sqlStatement = "INSERT INTO System_Defined_Preferences (Preference_ID, User_ID, Variable) VALUES("
-                + preferenceID + ", " + userID + ", 5.0;";
+                + preferenceID + ", " + userID + ", 5.0);";
         dontNeedThat(sqlStatement);
     }
 
@@ -249,20 +252,20 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
     public static Double selectLowestDouble(String column, String table) {
-        String sqlStatement = "SELECT MIN(" + column + ") FROM " + table + ")";
-        Double minValue = needThatDouble(column, sqlStatement);
+        String sqlStatement = "SELECT MIN(" + column + ") FROM " + table + ";";
+        Double minValue = needThatDouble("MIN(" + column + ")", sqlStatement);
         return minValue;
     }
 
     public static Double selectHighestDouble(String column, String table) {
-        String sqlStatement = "SELECT MAX(" + column + ") FROM " + table + ")";
-        Double maxValue = needThatDouble(column, sqlStatement);
+        String sqlStatement = "SELECT MAX(" + column + ") FROM " + table + ";";
+        Double maxValue = needThatDouble("MAX(" + column + ")", sqlStatement);
         return maxValue;
     }
 
     public static Double selectAverageDouble(String column, String table) {
-        String sqlStatement = "SELECT AVG(" + column + ") FROM " + table + ")";
-        Double maxValue = needThatDouble(column, sqlStatement);
+        String sqlStatement = "SELECT AVG(" + column + ") FROM " + table + ";";
+        Double maxValue = needThatDouble("AVG(" + column + ")", sqlStatement);
         return maxValue;
     }
 

@@ -31,12 +31,15 @@ public class WhoAreYouAndWhatDoYouWant {
         }
 
         while (!weHave) {
-            if (quit) {
+            while (quit) {
                 username = stringInput("Enter your username:");
                 password = stringInput("Enter your password:");
-                weHave = DontHopUnlessISaySo.whosThere(username, password);
+                quit = DontHopUnlessISaySo.whosThere(username, password);
             }
+            weHave = true;
         }
+
+        loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_Credential_ID", "Login_Credentials", "Username", username);
         userOrOwner();
     }
 
@@ -52,14 +55,14 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     public static void deleteAccount() {
-        loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_ID",
+        loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_Credential_ID",
                 "Login_Credentials", "Username", username);
         Integer userID = AllYourDatabaseAreBelongToDrunks.selectInteger("User_ID", "Users",
                 "Login_Credential_ID", loginID);
         boolean response = yesNoInput("Awh, you wanna leave? Big baby got his feewings hurt?");
         if (response) {
             AllYourDatabaseAreBelongToDrunks.delete("Users", "User_ID", userID);
-            AllYourDatabaseAreBelongToDrunks.delete("Login_Credentials", "Login_ID", loginID);
+            AllYourDatabaseAreBelongToDrunks.delete("Login_Credentials", "Login_Credential_ID", loginID);
         }
     }
 
@@ -126,8 +129,6 @@ public class WhoAreYouAndWhatDoYouWant {
             }
         }
         AllYourDatabaseAreBelongToDrunks.helloBoss(loginID, firstName, lastName, contactNumber, contactEmail);
-
-        ownerMenu();
     }
 
     public static boolean isValidEmail(String email) {
@@ -159,8 +160,8 @@ public class WhoAreYouAndWhatDoYouWant {
         boolean deepPockets = !yesNoInput("You broke, homie?");
         boolean youFancy = yesNoInput("You a fan of mixology?");
 
-        Integer userID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("User_ID",
-                "Login_Credentials", "Username", username);
+        Integer userID = AllYourDatabaseAreBelongToDrunks.selectInteger("User_ID",
+                "Users", "Login_Credential_ID", loginID);
         AllYourDatabaseAreBelongToDrunks.youGotSomeWeirdKinks(userID, allergies, topShelf, weakOrStrong,
                 deepPockets, youFancy);
     }
@@ -176,7 +177,7 @@ public class WhoAreYouAndWhatDoYouWant {
 
     public static void checkPreferenceSetup() {
         Integer preferenceID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Preference_ID",
-                "Preferences", "Type", "drink");
+                "Preferences", "Name", "Alcohol content");
         if (preferenceID == 0) {
             AllYourDatabaseAreBelongToDrunks.youreSayingPeopleLikeThat("Alcohol content", "drink");
             AllYourDatabaseAreBelongToDrunks.youreSayingPeopleLikeThat("Price", "drink");
@@ -244,7 +245,7 @@ public class WhoAreYouAndWhatDoYouWant {
             }
 
             if (toBeUpdated.equals("name")) {
-                loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_ID",
+                loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_Credential_ID",
                         "Login_Credentials", "Username", username);
                 Integer userID = AllYourDatabaseAreBelongToDrunks.selectInteger("User_ID", "Users",
                         "Login_Credential_ID", loginID);
@@ -257,10 +258,10 @@ public class WhoAreYouAndWhatDoYouWant {
                 AllYourDatabaseAreBelongToDrunks.updateString("Users", "Last_Name", last,
                         "User_ID", userID);
             } else {
-                Integer loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_ID",
+                Integer loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_Credential_ID",
                         "Login_Credentials", "Username", username);
                 AllYourDatabaseAreBelongToDrunks.updateString("Login_Credentials", toBeUpdated, newInfo,
-                        "Login_ID", loginID);
+                        "Login_Credential_ID", loginID);
             }
         } while (!yesNoInput("You done yet?"));
 
@@ -272,7 +273,7 @@ public class WhoAreYouAndWhatDoYouWant {
         boolean leave = false;
 
         while (go) {
-            loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_ID",
+            loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_Credential_ID",
                     "Login_Credentials", "Username", username);
             ownerID = AllYourDatabaseAreBelongToDrunks.selectInteger("Owner_ID", "Owners",
                     "Login_Credential_ID", loginID);
@@ -327,7 +328,7 @@ public class WhoAreYouAndWhatDoYouWant {
                 }
             }
 
-            loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_ID",
+            loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_Credential_ID",
                     "Login_Credentials", "Username", username);
             Integer ownerID = AllYourDatabaseAreBelongToDrunks.selectInteger("Owner_ID", "Owners",
                     "Login_Credential_ID", loginID);
