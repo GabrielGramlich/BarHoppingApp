@@ -8,22 +8,20 @@ import java.util.Random;
 import static input.InputUtils.*;
 
 public class HopThoseBars {
+    //TODO Comment your code, you dick
+
     public static Integer howMuchHaveYouHad = 0;
     public static LocalDateTime startGettingDrunkTime = null;
     public static Integer LIMIT = 3;
-
     public static Integer userID;
     public static ArrayList<String> drinks = new ArrayList<>();
     public static ArrayList<Integer> locations = new ArrayList<>();
-
     public static String preferredLiquor;
     public static boolean strongPreference;
     public static boolean priceyPreference;
     public static boolean complexPreference;
-
     public static boolean spiritForwardOrRefreshing;
     public static Integer type;
-
     public static Integer rating;
     public static Integer drinkID;
 
@@ -39,9 +37,9 @@ public class HopThoseBars {
             spiritForwardOrRefreshing = yesNoInput("Would you like something spirit forward (N), " +
                     "or refreshing (Y)?");
             if (spiritForwardOrRefreshing) {
-                type = intInput("Would you prefer type (1), type2 (2), or type3 (3)?");
+                type = intInput("Would you prefer type1 (1), type2 (2), or type3 (3)?");
             } else {
-                type = intInput("Would you prefer type (1), type2 (2), or type3 (3)?");
+                type = intInput("Would you prefer type1 (1), type2 (2), or type3 (3)?");
             }
 
             pickingYourPoison();
@@ -78,8 +76,10 @@ public class HopThoseBars {
     }
 
     public static void pickingYourPoison() {
+//        ArrayList<Integer> localDrinks = getLocalDrinks();
         ArrayList<Integer> startingDrinks = getStartingDrinks();
-        ArrayList<Integer> almostRightDrinks = getAlmostRightDrinks(startingDrinks);
+        ArrayList<Integer> allergenFreeDrinks = getAllergenFreeDrinks(startingDrinks);
+        ArrayList<Integer> almostRightDrinks = getAlmostRightDrinks(allergenFreeDrinks);
         ArrayList<Integer> rightDrinks = getRightDrinks(almostRightDrinks);
 
         Random rand = new Random();
@@ -91,6 +91,11 @@ public class HopThoseBars {
 
         letMeCheckInTheBack(drinkName);
     }
+
+//    public static ArrayList<Integer> getLocalDrinks() {
+//        //TODO get input on where the user is drinking
+//        //TODO get drinks in that area
+//    }
 
     public static ArrayList<Integer> getStartingDrinks() {
         ArrayList<Integer> tempDrinksBoolean = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayListWithBoolean(
@@ -110,10 +115,44 @@ public class HopThoseBars {
         return startingDrinks;
     }
 
-    public static ArrayList<Integer> getAlmostRightDrinks(ArrayList<Integer> startingDrinks) {
-        Double sdpAlcoholContent = AllYourDatabaseAreBelongToDrunks.selectDoubleWithSecondaryKey("Variable", "System_Defined_Preferences", "Preference_ID", 1, "User_ID", userID);
-        Double sdpPrice = AllYourDatabaseAreBelongToDrunks.selectDoubleWithSecondaryKey("Variable", "System_Defined_Preferences", "Preference_ID", 2, "User_ID", userID);
-        Double sdpComplexity = AllYourDatabaseAreBelongToDrunks.selectDoubleWithSecondaryKey("Variable", "System_Defined_Preferences", "Preference_ID", 3, "User_ID", userID);
+    public static ArrayList<Integer> getAllergenFreeDrinks(ArrayList<Integer> startingDrinks) {
+        ArrayList<Integer> allergenFreeDrinks = new ArrayList<>();
+        ArrayList<Integer> allergies = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Allergy_ID", "User_Allergies", "User_ID", userID);
+        ArrayList<String> allergens = new ArrayList<>();
+
+        for (Integer allergy : allergies) {
+            allergens.add(AllYourDatabaseAreBelongToDrunks.selectString("Name", "Allergies", "Allergy_ID", allergy));
+        }
+
+        for (Integer drink : startingDrinks) {
+            boolean hasAllergen = false;
+            ArrayList<Integer> recipe = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Ingredient_ID", "Recipes", "Drink_ID", drink);
+            for (Integer ingredient : recipe ) {
+                String name = AllYourDatabaseAreBelongToDrunks.selectString("Name", "Ingredients", "Ingredient_ID", ingredient);
+                for (String allergen : allergens) {
+                    if (name.equals(allergen)) {
+                        hasAllergen = true;
+                    }
+                }
+            }
+            if (!hasAllergen) {
+                allergenFreeDrinks.add(drink);
+            }
+        }
+
+        return allergenFreeDrinks;
+    }
+
+    public static ArrayList<Integer> getAlmostRightDrinks(ArrayList<Integer> allergenFreeDrinks) {
+        Double sdpAlcoholContent = AllYourDatabaseAreBelongToDrunks.selectDoubleWithSecondaryKey("Variable",
+                "System_Defined_Preferences", "Preference_ID", 1,
+                "User_ID", userID);
+        Double sdpPrice = AllYourDatabaseAreBelongToDrunks.selectDoubleWithSecondaryKey("Variable",
+                "System_Defined_Preferences", "Preference_ID", 2,
+                "User_ID", userID);
+        Double sdpComplexity = AllYourDatabaseAreBelongToDrunks.selectDoubleWithSecondaryKey("Variable",
+                "System_Defined_Preferences", "Preference_ID", 3,
+                "User_ID", userID);
         if (strongPreference) {
             sdpAlcoholContent++;
         } else {
@@ -139,7 +178,7 @@ public class HopThoseBars {
         Double complexityHigh = sdpComplexity + allowedVariation;
 
         ArrayList<Integer> almostRightDrinks = new ArrayList<>();
-        for (Integer drink : startingDrinks) {
+        for (Integer drink : allergenFreeDrinks) {
             drinkID = drink;
             Integer drinkAlcoholContent = AllYourDatabaseAreBelongToDrunks.selectInteger("Alcohol_Content", "Drinks", "Drink_ID", drinkID);
             Integer drinkPrice = updateRatingPrice(false);

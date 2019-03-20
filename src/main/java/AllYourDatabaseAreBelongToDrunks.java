@@ -6,6 +6,7 @@ import static input.InputUtils.yesNoInput;
 
 public class AllYourDatabaseAreBelongToDrunks {
     public static void main(String[] args) { }
+    //TODO Comment your code, you dick
 
 
     /***********************************************
