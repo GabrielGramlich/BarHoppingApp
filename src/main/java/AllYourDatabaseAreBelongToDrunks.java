@@ -248,6 +248,24 @@ public class AllYourDatabaseAreBelongToDrunks {
         return returnInteger;
     }
 
+    public static Double selectLowestDouble(String column, String table) {
+        String sqlStatement = "SELECT MIN(" + column + ") FROM " + table + ")";
+        Double minValue = needThatDouble(column, sqlStatement);
+        return minValue;
+    }
+
+    public static Double selectHighestDouble(String column, String table) {
+        String sqlStatement = "SELECT MAX(" + column + ") FROM " + table + ")";
+        Double maxValue = needThatDouble(column, sqlStatement);
+        return maxValue;
+    }
+
+    public static Double selectAverageDouble(String column, String table) {
+        String sqlStatement = "SELECT AVG(" + column + ") FROM " + table + ")";
+        Double maxValue = needThatDouble(column, sqlStatement);
+        return maxValue;
+    }
+
     public static Integer selectIntegerWithSecondKey(String column, String table, String primaryKeyName,
                                                      Integer primaryKeyID, String secondaryKeyName,
                                                      Integer secondaryKeyData) {
@@ -290,18 +308,6 @@ public class AllYourDatabaseAreBelongToDrunks {
                 + primaryKeyBool + ";";
         ArrayList<Integer> returnArrayListInteger = needThatArrayListInteger(column, sqlStatement);
         return returnArrayListInteger;
-    }
-
-    public static Double selectLowestDouble(String column, String table) {
-        String sqlStatement = "SELECT MIN(" + column + ") FROM " + table + ")";
-        Double minValue = needThatDouble(column, sqlStatement);
-        return minValue;
-    }
-
-    public static Double selectHighestDouble(String column, String table) {
-        String sqlStatement = "SELECT MAX(" + column + ") FROM " + table + ")";
-        Double maxValue = needThatDouble(column, sqlStatement);
-        return maxValue;
     }
 
 

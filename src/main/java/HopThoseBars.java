@@ -184,13 +184,29 @@ public class HopThoseBars {
         Double price = AllYourDatabaseAreBelongToDrunks.selectDouble("Price", "Drinks",
                 "Drink_ID", drinkID);
         Double lowestPrice = AllYourDatabaseAreBelongToDrunks.selectLowestDouble("Price", "Drinks");
-        Double highestPrice = AllYourDatabaseAreBelongToDrunks.selectLowestDouble("Price", "Drinks");
+        Double highestPrice = AllYourDatabaseAreBelongToDrunks.selectHighestDouble("Price", "Drinks");
+        Double averagePrice = AllYourDatabaseAreBelongToDrunks.selectAverageDouble("Price", "Drinks");
 
-        //TODO alter system values
+        Integer priceVariable = 5;
+        if (price < averagePrice) {
+            Double highDifference = averagePrice - price;
+            Double lowDifference = price - lowestPrice;
+            if (highDifference > lowDifference) {
+                priceVariable = 1;
+            } else {
+                priceVariable = 3;
+            }
+        } else if (price > averagePrice) {
+            Double highDifference = highestPrice - price;
+            Double lowDifference = price - averagePrice;
+            if (highDifference < lowDifference) {
+                priceVariable = 9;
+            } else {
+                priceVariable = 7;
+            }
+        }
 
-        //TODO set that as difference from three
-        //TODO apply that to rating
-        //TODO push that new rating
+        updateRatingInteger(priceVariable, 2);
     }
 
     public static void updateRatingComplexity() {
@@ -203,12 +219,23 @@ public class HopThoseBars {
     public static void updateRatingSpiritForwardOrRefreshing() {
         boolean spiritForwardOrRefreshing = AllYourDatabaseAreBelongToDrunks.selectBoolean(
                 "Spirit_Forward_or_Refreshing", "Drinks", "Drink_ID", drinkID);
+        Integer preferenceID;
+        if (!spiritForwardOrRefreshing) {
+            preferenceID = 4;
+        } else {
+            preferenceID = 5;
+        }
 
-        //TODO alter system values
+        Double currentRating = AllYourDatabaseAreBelongToDrunks.selectDoubleWithSecondaryKey("Variable",
+                "System_Defined_Preferences", "Preference_ID", preferenceID,
+                "User_ID", userID);
+        Double newRating = getNewSimpleRating(currentRating);
 
-        //TODO set that as difference from three
-        //TODO apply that to rating
-        //TODO push that new rating
+        Integer sdpID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithSecondKey(
+                "System_Defined_Preference_ID", "System_Defined_Preferences",
+                "Preference_ID", preferenceID, "User_ID", userID);
+        AllYourDatabaseAreBelongToDrunks.updateDouble("System_Defined_Preferences", "Variable", newRating,
+                "System_Defined_Preference_ID", sdpID);
     }
 
     public static void updateRatingType() {
