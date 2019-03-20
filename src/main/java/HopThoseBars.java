@@ -78,21 +78,9 @@ public class HopThoseBars {
     }
 
     public static void pickingYourPoison() {
-        ArrayList<Integer> almostRightDrinks = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayListWithBoolean(
-                "Drink_ID", "Drinks", "Spirit_Forward_or_Refreshing",
-                spiritForwardOrRefreshing);
-        ArrayList<Integer> rightDrinks = new ArrayList<>();
-
-        for (Integer drink : almostRightDrinks) {
-            rightDrinks.add(AllYourDatabaseAreBelongToDrunks.selectIntegerWithSecondKey("Drink_ID",
-                    "Drinks", "Drink_ID", drink, "Type", type));
-        }
-
-        //TODO figure out how you want to add in user preferences
-        //TODO get alcohol content, price, and complexity preference
-        //TODO add or subtract user defined preferences from that
-        //TODO check arraylist and remove drinks not in +/-3 range of that
-        //TODO check arraylist and take drinks with preferred liquor unless there are none, and then just the original list
+        ArrayList<Integer> startingDrinks = getStartingDrinks();
+        ArrayList<Integer> almostRightDrinks = getAlmostRightDrinks(startingDrinks);
+        ArrayList<Integer> rightDrinks = getRightDrinks(almostRightDrinks);
 
         Random rand = new Random();
         int randInt = rand.nextInt(rightDrinks.size());
@@ -102,6 +90,92 @@ public class HopThoseBars {
                 "Drink_ID", drinkID);
 
         letMeCheckInTheBack(drinkName);
+    }
+
+    public static ArrayList<Integer> getStartingDrinks() {
+        ArrayList<Integer> tempDrinksBoolean = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayListWithBoolean(
+                "Drink_ID", "Drinks", "Spirit_Forward_or_Refreshing",
+                spiritForwardOrRefreshing);
+        ArrayList<Integer> tempDrinksType = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Drink_ID", "Drinks", "Type", type);
+        ArrayList<Integer> startingDrinks = new ArrayList<>();
+
+        for (Integer drinkBool : tempDrinksBoolean) {
+            for (Integer drinkType : tempDrinksType) {
+                if (drinkBool.equals(drinkType)) {
+                    startingDrinks.add(drinkBool);
+                }
+            }
+        }
+
+        return startingDrinks;
+    }
+
+    public static ArrayList<Integer> getAlmostRightDrinks(ArrayList<Integer> startingDrinks) {
+        Double sdpAlcoholContent = AllYourDatabaseAreBelongToDrunks.selectDoubleWithSecondaryKey("Variable", "System_Defined_Preferences", "Preference_ID", 1, "User_ID", userID);
+        Double sdpPrice = AllYourDatabaseAreBelongToDrunks.selectDoubleWithSecondaryKey("Variable", "System_Defined_Preferences", "Preference_ID", 2, "User_ID", userID);
+        Double sdpComplexity = AllYourDatabaseAreBelongToDrunks.selectDoubleWithSecondaryKey("Variable", "System_Defined_Preferences", "Preference_ID", 3, "User_ID", userID);
+        if (strongPreference) {
+            sdpAlcoholContent++;
+        } else {
+            sdpAlcoholContent--;
+        }
+        if (priceyPreference) {
+            sdpPrice++;
+        } else {
+            sdpPrice--;
+        }
+        if (complexPreference) {
+            sdpComplexity++;
+        } else {
+            sdpComplexity--;
+        }
+
+        Integer allowedVariation = 3;
+        Double alcoholContentLow = sdpAlcoholContent - allowedVariation;
+        Double alcoholContentHigh = sdpAlcoholContent + allowedVariation;
+        Double priceLow = sdpPrice - allowedVariation;
+        Double priceHigh = sdpPrice + allowedVariation;
+        Double complexityLow = sdpComplexity - allowedVariation;
+        Double complexityHigh = sdpComplexity + allowedVariation;
+
+        ArrayList<Integer> almostRightDrinks = new ArrayList<>();
+        for (Integer drink : startingDrinks) {
+            drinkID = drink;
+            Integer drinkAlcoholContent = AllYourDatabaseAreBelongToDrunks.selectInteger("Alcohol_Content", "Drinks", "Drink_ID", drinkID);
+            Integer drinkPrice = updateRatingPrice(false);
+            Integer drinkComplexity = AllYourDatabaseAreBelongToDrunks.selectInteger("Complexity", "Drinks", "Drink_ID", drinkID);
+            if (drinkAlcoholContent < alcoholContentHigh && drinkAlcoholContent > alcoholContentLow) {
+                if (drinkPrice < priceHigh && drinkPrice > priceLow) {
+                    if (drinkComplexity < complexityHigh && drinkComplexity > complexityLow) {
+                        almostRightDrinks.add(drink);
+                    }
+                }
+            }
+        }
+
+        return almostRightDrinks;
+    }
+
+    public static ArrayList<Integer> getRightDrinks(ArrayList<Integer> almostRightDrinks) {
+        ArrayList<Integer> tempRightDrinks = new ArrayList<>();
+        ArrayList<Integer> rightDrinks = new ArrayList<>();
+        Integer ingredientID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Ingredient_ID", "Ingredients", "Name", preferredLiquor);
+        ArrayList<Integer> drinksWithLiquor = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Drink_ID", "Recipes", "Ingredient_ID", ingredientID);
+
+        for (Integer drink : almostRightDrinks) {
+            for (Integer otherDrink : drinksWithLiquor) {
+                if (drink.equals(otherDrink)) {
+                    tempRightDrinks.add(drink);
+                }
+            }
+        }
+        if (tempRightDrinks.isEmpty()) {
+            rightDrinks.addAll(almostRightDrinks);
+        } else {
+            rightDrinks.addAll(tempRightDrinks);
+        }
+
+        return rightDrinks;
     }
 
     public static void letMeCheckInTheBack(String name) {
@@ -168,7 +242,7 @@ public class HopThoseBars {
 
     public static void whatDoYouThinkYoureBetterThanMe() {
         updateRatingAlcoholContent();
-        updateRatingPrice();
+        updateRatingPrice(true);
         updateRatingComplexity();
         updateRatingSpiritForwardOrRefreshing();
         updateRatingType();
@@ -181,7 +255,7 @@ public class HopThoseBars {
         updateRatingInteger(alcoholContent, 1);
     }
 
-    public static void updateRatingPrice() {
+    public static Integer updateRatingPrice(boolean actuallyUpdating) {
         Double price = AllYourDatabaseAreBelongToDrunks.selectDouble("Price", "Drinks",
                 "Drink_ID", drinkID);
         Double lowestPrice = AllYourDatabaseAreBelongToDrunks.selectLowestDouble("Price", "Drinks");
@@ -207,7 +281,11 @@ public class HopThoseBars {
             }
         }
 
-        updateRatingInteger(priceVariable, 2);
+        if (actuallyUpdating) {
+            updateRatingInteger(priceVariable, 2);
+        }
+
+        return priceVariable;
     }
 
     public static void updateRatingComplexity() {
