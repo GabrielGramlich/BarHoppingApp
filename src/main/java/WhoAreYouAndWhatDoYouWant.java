@@ -348,12 +348,12 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     public static void createLocationCalendar() {
-        //TODO percent needs to be added to calendar
         ArrayList<String> days = new ArrayList<>();
         ArrayList<String> openHours = new ArrayList<>();
         ArrayList<String> closeHours = new ArrayList<>();
         ArrayList<String> speHoursStart = new ArrayList<>();
         ArrayList<String> speHoursEnd = new ArrayList<>();
+        ArrayList<Double> speHoursDiscount = new ArrayList<>();
         days.add("Monday");
         days.add("Tuesday");
         days.add("Wednesday");
@@ -376,16 +376,18 @@ public class WhoAreYouAndWhatDoYouWant {
                 speHoursEndInput = stringInput("When do they end? (HH:MM)");
                 speHoursStart.add(speHoursStartInput);
                 speHoursEnd.add(speHoursEndInput);
+                speHoursDiscount.add(doubleInput("What percent discount is offered during these hours?") / 100);
             } else {
                 speHoursStartInput = "00:00";
                 speHoursEndInput = "00:00";
                 speHoursStart.add(speHoursStartInput);
                 speHoursEnd.add(speHoursEndInput);
+                speHoursDiscount.add(.00);
             }
         }
 
         locationID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Location_ID", "Locations", "Name", locationName);
-        AllYourDatabaseAreBelongToDrunks.IDidntKnowKingdomsHadHours(locationID, days, openHours, closeHours, speHoursStart, speHoursEnd);
+        AllYourDatabaseAreBelongToDrunks.IDidntKnowKingdomsHadHours(locationID, days, openHours, closeHours, speHoursStart, speHoursEnd, speHoursDiscount);
     }
 
     public static void updateLocation() {
@@ -458,7 +460,6 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     public static void createDrink() {
-        //TODO specialty price needs to be removed from drinks
         String name = stringInput("What is this tasty concoction you have for us?");
         String startDate;
         String endDate;
@@ -473,12 +474,6 @@ public class WhoAreYouAndWhatDoYouWant {
 
         Integer strength = intInput("On a scale from 1-5, how strong is this drink?");
         Double price = doubleInput("How much does it cost?");
-        Double specialtyPrice;
-        if (yesNoInput("Is there a specialty price for it during certain hours?")) {
-            specialtyPrice = doubleInput("What is that price?");
-        } else {
-            specialtyPrice = 0.00;
-        }
         Integer complexity = intInput("On a scale from 1-5, how complex is this drink?");
         boolean spiritForwardOrRefreshing = yesNoInput("Is it spirit forward (N), or refreshing (Y)?");
         Integer type;
@@ -493,7 +488,7 @@ public class WhoAreYouAndWhatDoYouWant {
             ingredients.add(stringInput("What's in this thingamadrink?"));
         } while (yesNoInput("Is there another ingredient?"));
 
-        AllYourDatabaseAreBelongToDrunks.thatSoundsDelicious(name, startDate, endDate, strength, price, specialtyPrice, complexity, spiritForwardOrRefreshing, type);
+        AllYourDatabaseAreBelongToDrunks.thatSoundsDelicious(name, startDate, endDate, strength, price, complexity, spiritForwardOrRefreshing, type);
         drinkID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Drink_ID", "Drinks", "Name", name);
         AllYourDatabaseAreBelongToDrunks.whatsInItThough(ingredients, drinkID);
     }
@@ -517,8 +512,9 @@ public class WhoAreYouAndWhatDoYouWant {
 
                     AllYourDatabaseAreBelongToDrunks.updateIntegerWithSecondaryID("Recipes", "Ingredient_ID", newIngredientID, "Drink_ID", drinkID, "Ingredient_ID", oldIngredientID);
                 } else if (finalDecision.equals("add")) {
-                    String newData = stringInput("What would you like to add to " + drinkSelection + "?");
-                    AllYourDatabaseAreBelongToDrunks.evenBetter(drinkID, newData);
+                    ArrayList<String> ingredients = new ArrayList<>();
+                    ingredients.add(stringInput("What would you like to add to " + drinkSelection + "?"));
+                    AllYourDatabaseAreBelongToDrunks.whatsInItThough(ingredients, drinkID);
                 }
 
             } else if (otherDecision.equals("description")) {

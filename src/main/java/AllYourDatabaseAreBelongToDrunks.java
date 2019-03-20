@@ -1,11 +1,11 @@
 import java.sql.*;
 import java.util.ArrayList;
 
+import static input.InputUtils.stringInput;
 import static input.InputUtils.yesNoInput;
 
 public class AllYourDatabaseAreBelongToDrunks {
     public static void main(String[] args) { }
-    //TODO check order for insert statements
 
 
     /***********************************************
@@ -24,10 +24,9 @@ public class AllYourDatabaseAreBelongToDrunks {
         dontNeedThat(insertDataSql);
     }
 
-    public static void IDidntKnowKingdomsHadHours(Integer locationID, ArrayList<String> days, ArrayList<String> openHours, ArrayList<String> closeHours, ArrayList<String> speHoursStart, ArrayList<String> speHoursEnd) {
-        //TODO percent needs to be added to calendar
+    public static void IDidntKnowKingdomsHadHours(Integer locationID, ArrayList<String> days, ArrayList<String> openHours, ArrayList<String> closeHours, ArrayList<String> speHoursStart, ArrayList<String> speHoursEnd, ArrayList<Double> speHoursDiscount) {
         for (int i = 0; i < days.size(); i++) {
-            String insertDataSql = "INSERT INTO Calendar (Location_ID, Day_of_Week, Time_Open, Time_Close, Specialty_Hour_Start, Specialty_Hour_End) VALUES (" + locationID + ", \"" + days.get(i) + "\", TIME_FORMAT(CONVERT(\"" + openHours.get(i) + "\", TIME), \"%H:%i\"), TIME_FORMAT(CONVERT(\"" + closeHours.get(i) + "\", TIME), \"%H:%i\"), TIME_FORMAT(CONVERT(\"" + speHoursStart.get(i) + "\", TIME), \"%H:%i\"), TIME_FORMAT(CONVERT(\"" + speHoursEnd.get(i) + "\", TIME), \"%H:%i\"));";
+            String insertDataSql = "INSERT INTO Calendar (Location_ID, Day_of_Week, Time_Open, Time_Close, Specialty_Hour_Start, Specialty_Hour_End, Specialty_Discount) VALUES (" + locationID + ", \"" + days.get(i) + "\", TIME_FORMAT(CONVERT(\"" + openHours.get(i) + "\", TIME), \"%H:%i\"), TIME_FORMAT(CONVERT(\"" + closeHours.get(i) + "\", TIME), \"%H:%i\"), TIME_FORMAT(CONVERT(\"" + speHoursStart.get(i) + "\", TIME), \"%H:%i\"), TIME_FORMAT(CONVERT(\"" + speHoursEnd.get(i) + "\", TIME), \"%H:%i\"), " + speHoursDiscount.get(i) + ");";
             dontNeedThat(insertDataSql);
         }
     }
@@ -47,31 +46,34 @@ public class AllYourDatabaseAreBelongToDrunks {
         dontNeedThat(insertDataSql);
     }
 
-    public static void thatSoundsDelicious(String name, String startDate, String endDate, Integer strength, Double price, Double specialtyPrice, Integer complexity, boolean spiritForwardOrRefreshing, Integer type) {
-        //TODO specialty price needs to be removed from drinks
-        String insertDataSql = "INSERT INTO Drinks (Name, Availability_Start, Availability_End, Alcohol_Content, Price, Specialty_Price, Complexity, Spirit_Forward_or_Refreshing, Type) VALUES(\"" + name + "\", STR_TO_DATE(\"" + startDate + "\", \"%m/%d/%y\"), STR_TO_DATE(\"" + endDate + "\", \"%m/%d/%y\"), " + strength + ", " + price + ", " + specialtyPrice + ", " + complexity + ", " + spiritForwardOrRefreshing + ", " + type + ");";
+    public static void thatSoundsDelicious(String name, String startDate, String endDate, Integer strength, Double price, Integer complexity, boolean spiritForwardOrRefreshing, Integer type) {
+        String insertDataSql = "INSERT INTO Drinks (Name, Availability_Start, Availability_End, Alcohol_Content, Price, Complexity, Spirit_Forward_or_Refreshing, Type) VALUES(\"" + name + "\", STR_TO_DATE(\"" + startDate + "\", \"%m/%d/%y\"), STR_TO_DATE(\"" + endDate + "\", \"%m/%d/%y\"), " + strength + ", " + price + ", " + complexity + ", " + spiritForwardOrRefreshing + ", " + type + ");";
         dontNeedThat(insertDataSql);
     }
 
     public static void whatsInItThough(ArrayList<String> ingredients, Integer drinkID) {
-        //TODO ingredients need to be checked for and possibly added when owner selects them
-
         for (String ingredient : ingredients) {
-            Integer ingredientID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Ingredient_Name", "Ingredients", "Name", ingredient);
-            String sqlStatement = "INSERT INTO Recipes (Drink_ID, Ingredient_ID) VALUES(" + drinkID + ", " + ingredientID + ");";
+            Integer ingredientID = selectIntegerWithString("Ingredient_Name", "Ingredients", "Name", ingredient);
+            if (ingredientID == 0) {
+                String ingredientType = stringInput("Is this ingredient a liquor, liqueur, mixer or garnish?");
+                String sqlStatement = "INSERT INTO Ingredients (Name, Type) VALUES(\"" + ingredient + "\", \"" + ingredientType + "\");";
+                dontNeedThat(sqlStatement);
+                ingredientID = selectIntegerWithString("Ingredient_Name", "Ingredients", "Name", ingredient);
+            }
+            String sqlStatement = "INSERT INTO Recipes (Ingredient_ID, Drink_ID) VALUES(" + ingredientID + ", " + drinkID + ");";
             dontNeedThat(sqlStatement);
         }
     }
 
-    public static void evenBetter(Integer drinkID, String newData) {
-        String sqlStatement = "INSERT INTO Recipes (Drink_ID, Ingredient_ID) Values(" + drinkID + ", " + newData + ");";
-        dontNeedThat(sqlStatement);
-    }
-
     public static void youGotSomeWeirdKinks(Integer userID, ArrayList<String> allergies, String topShelf, String bottomShelf, boolean weakOrStrong, boolean deepPockets, boolean youFancy) {
-        //TODO allergies need to be checked for and possibly added when user selects them
         for (String allergy : allergies) {
             Integer allergyID = selectIntegerWithString("Allergy_ID", "Allergies", "Name", allergy);
+
+            if (allergyID == 0) {
+                String sqlStatement = "INSERT INTO Allergies (Name) VALUES(\"" + allergy + "\");";
+                dontNeedThat(sqlStatement);
+                allergyID = selectIntegerWithString("Allergy_ID", "Allergies", "Name", allergy);
+            }
 
             String sqlStatement = "INSERT INTO User_Allergies (Allergy_ID, User_ID) VALUES(" + allergyID + ", " + userID + ");";
             dontNeedThat(sqlStatement);
