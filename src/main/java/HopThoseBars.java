@@ -151,7 +151,7 @@ public class HopThoseBars {
                 "Name", name);
         AllYourDatabaseAreBelongToDrunks.wasItGood(userID, drinkID, rating);
 
-        //TODO get ingredients and shit and add them to the system defined preferences table
+        whatDoYouThinkYoureBetterThanMe(drinkID, rating);
         youreSoPicky(drinkID, rating);
 
         boolean keepEmComing = yesNoInput("Another round?");
@@ -162,10 +162,7 @@ public class HopThoseBars {
         }
     }
 
-    public static void youreSoPicky(Integer drinkID, Integer rating) {
-        ArrayList<Integer> ingredientIDs = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList(
-                "Ingredient_ID", "Recipes", "Drink_ID", drinkID);
-        ArrayList<String> ingredients = new ArrayList<>();
+    public static void whatDoYouThinkYoureBetterThanMe(Integer drinkID, Integer rating) {
         Integer alcoholContent = AllYourDatabaseAreBelongToDrunks.selectInteger("Alcohol_Content",
                 "Drinks", "Drink_ID", drinkID);
         Double price = AllYourDatabaseAreBelongToDrunks.selectDouble("Price", "Drinks",
@@ -179,16 +176,62 @@ public class HopThoseBars {
         Integer type = AllYourDatabaseAreBelongToDrunks.selectInteger("Type", "Drinks",
                 "Drink_ID", drinkID);
 
+        //TODO check if drink data is already defined by system
+        //TODO if not defined, add with base value to the system defined preferences table
+        //TODO alter system values
+    }
+
+    public static void youreSoPicky(Integer drinkID, Integer rating) {
+        ArrayList<Integer> ingredientIDs = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList(
+                "Ingredient_ID", "Recipes", "Drink_ID", drinkID);
+        ArrayList<String> ingredients = new ArrayList<>();
+
         for (Integer ID: ingredientIDs) {
             ingredients.add(AllYourDatabaseAreBelongToDrunks.selectString("Name", "Ingredients",
                     "Ingredient_ID", ID));
         }
 
-        //TODO check if ingredients are already defined by system
-        //TODO check if drink data is already defined by system
-        //TODO if not defined, add with base value
-        //TODO alter system values
+        for (String ingredient : ingredients) {
+            Integer sdpID = haveYouEvenTriedIt(ingredient);
+            Integer currentRating = AllYourDatabaseAreBelongToDrunks.selectInteger("Variable",
+                    "System_Defined_Preferences", "System_Defined_Preferences_ID", sdpID);
 
+            if (rating == 2) {
+                currentRating --;
+            } else if (rating == 1) {
+                currentRating --;
+                currentRating --;
+            } else if (rating == 4) {
+                currentRating ++;
+            } else if (rating == 5) {
+                currentRating ++;
+                currentRating ++;
+            }
+
+            AllYourDatabaseAreBelongToDrunks.updateInteger("System_Defined_Preferences", "Variable", currentRating, "System_Defined_Preferences_ID", sdpID);
+        }
+    }
+
+    public static Integer haveYouEvenTriedIt(String ingredient) {
+        Integer preferenceID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Preference_ID",
+                "Preferences", "Name", ingredient);
+        if (preferenceID == 0) {
+            AllYourDatabaseAreBelongToDrunks.youreSayingPeopleLikeThat(ingredient, "ingredient");
+            preferenceID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Preference_ID",
+                    "Preferences", "Name", ingredient);
+        }
+
+        Integer sdpID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithSecondKey(
+                "System_Defined_Preference_ID", "System_Defined_Preferences",
+                "Preference_ID", preferenceID, "User_ID", userID);
+        if (sdpID == 0) {
+            AllYourDatabaseAreBelongToDrunks.youreOpinionIsWrong(preferenceID, userID, 5);
+            sdpID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithSecondKey("System_Defined_Preference_ID",
+                    "System_Defined_Preferences", "Preference_ID", preferenceID,
+                    "User_ID", userID);
+        }
+
+        return sdpID;
     }
 
     public static void cuttingYouOff() {

@@ -124,6 +124,17 @@ public class AllYourDatabaseAreBelongToDrunks {
         dontNeedThat(sqlStatement);
     }
 
+    public static void youreSayingPeopleLikeThat(String name, String type) {
+        String sqlStatement = "INSERT INTO Preferences (Name, Type) VALUES(\"" + name + "\", \"" + type + "\";";
+        dontNeedThat(sqlStatement);
+    }
+
+    public static void youreOpinionIsWrong(Integer preferenceID, Integer userID, Integer variable) {
+        String sqlStatement = "INSERT INTO System_Defined_Preferences (Preference_ID, User_ID, Variable) VALUES("
+                + preferenceID + ", " + userID + ", " + variable + ";";
+        dontNeedThat(sqlStatement);
+    }
+
 
     /**********************************************
     ***Generic update statement creation methods***
