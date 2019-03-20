@@ -93,8 +93,7 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
     public static void youGotSomeWeirdKinks(Integer userID, ArrayList<String> allergies, String topShelf,
-                                            String bottomShelf, boolean weakOrStrong, boolean deepPockets,
-                                            boolean youFancy) {
+                                            boolean weakOrStrong, boolean deepPockets, boolean youFancy) {
         for (String allergy : allergies) {
             Integer allergyID = selectIntegerWithString("Allergy_ID", "Allergies",
                     "Name", allergy);
@@ -112,9 +111,7 @@ public class AllYourDatabaseAreBelongToDrunks {
         }
 
         String sqlStatement = "INSERT INTO User_Defined_Preferences (User_ID, Preferred_Liquor, " +
-                "Nonpreferred_Liquor, Weak_or_Strong, Cheap_or_Pricey, Simple_or_Complex) VALUES(" + userID + ", \""
-                + topShelf + "\", \"" + bottomShelf + "\", " + weakOrStrong + ", " + deepPockets + ", "
-                + youFancy + ");";
+                "Weak_or_Strong, Cheap_or_Pricey, Simple_or_Complex) VALUES(" + userID + ", \"" + topShelf + "\", " + weakOrStrong + ", " + deepPockets + ", " + youFancy + ");";
         dontNeedThat(sqlStatement);
     }
 
@@ -226,9 +223,11 @@ public class AllYourDatabaseAreBelongToDrunks {
         return returnDouble;
     }
 
-    public static Double selectDoubleWithSecondaryKey(String column, String table, String primaryKeyName, Integer primaryKeyID, String secondaryKeyName, Integer secondaryKeyID) {
+    public static Double selectDoubleWithSecondaryKey(String column, String table, String primaryKeyName,
+                                                      Integer primaryKeyID, String secondaryKeyName,
+                                                      Integer secondaryKeyID) {
         String sqlStatement = "SELECT " + column + " FROM " + table + " WHERE " + primaryKeyName + " = "
-                + primaryKeyID + ";";
+                + primaryKeyID + " AND " + secondaryKeyName + " = " + secondaryKeyID + ";";
         Double returnDouble = needThatDouble(column, sqlStatement);
         return returnDouble;
     }

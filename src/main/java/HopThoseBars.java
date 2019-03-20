@@ -17,7 +17,6 @@ public class HopThoseBars {
     public static ArrayList<Integer> locations = new ArrayList<>();
 
     public static String preferredLiquor;
-    public static String nonpreferredLiquor;
     public static boolean strongPreference;
     public static boolean priceyPreference;
     public static boolean complexPreference;
@@ -53,8 +52,6 @@ public class HopThoseBars {
     public static void getUserPreferrences() {
         preferredLiquor = AllYourDatabaseAreBelongToDrunks.selectString("Preferred_Liquor",
                 "User_Defined_Preferences", "User_ID", userID);
-        nonpreferredLiquor = AllYourDatabaseAreBelongToDrunks.selectString("Nonpreferred_Liquor",
-                "User_Defined_Preferences", "User_ID", userID);
         strongPreference = AllYourDatabaseAreBelongToDrunks.selectBoolean("Weak_or_Strong",
                 "User_Defined_Preferences", "User_ID", userID);
         priceyPreference = AllYourDatabaseAreBelongToDrunks.selectBoolean("Cheap_or_Pricey",
@@ -81,8 +78,6 @@ public class HopThoseBars {
     }
 
     public static void pickingYourPoison() {
-        //TODO figure out how you want to add in user preferences
-
         ArrayList<Integer> almostRightDrinks = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayListWithBoolean(
                 "Drink_ID", "Drinks", "Spirit_Forward_or_Refreshing",
                 spiritForwardOrRefreshing);
@@ -92,6 +87,12 @@ public class HopThoseBars {
             rightDrinks.add(AllYourDatabaseAreBelongToDrunks.selectIntegerWithSecondKey("Drink_ID",
                     "Drinks", "Drink_ID", drink, "Type", type));
         }
+
+        //TODO figure out how you want to add in user preferences
+        //TODO get alcohol content, price, and complexity preference
+        //TODO add or subtract user defined preferences from that
+        //TODO check arraylist and remove drinks not in +/-3 range of that
+        //TODO check arraylist and take drinks with preferred liquor unless there are none, and then just the original list
 
         Random rand = new Random();
         int randInt = rand.nextInt(rightDrinks.size());
@@ -303,91 +304,98 @@ public class HopThoseBars {
     }
 
     public static Double getNewComplexRating(Integer difference, Integer minusOrPlus, Double currentRating) {
+        Double updateValue = .125;
         if (rating == 2) {
             if (difference == 1 || difference == 2) {
                 if (minusOrPlus == 0) {
-                    if (currentRating <= 8.875) {
-                        currentRating += .125;
+                    if (currentRating <= 9 - updateValue) {
+                        currentRating += updateValue;
                     }
                 } else if (minusOrPlus == 2) {
-                    if (currentRating >= 1.125) {
-                        currentRating -= .125;
+                    if (currentRating >= 1 + updateValue) {
+                        currentRating -= updateValue;
                     }
                 }
             } else if (difference == 3 || difference == 4) {
+                updateValue *= updateValue * 2;
                 if (minusOrPlus == 0) {
-                    if (currentRating <= 8.75) {
-                        currentRating += .25;
+                    if (currentRating <= 9 - updateValue) {
+                        currentRating += updateValue;
                     }
                 } else if (minusOrPlus == 2) {
-                    if (currentRating >= 1.25) {
-                        currentRating -= .25;
+                    if (currentRating >= 1 + updateValue) {
+                        currentRating -= updateValue;
                     }
                 }
             }
         } else if (rating == 1) {
             if (difference == 1 || difference == 2) {
+                updateValue *= updateValue * 2;
                 if (minusOrPlus == 0) {
-                    if (currentRating <= 8.75) {
-                        currentRating += .25;
+                    if (currentRating <= 9 - updateValue) {
+                        currentRating += updateValue;
                     }
                 } else if (minusOrPlus == 2) {
-                    if (currentRating >= 1.25) {
-                        currentRating -= .25;
+                    if (currentRating >= 1 + updateValue) {
+                        currentRating -= updateValue;
                     }
                 }
             } else if (difference == 3 || difference == 4) {
+                updateValue *= updateValue * 4;
                 if (minusOrPlus == 0) {
-                    if (currentRating <= 8.5) {
-                        currentRating += .5;
+                    if (currentRating <= 9 - updateValue) {
+                        currentRating += updateValue;
                     }
                 } else if (minusOrPlus == 2) {
-                    if (currentRating >= 1.5) {
-                        currentRating -= .5;
+                    if (currentRating >= 1 + updateValue) {
+                        currentRating -= updateValue;
                     }
                 }
             }
         } else if (rating == 4) {
             if (difference == 1 || difference == 2) {
                 if (minusOrPlus == 0) {
-                    if (currentRating >= 1.125) {
-                        currentRating -= .125;
+                    if (currentRating >= 1 + updateValue) {
+                        currentRating -= updateValue;
                     }
                 } else if (minusOrPlus == 2) {
-                    if (currentRating <= 8.875) {
-                        currentRating += .125;
+                    if (currentRating <= 9 - updateValue) {
+                        currentRating += updateValue;
                     }
                 }
             } else if (difference == 3 || difference == 4) {
+                updateValue *= updateValue * 2;
                 if (minusOrPlus == 0) {
-                    if (currentRating >= 1.25) {
-                        currentRating -= .25;
+                    if (currentRating >= 1 + updateValue) {
+                        currentRating -= updateValue;
                     }
                 } else if (minusOrPlus == 2) {
-                    if (currentRating <= 8.75) {
-                        currentRating += .25;
+                    if (currentRating <= 9 - updateValue) {
+                        currentRating += updateValue;
                     }
                 }
             }
         } else if (rating == 5) {
             if (difference == 1 || difference == 2) {
+                updateValue *= updateValue * 2;
                 if (minusOrPlus == 0) {
-                    if (currentRating >= 1.25) {
-                        currentRating -= .25;
+                    if (currentRating >= 1 + updateValue) {
+                        currentRating -= updateValue;
                     }
                 } else if (minusOrPlus == 2) {
-                    if (currentRating <= 8.75) {
-                        currentRating += .25;
+                    if (currentRating <= 9 - updateValue) {
+                        currentRating += updateValue;
                     }
                 }
             } else if (difference == 3 || difference == 4) {
+                updateValue *= updateValue * 4;
                 if (minusOrPlus == 0) {
-                    if (currentRating >= 1.5) {
-                        currentRating -= .5;
+                    if (currentRating >= 1 + updateValue) {
+                        currentRating -= updateValue;
                     }
                 } else if (minusOrPlus == 2) {
-                    if (currentRating <= 8.5) {
-                        currentRating += .5;
+                    if (currentRating <= 9 - updateValue) {
+                        currentRating += updateValue;
                     }
                 }
             }

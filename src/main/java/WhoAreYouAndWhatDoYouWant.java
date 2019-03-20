@@ -153,14 +153,13 @@ public class WhoAreYouAndWhatDoYouWant {
         }
 
         String topShelf = stringInput("Favorite spirit?");
-        String bottomShelf = stringInput("Least favorite?");
         boolean weakOrStrong = yesNoInput("Do you have hair on your chest?");
         boolean deepPockets = !yesNoInput("You broke, homie?");
         boolean youFancy = yesNoInput("You a fan of mixology?");
 
         Integer userID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("User_ID",
                 "Login_Credentials", "Username", username);
-        AllYourDatabaseAreBelongToDrunks.youGotSomeWeirdKinks(userID, allergies, topShelf, bottomShelf, weakOrStrong,
+        AllYourDatabaseAreBelongToDrunks.youGotSomeWeirdKinks(userID, allergies, topShelf, weakOrStrong,
                 deepPockets, youFancy);
     }
 
