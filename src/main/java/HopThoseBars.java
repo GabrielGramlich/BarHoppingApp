@@ -8,6 +8,7 @@ import java.util.Random;
 import static input.InputUtils.*;
 
 public class HopThoseBars {
+    //TODO check for time with drink selection and factor in specialty price with that
     //TODO Comment your code, you dick
 
     public static Integer howMuchHaveYouHad = 0;
@@ -15,7 +16,7 @@ public class HopThoseBars {
     public static Integer LIMIT = 3;
     public static Integer userID;
     public static ArrayList<String> drinks = new ArrayList<>();
-    public static ArrayList<Integer> locations = new ArrayList<>();
+    public static ArrayList<String> locations = new ArrayList<>();
     public static String preferredLiquor;
     public static boolean strongPreference;
     public static boolean priceyPreference;
@@ -93,8 +94,8 @@ public class HopThoseBars {
     }
 
 //    public static ArrayList<Integer> getLocalDrinks() {
-//        //TODO get input on where the user is drinking
-//        //TODO get drinks in that area
+//        //TODO get input on where the user is drinking #this will happen when it's a real app
+//        //TODO get drinks in that area #this will happen when it's a real app
 //    }
 
     public static ArrayList<Integer> getStartingDrinks() {
@@ -236,8 +237,11 @@ public class HopThoseBars {
         turnLeftAtTheOakTree(drinkAddress, name, locationID);
     }
 
-    public static void turnLeftAtTheOakTree(String address, String name, Integer locationID) {
-        System.out.println("Here's your drink: " + name);
+    public static void turnLeftAtTheOakTree(String address, String drinkName, Integer locationID) {
+        String locationName = AllYourDatabaseAreBelongToDrunks.selectString("Name", "Locations",
+                "Location_ID", locationID);
+        System.out.println("Here's your drink: " + drinkName);
+        System.out.println("You can find it at: " + locationName);
 
         String map = "http://maps.google.co.in/maps?q=" + address;
         map = map.replace(" ", "+");
@@ -247,12 +251,12 @@ public class HopThoseBars {
             e.printStackTrace();
         }
 
-        checkPlease(name, locationID);
+        checkPlease(drinkName, locationName);
     }
 
-    public static void checkPlease(String name, Integer locationID) {
+    public static void checkPlease(String name, String locationName) {
         drinks.add(name);
-        locations.add(locationID);
+        locations.add(locationName);
 
         //TODO wait for users return #this will happen when it's a real app
         boolean stillDrinking = true;
