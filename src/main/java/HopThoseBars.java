@@ -197,15 +197,23 @@ public class HopThoseBars {
                     "System_Defined_Preferences", "System_Defined_Preferences_ID", sdpID);
 
             if (rating == 2) {
-                currentRating --;
+                if (currentRating >= 2) {
+                    currentRating--;
+                }
             } else if (rating == 1) {
-                currentRating --;
-                currentRating --;
+                if (currentRating >= 3) {
+                    currentRating--;
+                    currentRating--;
+                }
             } else if (rating == 4) {
-                currentRating ++;
+                if (currentRating <= 8) {
+                    currentRating++;
+                }
             } else if (rating == 5) {
-                currentRating ++;
-                currentRating ++;
+                if (currentRating <= 7) {
+                    currentRating++;
+                    currentRating++;
+                }
             }
 
             AllYourDatabaseAreBelongToDrunks.updateInteger("System_Defined_Preferences", "Variable", currentRating, "System_Defined_Preferences_ID", sdpID);
