@@ -25,6 +25,9 @@ public class HopThoseBars {
     public static boolean spiritForwardOrRefreshing;
     public static Integer type;
 
+    public static Integer rating;
+    public static Integer drinkID;
+
     public static void main(String[] args) { }
 
     public static void letsGetLit(Integer ID) {
@@ -93,16 +96,16 @@ public class HopThoseBars {
         Random rand = new Random();
         int randInt = rand.nextInt(rightDrinks.size());
 
-        Integer drinkID = rightDrinks.get(randInt);
+        drinkID = rightDrinks.get(randInt);
         String drinkName = AllYourDatabaseAreBelongToDrunks.selectString("Name", "Drinks",
                 "Drink_ID", drinkID);
 
-        letMeCheckInTheBack(drinkName, drinkID);
+        letMeCheckInTheBack(drinkName);
     }
 
-    public static void letMeCheckInTheBack(String name, Integer ID) {
+    public static void letMeCheckInTheBack(String name) {
         Integer locationID = AllYourDatabaseAreBelongToDrunks.selectInteger("Location_ID",
-                "Drink_Locations", "Drink_ID", ID);
+                "Drink_Locations", "Drink_ID", drinkID);
         String street = AllYourDatabaseAreBelongToDrunks.selectString("Street", "Locations",
                 "Location_ID", locationID);
         String city = AllYourDatabaseAreBelongToDrunks.selectString("City", "Locations",
@@ -146,13 +149,13 @@ public class HopThoseBars {
 
 
     public static void keepEmComingBarkeep(String name) {
-        Integer rating = intInput("On a scale from 1-5, how did you like " + name + "?");
-        Integer drinkID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Drink_ID", "Drinks",
+        rating = intInput("On a scale from 1-5, how did you like " + name + "?");
+        drinkID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Drink_ID", "Drinks",
                 "Name", name);
         AllYourDatabaseAreBelongToDrunks.wasItGood(userID, drinkID, rating);
 
-        whatDoYouThinkYoureBetterThanMe(drinkID, rating);
-        youreSoPicky(drinkID, rating);
+        whatDoYouThinkYoureBetterThanMe();
+        youreSoPicky();
 
         boolean keepEmComing = yesNoInput("Another round?");
         if (keepEmComing) {
@@ -162,24 +165,211 @@ public class HopThoseBars {
         }
     }
 
-    public static void whatDoYouThinkYoureBetterThanMe(Integer drinkID, Integer rating) {
+    public static void whatDoYouThinkYoureBetterThanMe() {
+        updateRatingAlcoholContent();
+        updateRatingPrice();
+        updateRatingComplexity();
+        updateRatingSpiritForwardOrRefreshing();
+        updateRatingType();
+    }
+
+    public static void updateRatingAlcoholContent() {
         Integer alcoholContent = AllYourDatabaseAreBelongToDrunks.selectInteger("Alcohol_Content",
                 "Drinks", "Drink_ID", drinkID);
+
+        updateRatingInteger(alcoholContent, 1);
+    }
+
+    public static void updateRatingPrice() {
         Double price = AllYourDatabaseAreBelongToDrunks.selectDouble("Price", "Drinks",
                 "Drink_ID", drinkID);
         Double lowestPrice = AllYourDatabaseAreBelongToDrunks.selectLowestDouble("Price", "Drinks");
         Double highestPrice = AllYourDatabaseAreBelongToDrunks.selectLowestDouble("Price", "Drinks");
+
+        //TODO alter system values
+
+        //TODO set that as difference from three
+        //TODO apply that to rating
+        //TODO push that new rating
+    }
+
+    public static void updateRatingComplexity() {
         Integer complexity = AllYourDatabaseAreBelongToDrunks.selectInteger("Complexity", "Drinks",
                 "Drink_ID", drinkID);
+
+        updateRatingInteger(complexity, 3);
+    }
+
+    public static void updateRatingSpiritForwardOrRefreshing() {
+        boolean spiritForwardOrRefreshing = AllYourDatabaseAreBelongToDrunks.selectBoolean(
+                "Spirit_Forward_or_Refreshing", "Drinks", "Drink_ID", drinkID);
+
+        //TODO alter system values
+
+        //TODO set that as difference from three
+        //TODO apply that to rating
+        //TODO push that new rating
+    }
+
+    public static void updateRatingType() {
         boolean spiritForwardOrRefreshing = AllYourDatabaseAreBelongToDrunks.selectBoolean(
                 "Spirit_Forward_or_Refreshing", "Drinks", "Drink_ID", drinkID);
         Integer type = AllYourDatabaseAreBelongToDrunks.selectInteger("Type", "Drinks",
                 "Drink_ID", drinkID);
+        if (spiritForwardOrRefreshing) {
+            type +=3;
+        }
 
-        //TODO alter system values
+        Double currentRating = AllYourDatabaseAreBelongToDrunks.selectDoubleWithSecondaryKey("Variable",
+                "System_Defined_Preferences", "Preference_ID", (type + 5),
+                "User_ID", userID);
+        Double newRating = getNewSimpleRating(currentRating);
+
+        Integer sdpID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithSecondKey(
+                "System_Defined_Preference_ID", "System_Defined_Preferences",
+                "Preference_ID", 1, "User_ID", userID);
+        AllYourDatabaseAreBelongToDrunks.updateDouble("System_Defined_Preferences", "Variable", newRating,
+                "System_Defined_Preference_ID", sdpID);
     }
 
-    public static void youreSoPicky(Integer drinkID, Integer rating) {
+    public static void updateRatingInteger(Integer variable, Integer primaryKeyID) {
+        int minusOrPlus = 1;
+        int difference = 0;
+        if (variable < 5) {
+            minusOrPlus = 0;
+            difference = (5 - variable);
+        } else if (variable > 5) {
+            minusOrPlus = 2;
+            difference = variable - 5;
+        }
+        Double currentRating = AllYourDatabaseAreBelongToDrunks.selectDoubleWithSecondaryKey("Variable",
+                "System_Defined_Preferences", "Preference_ID", primaryKeyID,
+                "User_ID", userID);
+        Double newRating = getNewComplexRating(difference, minusOrPlus, currentRating);
+
+        Integer sdpID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithSecondKey(
+                "System_Defined_Preference_ID", "System_Defined_Preferences",
+                "Preference_ID", primaryKeyID, "User_ID", userID);
+        AllYourDatabaseAreBelongToDrunks.updateDouble("System_Defined_Preferences", "Variable", newRating,
+                "System_Defined_Preference_ID", sdpID);
+    }
+
+    public static Double getNewSimpleRating(Double currentRating) {
+        if (rating == 2) {
+            if (currentRating >= 1.25) {
+                currentRating -= .25;
+            }
+        } else if (rating == 1) {
+            if (currentRating >= 1.5) {
+                currentRating -= .5;
+            }
+        } else if (rating == 4) {
+            if (currentRating <= 8.75) {
+                currentRating += .25;
+            }
+        } else if (rating == 5) {
+            if (currentRating <= 8.5) {
+                currentRating += .5;
+            }
+        }
+        return currentRating;
+    }
+
+    public static Double getNewComplexRating(Integer difference, Integer minusOrPlus, Double currentRating) {
+        if (rating == 2) {
+            if (difference == 1 || difference == 2) {
+                if (minusOrPlus == 0) {
+                    if (currentRating <= 8.875) {
+                        currentRating += .125;
+                    }
+                } else if (minusOrPlus == 2) {
+                    if (currentRating >= 1.125) {
+                        currentRating -= .125;
+                    }
+                }
+            } else if (difference == 3 || difference == 4) {
+                if (minusOrPlus == 0) {
+                    if (currentRating <= 8.75) {
+                        currentRating += .25;
+                    }
+                } else if (minusOrPlus == 2) {
+                    if (currentRating >= 1.25) {
+                        currentRating -= .25;
+                    }
+                }
+            }
+        } else if (rating == 1) {
+            if (difference == 1 || difference == 2) {
+                if (minusOrPlus == 0) {
+                    if (currentRating <= 8.75) {
+                        currentRating += .25;
+                    }
+                } else if (minusOrPlus == 2) {
+                    if (currentRating >= 1.25) {
+                        currentRating -= .25;
+                    }
+                }
+            } else if (difference == 3 || difference == 4) {
+                if (minusOrPlus == 0) {
+                    if (currentRating <= 8.5) {
+                        currentRating += .5;
+                    }
+                } else if (minusOrPlus == 2) {
+                    if (currentRating >= 1.5) {
+                        currentRating -= .5;
+                    }
+                }
+            }
+        } else if (rating == 4) {
+            if (difference == 1 || difference == 2) {
+                if (minusOrPlus == 0) {
+                    if (currentRating >= 1.125) {
+                        currentRating -= .125;
+                    }
+                } else if (minusOrPlus == 2) {
+                    if (currentRating <= 8.875) {
+                        currentRating += .125;
+                    }
+                }
+            } else if (difference == 3 || difference == 4) {
+                if (minusOrPlus == 0) {
+                    if (currentRating >= 1.25) {
+                        currentRating -= .25;
+                    }
+                } else if (minusOrPlus == 2) {
+                    if (currentRating <= 8.75) {
+                        currentRating += .25;
+                    }
+                }
+            }
+        } else if (rating == 5) {
+            if (difference == 1 || difference == 2) {
+                if (minusOrPlus == 0) {
+                    if (currentRating >= 1.25) {
+                        currentRating -= .25;
+                    }
+                } else if (minusOrPlus == 2) {
+                    if (currentRating <= 8.75) {
+                        currentRating += .25;
+                    }
+                }
+            } else if (difference == 3 || difference == 4) {
+                if (minusOrPlus == 0) {
+                    if (currentRating >= 1.5) {
+                        currentRating -= .5;
+                    }
+                } else if (minusOrPlus == 2) {
+                    if (currentRating <= 8.5) {
+                        currentRating += .5;
+                    }
+                }
+            }
+        }
+
+        return currentRating;
+    }
+
+    public static void youreSoPicky() {
         ArrayList<Integer> ingredientIDs = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList(
                 "Ingredient_ID", "Recipes", "Drink_ID", drinkID);
         ArrayList<String> ingredients = new ArrayList<>();
@@ -191,30 +381,12 @@ public class HopThoseBars {
 
         for (String ingredient : ingredients) {
             Integer sdpID = haveYouEvenTriedIt(ingredient);
-            Integer currentRating = AllYourDatabaseAreBelongToDrunks.selectInteger("Variable",
+            Double currentRating = AllYourDatabaseAreBelongToDrunks.selectDouble("Variable",
                     "System_Defined_Preferences", "System_Defined_Preferences_ID", sdpID);
 
-            if (rating == 2) {
-                if (currentRating >= 2) {
-                    currentRating--;
-                }
-            } else if (rating == 1) {
-                if (currentRating >= 3) {
-                    currentRating--;
-                    currentRating--;
-                }
-            } else if (rating == 4) {
-                if (currentRating <= 8) {
-                    currentRating++;
-                }
-            } else if (rating == 5) {
-                if (currentRating <= 7) {
-                    currentRating++;
-                    currentRating++;
-                }
-            }
-
-            AllYourDatabaseAreBelongToDrunks.updateInteger("System_Defined_Preferences", "Variable", currentRating, "System_Defined_Preferences_ID", sdpID);
+            Double newRating = getNewSimpleRating(currentRating);
+            AllYourDatabaseAreBelongToDrunks.updateDouble("System_Defined_Preferences", "Variable",
+                    newRating, "System_Defined_Preferences_ID", sdpID);
         }
     }
 
@@ -231,7 +403,7 @@ public class HopThoseBars {
                 "System_Defined_Preference_ID", "System_Defined_Preferences",
                 "Preference_ID", preferenceID, "User_ID", userID);
         if (sdpID == 0) {
-            AllYourDatabaseAreBelongToDrunks.youreOpinionIsWrong(preferenceID, userID, 5);
+            AllYourDatabaseAreBelongToDrunks.youreOpinionIsWrong(preferenceID, userID, 5.0);
             sdpID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithSecondKey("System_Defined_Preference_ID",
                     "System_Defined_Preferences", "Preference_ID", preferenceID,
                     "User_ID", userID);

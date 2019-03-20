@@ -129,7 +129,7 @@ public class AllYourDatabaseAreBelongToDrunks {
         dontNeedThat(sqlStatement);
     }
 
-    public static void youreOpinionIsWrong(Integer preferenceID, Integer userID, Integer variable) {
+    public static void youreOpinionIsWrong(Integer preferenceID, Integer userID, Double variable) {
         String sqlStatement = "INSERT INTO System_Defined_Preferences (Preference_ID, User_ID, Variable) VALUES("
                 + preferenceID + ", " + userID + ", " + variable + ";";
         dontNeedThat(sqlStatement);
@@ -137,7 +137,7 @@ public class AllYourDatabaseAreBelongToDrunks {
 
     public static void youHaveNoPersonalityWhatsoever(Integer preferenceID, Integer userID) {
         String sqlStatement = "INSERT INTO System_Defined_Preferences (Preference_ID, User_ID, Variable) VALUES("
-                + preferenceID + ", " + userID + ", 5;";
+                + preferenceID + ", " + userID + ", 5.0;";
         dontNeedThat(sqlStatement);
     }
 
@@ -220,6 +220,13 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
     public static Double selectDouble(String column, String table, String primaryKeyName, Integer primaryKeyID) {
+        String sqlStatement = "SELECT " + column + " FROM " + table + " WHERE " + primaryKeyName + " = "
+                + primaryKeyID + ";";
+        Double returnDouble = needThatDouble(column, sqlStatement);
+        return returnDouble;
+    }
+
+    public static Double selectDoubleWithSecondaryKey(String column, String table, String primaryKeyName, Integer primaryKeyID, String secondaryKeyName, Integer secondaryKeyID) {
         String sqlStatement = "SELECT " + column + " FROM " + table + " WHERE " + primaryKeyName + " = "
                 + primaryKeyID + ";";
         Double returnDouble = needThatDouble(column, sqlStatement);
