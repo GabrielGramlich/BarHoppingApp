@@ -516,9 +516,9 @@ public class WhoAreYouAndWhatDoYouWant {
             endDate = "01/01/00";
         }
 
-        Integer strength = intInput("On a scale from 1-5, how strong is this drink?");
+        Integer strength = intInput("On a scale from 1-9, how strong is this drink?");
         Double price = doubleInput("How much does it cost?");
-        Integer complexity = intInput("On a scale from 1-5, how complex is this drink?");
+        Integer complexity = intInput("On a scale from 1-9, how complex is this drink?");
         boolean spiritForwardOrRefreshing = yesNoInput("Is it spirit forward (N), or refreshing (Y)?");
         Integer type;
         if (spiritForwardOrRefreshing) {
@@ -584,7 +584,7 @@ public class WhoAreYouAndWhatDoYouWant {
                 "spirit_forward_or_refreshing, or type?");
 
         if (finalDecision.equals("alcohol_content")) {
-            Integer newData = intInput("Enter new strength on a scale of 1-5.");
+            Integer newData = intInput("Enter new strength on a scale of 1-9.");
             AllYourDatabaseAreBelongToDrunks.updateInteger("Drinks", finalDecision, newData,
                     "Drink_ID", drinkID);
         } else if (finalDecision.equals("price")) {
@@ -596,7 +596,7 @@ public class WhoAreYouAndWhatDoYouWant {
             AllYourDatabaseAreBelongToDrunks.updateDouble("Drinks", finalDecision, newData,
                     "Drink_ID", drinkID);
         } else if (finalDecision.equals("complexity")) {
-            Integer newData = intInput("Enter new complexity on a scale of 1-5.");
+            Integer newData = intInput("Enter new complexity on a scale of 1-9.");
             AllYourDatabaseAreBelongToDrunks.updateInteger("Drinks", finalDecision, newData,
                     "Drink_ID", drinkID);
         } else if (finalDecision.equals("spirit_forward_or_refreshing")) {
@@ -678,13 +678,13 @@ public class WhoAreYouAndWhatDoYouWant {
     }
 
     public static void displayDrinkData() {
-        System.out.println("Alcohol content, scale from 1-5: " + AllYourDatabaseAreBelongToDrunks.selectInteger(
+        System.out.println("Alcohol content, scale from 1-9: " + AllYourDatabaseAreBelongToDrunks.selectInteger(
                 "Alcohol_Content", "Drinks", "Drink_ID", drinkID));
         System.out.println("Price: " + AllYourDatabaseAreBelongToDrunks.selectDouble("Price", "Drinks",
                 "Drink_ID", drinkID));
         System.out.println("Specialty Price: " + AllYourDatabaseAreBelongToDrunks.selectDouble(
                 "Specialty_Price", "Drinks", "Drink_ID", drinkID));
-        System.out.println("Complexity, scale from 1-5: " + AllYourDatabaseAreBelongToDrunks.selectInteger(
+        System.out.println("Complexity, scale from 1-9: " + AllYourDatabaseAreBelongToDrunks.selectInteger(
                 "Complexity", "Drinks", "Drink_ID", drinkID));
         boolean spiritForwardOrRefreshing = AllYourDatabaseAreBelongToDrunks.selectBoolean(
                 "Spirit_Forward_or_Refreshing", "Drinks", "Drink_ID", drinkID);

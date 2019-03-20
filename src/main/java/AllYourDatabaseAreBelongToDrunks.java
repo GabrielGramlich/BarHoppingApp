@@ -119,7 +119,8 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
     public static void wasItGood(Integer userID, Integer drinkID, Integer rating) {
-        String sqlStatement = "INSERT INTO Drink_Preferences (User_ID, Drink_ID, Rating) VALUES(" + userID + ", " + drinkID + ", " + rating + ";";
+        String sqlStatement = "INSERT INTO Drink_Preferences (User_ID, Drink_ID, Rating) VALUES(" + userID + ", "
+                + drinkID + ", " + rating + ";";
         dontNeedThat(sqlStatement);
     }
 
@@ -265,6 +266,18 @@ public class AllYourDatabaseAreBelongToDrunks {
                 + primaryKeyBool + ";";
         ArrayList<Integer> returnArrayListInteger = needThatArrayListInteger(column, sqlStatement);
         return returnArrayListInteger;
+    }
+
+    public static Double selectLowestDouble(String column, String table) {
+        String sqlStatement = "SELECT MIN(" + column + ") FROM " + table + ")";
+        Double minValue = needThatDouble(column, sqlStatement);
+        return minValue;
+    }
+
+    public static Double selectHighestDouble(String column, String table) {
+        String sqlStatement = "SELECT MAX(" + column + ") FROM " + table + ")";
+        Double maxValue = needThatDouble(column, sqlStatement);
+        return maxValue;
     }
 
 

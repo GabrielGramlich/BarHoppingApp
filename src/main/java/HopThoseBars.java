@@ -147,10 +147,12 @@ public class HopThoseBars {
 
     public static void keepEmComingBarkeep(String name) {
         Integer rating = intInput("On a scale from 1-5, how did you like " + name + "?");
-        Integer drinkID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Drink_ID", "Drinks", "Name", name);
+        Integer drinkID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Drink_ID", "Drinks",
+                "Name", name);
         AllYourDatabaseAreBelongToDrunks.wasItGood(userID, drinkID, rating);
 
         //TODO get ingredients and shit and add them to the system defined preferences table
+        youreSoPicky(drinkID, rating);
 
         boolean keepEmComing = yesNoInput("Another round?");
         if (keepEmComing) {
@@ -158,6 +160,35 @@ public class HopThoseBars {
         } else {
             cuttingYouOff();
         }
+    }
+
+    public static void youreSoPicky(Integer drinkID, Integer rating) {
+        ArrayList<Integer> ingredientIDs = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList(
+                "Ingredient_ID", "Recipes", "Drink_ID", drinkID);
+        ArrayList<String> ingredients = new ArrayList<>();
+        Integer alcoholContent = AllYourDatabaseAreBelongToDrunks.selectInteger("Alcohol_Content",
+                "Drinks", "Drink_ID", drinkID);
+        Double price = AllYourDatabaseAreBelongToDrunks.selectDouble("Price", "Drinks",
+                "Drink_ID", drinkID);
+        Double lowestPrice = AllYourDatabaseAreBelongToDrunks.selectLowestDouble("Price", "Drinks");
+        Double highestPrice = AllYourDatabaseAreBelongToDrunks.selectLowestDouble("Price", "Drinks");
+        Integer complexity = AllYourDatabaseAreBelongToDrunks.selectInteger("Complexity", "Drinks",
+                "Drink_ID", drinkID);
+        boolean spiritForwardOrRefreshing = AllYourDatabaseAreBelongToDrunks.selectBoolean(
+                "Spirit_Forward_or_Refreshing", "Drinks", "Drink_ID", drinkID);
+        Integer type = AllYourDatabaseAreBelongToDrunks.selectInteger("Type", "Drinks",
+                "Drink_ID", drinkID);
+
+        for (Integer ID: ingredientIDs) {
+            ingredients.add(AllYourDatabaseAreBelongToDrunks.selectString("Name", "Ingredients",
+                    "Ingredient_ID", ID));
+        }
+
+        //TODO check if ingredients are already defined by system
+        //TODO check if drink data is already defined by system
+        //TODO if not defined, add with base value
+        //TODO alter system values
+
     }
 
     public static void cuttingYouOff() {
