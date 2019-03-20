@@ -48,11 +48,11 @@ public class HopThoseBars {
     }
 
     public static void getUserPreferrences() {
-        preferredLiquor = AllYourDatabaseAreBelongToDrunks.selectString("Preferred_Liquor", "User_Defined_Preferences", "Users_User_ID", userID);
-        nonpreferredLiquor = AllYourDatabaseAreBelongToDrunks.selectString("Nonpreferred_Liquor", "User_Defined_Preferences", "Users_User_ID", userID);
-        strongPreference = AllYourDatabaseAreBelongToDrunks.selectBoolean("Weak_or_Strong", "User_Defined_Preferences", "Users_User_ID", userID);
-        priceyPreference = AllYourDatabaseAreBelongToDrunks.selectBoolean("Cheap_or_Pricey", "User_Defined_Preferences", "Users_User_ID", userID);
-        complexPreference = AllYourDatabaseAreBelongToDrunks.selectBoolean("Simple_or_Complex", "User_Defined_Preferences", "Users_User_ID", userID);
+        preferredLiquor = AllYourDatabaseAreBelongToDrunks.selectString("Preferred_Liquor", "User_Defined_Preferences", "User_ID", userID);
+        nonpreferredLiquor = AllYourDatabaseAreBelongToDrunks.selectString("Nonpreferred_Liquor", "User_Defined_Preferences", "User_ID", userID);
+        strongPreference = AllYourDatabaseAreBelongToDrunks.selectBoolean("Weak_or_Strong", "User_Defined_Preferences", "User_ID", userID);
+        priceyPreference = AllYourDatabaseAreBelongToDrunks.selectBoolean("Cheap_or_Pricey", "User_Defined_Preferences", "User_ID", userID);
+        complexPreference = AllYourDatabaseAreBelongToDrunks.selectBoolean("Simple_or_Complex", "User_Defined_Preferences", "User_ID", userID);
     }
 
     public static boolean checkingYourIntake() {
@@ -92,7 +92,7 @@ public class HopThoseBars {
     }
 
     public static void letMeCheckInTheBack(String name, Integer ID) {
-        Integer locationID = AllYourDatabaseAreBelongToDrunks.selectInteger("Locations_Location_ID", "Drink_Locations", "Drinks_Drink_ID", ID);
+        Integer locationID = AllYourDatabaseAreBelongToDrunks.selectInteger("Location_ID", "Drink_Locations", "Drink_ID", ID);
         String street = AllYourDatabaseAreBelongToDrunks.selectString("Street", "Locations", "Location_ID", locationID);
         String city = AllYourDatabaseAreBelongToDrunks.selectString("City", "Locations", "Location_ID", locationID);
         String state = AllYourDatabaseAreBelongToDrunks.selectString("State", "Locations", "Location_ID", locationID);
@@ -127,6 +127,7 @@ public class HopThoseBars {
 
     public static void keepEmComingBarkeep() {
         //TODO determine if last results were faulty
+        //TODO store users junk in the junkbase
 
         boolean keepEmComing = yesNoInput("Another round?");
         if (keepEmComing) {
