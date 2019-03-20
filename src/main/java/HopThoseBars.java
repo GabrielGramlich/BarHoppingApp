@@ -5,8 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static input.InputUtils.intInput;
-import static input.InputUtils.yesNoInput;
+import static input.InputUtils.*;
 
 public class HopThoseBars {
     public static Integer howMuchHaveYouHad = 0;
@@ -135,14 +134,23 @@ public class HopThoseBars {
         drinks.add(name);
         locations.add(locationID);
 
-        //TODO wait for users return
-        keepEmComingBarkeep();
+        //TODO wait for users return #this will happen when it's a real app
+        boolean stillDrinking = true;
+
+        do {
+            stillDrinking = yesNoInput("Are you still drinking?");
+        } while (stillDrinking);
+
+        keepEmComingBarkeep(name);
     }
 
 
-    public static void keepEmComingBarkeep() {
-        //TODO determine if last results were faulty
-        //TODO store users junk in the junkbase
+    public static void keepEmComingBarkeep(String name) {
+        Integer rating = intInput("On a scale from 1-5, how did you like " + name + "?");
+        Integer drinkID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Drink_ID", "Drinks", "Name", name);
+        AllYourDatabaseAreBelongToDrunks.wasItGood(userID, drinkID, rating);
+
+        //TODO get ingredients and shit and add them to the system defined preferences table
 
         boolean keepEmComing = yesNoInput("Another round?");
         if (keepEmComing) {
@@ -153,7 +161,7 @@ public class HopThoseBars {
     }
 
     public static void cuttingYouOff() {
-        //TODO recommend a ride service #this will be for a future update
+        //TODO recommend a ride service #this will happen when it's a real app
         try {
             Desktop.getDesktop().browse(new URL("uber.com").toURI());
         } catch (Exception e) {
@@ -164,6 +172,6 @@ public class HopThoseBars {
     }
 
     public static void theHangoverThisAppEdition() {
-        //TODO display the course of the user's night #this will be for a future update.
+        //TODO display the course of the user's night #this will happen when it's a real app
     }
 }

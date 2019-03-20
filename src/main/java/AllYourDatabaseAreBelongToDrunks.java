@@ -118,6 +118,11 @@ public class AllYourDatabaseAreBelongToDrunks {
         dontNeedThat(sqlStatement);
     }
 
+    public static void wasItGood(Integer userID, Integer drinkID, Integer rating) {
+        String sqlStatement = "INSERT INTO Drink_Preferences (User_ID, Drink_ID, Rating) VALUES(" + userID + ", " + drinkID + ", " + rating + ";";
+        dontNeedThat(sqlStatement);
+    }
+
 
     /**********************************************
     ***Generic update statement creation methods***
@@ -289,18 +294,16 @@ public class AllYourDatabaseAreBelongToDrunks {
     public static void dontNeedThat(String sqlStatement) {
         // Generic means of pushing data
         try {
-            if (doIt()) {
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                Connection connection = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
-                                "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
-                        "root", "whopps666");
-                Statement statement = connection.createStatement();
-                statement.execute(sqlStatement);
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
+                            "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
+                    "root", "whopps666");
+            Statement statement = connection.createStatement();
+            statement.execute(sqlStatement);
 
-                statement.close();
-                connection.close();
-            }
+            statement.close();
+            connection.close();
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }

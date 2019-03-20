@@ -6,7 +6,7 @@ public class DontHopUnlessISaySo {
     public static void main(String[] args) { }
 
     public static boolean haveWeMet() {
-        //TODO check if user is already signed in
+        //TODO check if user is already signed in #this will happen when it's a real app
 
         return false;
     }

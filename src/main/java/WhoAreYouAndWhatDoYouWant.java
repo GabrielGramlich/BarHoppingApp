@@ -20,7 +20,7 @@ public class WhoAreYouAndWhatDoYouWant {
         boolean quit = true;
         username = "";
         password = "";
-        // TODO get username and password if already signed in
+        // TODO get username and password if already signed in #this will happen when it's a real app
 
         boolean newUser = yesNoInput("Are you a new member?");
 
