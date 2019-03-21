@@ -35,6 +35,12 @@ public class WhoAreYouAndWhatDoYouWant {
                 username = stringInput("Enter your username:");
                 password = stringInput("Enter your password:");
                 quit = DontHopUnlessISaySo.whosThere(username, password);
+                if (quit) {
+                    boolean signUp = yesNoInput("Username doesn't exit. Would you like to sign up?");
+                    if (signUp) {
+                        quit = createAccountLogin();
+                    }
+                }
             }
             weHave = true;
         }

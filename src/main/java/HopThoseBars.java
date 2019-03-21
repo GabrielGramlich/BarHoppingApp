@@ -11,6 +11,7 @@ public class HopThoseBars {
     //TODO check for time with drink selection and factor in specialty price with that #this will happen when it's a
     // real app
     //TODO Comment your code, you dick
+    //TODO remove drinks percent wise for previously rated drinks
 
     public static Integer howMuchHaveYouHad = 0;
     public static LocalDateTime startGettingDrunkTime = null;
@@ -53,7 +54,6 @@ public class HopThoseBars {
             }
 
             pickingYourPoison();
-            howMuchHaveYouHad++;
         }
     }
 
@@ -81,6 +81,7 @@ public class HopThoseBars {
         double hours = startGettingDrunkTime.until(currentTime, ChronoUnit.HOURS);
 
         double howMuchHaveYouReallyHad = howMuchHaveYouHad / hours;
+        howMuchHaveYouHad++;
         if (hours >= 2 && howMuchHaveYouReallyHad >= LIMIT) {
             cuttingYouOff();
             return false;
