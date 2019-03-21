@@ -8,7 +8,8 @@ import java.util.Random;
 import static input.InputUtils.*;
 
 public class HopThoseBars {
-    //TODO check for time with drink selection and factor in specialty price with that #this will happen when it's a real app
+    //TODO check for time with drink selection and factor in specialty price with that #this will happen when it's a
+    // real app
     //TODO Comment your code, you dick
 
     public static Integer howMuchHaveYouHad = 0;
@@ -114,7 +115,8 @@ public class HopThoseBars {
         ArrayList<Integer> tempDrinksBoolean = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayListWithBoolean(
                 "Drink_ID", "Drinks", "Spirit_Forward_or_Refreshing",
                 spiritForwardOrRefreshing);
-        ArrayList<Integer> tempDrinksType = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Drink_ID", "Drinks", "Type", type);
+        ArrayList<Integer> tempDrinksType = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Drink_ID",
+                "Drinks", "Type", type);
         ArrayList<Integer> startingDrinks = new ArrayList<>();
 
         for (Integer drinkBool : tempDrinksBoolean) {
@@ -130,19 +132,23 @@ public class HopThoseBars {
 
     public static ArrayList<Integer> getAllergenFreeDrinks(ArrayList<Integer> startingDrinks) {
         ArrayList<Integer> allergenFreeDrinks = new ArrayList<>();
-        ArrayList<Integer> allergies = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Allergy_ID", "User_Allergies", "User_ID", userID);
+        ArrayList<Integer> allergies = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Allergy_ID",
+                "User_Allergies", "User_ID", userID);
         if (!allergies.isEmpty()) {
             ArrayList<String> allergens = new ArrayList<>();
 
             for (Integer allergy : allergies) {
-                allergens.add(AllYourDatabaseAreBelongToDrunks.selectString("Name", "Allergies", "Allergy_ID", allergy));
+                allergens.add(AllYourDatabaseAreBelongToDrunks.selectString("Name", "Allergies",
+                        "Allergy_ID", allergy));
             }
 
             for (Integer drink : startingDrinks) {
                 boolean hasAllergen = false;
-                ArrayList<Integer> recipe = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Ingredient_ID", "Recipes", "Drink_ID", drink);
+                ArrayList<Integer> recipe = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList(
+                        "Ingredient_ID", "Recipes", "Drink_ID", drink);
                 for (Integer ingredient : recipe) {
-                    String name = AllYourDatabaseAreBelongToDrunks.selectString("Name", "Ingredients", "Ingredient_ID", ingredient);
+                    String name = AllYourDatabaseAreBelongToDrunks.selectString("Name", "Ingredients",
+                            "Ingredient_ID", ingredient);
                     for (String allergen : allergens) {
                         if (name.equals(allergen)) {
                             hasAllergen = true;
@@ -190,9 +196,11 @@ public class HopThoseBars {
         ArrayList<Integer> almostRightDrinks = new ArrayList<>();
         for (Integer drink : allergenFreeDrinks) {
             drinkID = drink;
-            Integer drinkAlcoholContent = AllYourDatabaseAreBelongToDrunks.selectInteger("Alcohol_Content", "Drinks", "Drink_ID", drinkID);
+            Integer drinkAlcoholContent = AllYourDatabaseAreBelongToDrunks.selectInteger("Alcohol_Content",
+                    "Drinks", "Drink_ID", drinkID);
             Integer drinkPrice = updateRatingPrice(false);
-            Integer drinkComplexity = AllYourDatabaseAreBelongToDrunks.selectInteger("Complexity", "Drinks", "Drink_ID", drinkID);
+            Integer drinkComplexity = AllYourDatabaseAreBelongToDrunks.selectInteger("Complexity",
+                    "Drinks", "Drink_ID", drinkID);
             if (drinkAlcoholContent < alcoholContentHigh && drinkAlcoholContent > alcoholContentLow) {
                 if (drinkPrice < priceHigh && drinkPrice > priceLow) {
                     if (drinkComplexity < complexityHigh && drinkComplexity > complexityLow) {
@@ -264,8 +272,10 @@ public class HopThoseBars {
     public static ArrayList<Integer> getRightDrinks(ArrayList<Integer> almostRightDrinks) {
         ArrayList<Integer> tempRightDrinks = new ArrayList<>();
         ArrayList<Integer> rightDrinks = new ArrayList<>();
-        Integer ingredientID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Ingredient_ID", "Ingredients", "Name", preferredLiquor);
-        ArrayList<Integer> drinksWithLiquor = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList("Drink_ID", "Recipes", "Ingredient_ID", ingredientID);
+        Integer ingredientID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Ingredient_ID",
+                "Ingredients", "Name", preferredLiquor);
+        ArrayList<Integer> drinksWithLiquor = AllYourDatabaseAreBelongToDrunks.selectIntegerArrayList(
+                "Drink_ID", "Recipes", "Ingredient_ID", ingredientID);
 
         for (Integer drink : almostRightDrinks) {
             for (Integer otherDrink : drinksWithLiquor) {

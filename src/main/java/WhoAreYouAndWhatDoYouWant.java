@@ -39,7 +39,8 @@ public class WhoAreYouAndWhatDoYouWant {
             weHave = true;
         }
 
-        loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_Credential_ID", "Login_Credentials", "Username", username);
+        loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_Credential_ID",
+                "Login_Credentials", "Username", username);
         userOrOwner();
     }
 
@@ -62,7 +63,8 @@ public class WhoAreYouAndWhatDoYouWant {
         boolean response = yesNoInput("Awh, you wanna leave? Big baby got his feewings hurt?");
         if (response) {
             AllYourDatabaseAreBelongToDrunks.delete("Users", "User_ID", userID);
-            AllYourDatabaseAreBelongToDrunks.delete("Login_Credentials", "Login_Credential_ID", loginID);
+            AllYourDatabaseAreBelongToDrunks.delete("Login_Credentials", "Login_Credential_ID",
+                    loginID);
         }
     }
 
@@ -262,8 +264,8 @@ public class WhoAreYouAndWhatDoYouWant {
                 AllYourDatabaseAreBelongToDrunks.updateString("Users", "Last_Name", last,
                         "User_ID", userID);
             } else {
-                Integer loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString("Login_Credential_ID",
-                        "Login_Credentials", "Username", username);
+                Integer loginID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithString(
+                        "Login_Credential_ID", "Login_Credentials", "Username", username);
                 AllYourDatabaseAreBelongToDrunks.updateString("Login_Credentials", toBeUpdated, newInfo,
                         "Login_Credential_ID", loginID);
             }
