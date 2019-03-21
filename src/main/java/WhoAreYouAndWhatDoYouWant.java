@@ -159,11 +159,15 @@ public class WhoAreYouAndWhatDoYouWant {
         boolean weakOrStrong = yesNoInput("Do you have hair on your chest?");
         boolean deepPockets = !yesNoInput("You broke, homie?");
         boolean youFancy = yesNoInput("You a fan of mixology?");
+        Integer importantPreference = intInput("What's most important, strength (1), price (2), " +
+                "complexity (3)?");
+        Integer unimportantPreference = intInput("What's least important, strength (1), price (2), " +
+                "complexity (3)?");
 
         Integer userID = AllYourDatabaseAreBelongToDrunks.selectInteger("User_ID",
                 "Users", "Login_Credential_ID", loginID);
         AllYourDatabaseAreBelongToDrunks.youGotSomeWeirdKinks(userID, allergies, topShelf, weakOrStrong,
-                deepPockets, youFancy);
+                deepPockets, youFancy, importantPreference, unimportantPreference);
     }
 
     public static void setBaseUserPreferences() {

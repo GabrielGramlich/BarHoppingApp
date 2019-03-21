@@ -94,7 +94,8 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
     public static void youGotSomeWeirdKinks(Integer userID, ArrayList<String> allergies, String topShelf,
-                                            boolean weakOrStrong, boolean deepPockets, boolean youFancy) {
+                                            boolean weakOrStrong, boolean deepPockets, boolean youFancy,
+                                            Integer importantPreference, Integer unimportantPreference) {
         if (!allergies.isEmpty()) {
             for (String allergy : allergies) {
                 Integer allergyID = selectIntegerWithString("Allergy_ID", "Allergies",
@@ -114,8 +115,9 @@ public class AllYourDatabaseAreBelongToDrunks {
         }
 
         String sqlStatement = "INSERT INTO User_Defined_Preferences (User_ID, Preferred_Liquor, " +
-                "Weak_or_Strong, Cheap_or_Pricey, Simple_or_Complex) VALUES(" + userID + ", \"" + topShelf + "\", "
-                + weakOrStrong + ", " + deepPockets + ", " + youFancy + ");";
+                "Weak_or_Strong, Cheap_or_Pricey, Simple_or_Complex, Important_Preference, Unimportant_Preference) " +
+                "VALUES(" + userID + ", \"" + topShelf + "\", " + weakOrStrong + ", " + deepPockets + ", "
+                + youFancy + ", " + importantPreference + ", " + unimportantPreference + ");";
         dontNeedThat(sqlStatement);
     }
 

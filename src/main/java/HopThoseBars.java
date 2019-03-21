@@ -21,6 +21,14 @@ public class HopThoseBars {
     public static boolean strongPreference;
     public static boolean priceyPreference;
     public static boolean complexPreference;
+    public static Integer importantPreference;
+    public static Integer unimportantPreference;
+    public static Double alcoholContentLow;
+    public static Double alcoholContentHigh;
+    public static Double priceLow;
+    public static Double priceHigh;
+    public static Double complexityLow;
+    public static Double complexityHigh;
     public static boolean spiritForwardOrRefreshing;
     public static Integer type;
     public static Integer rating;
@@ -56,6 +64,10 @@ public class HopThoseBars {
         priceyPreference = AllYourDatabaseAreBelongToDrunks.selectBoolean("Cheap_or_Pricey",
                 "User_Defined_Preferences", "User_ID", userID);
         complexPreference = AllYourDatabaseAreBelongToDrunks.selectBoolean("Simple_or_Complex",
+                "User_Defined_Preferences", "User_ID", userID);
+        importantPreference = AllYourDatabaseAreBelongToDrunks.selectInteger("Important_Preference",
+                "User_Defined_Preferences", "User_ID", userID);
+        unimportantPreference = AllYourDatabaseAreBelongToDrunks.selectInteger("Unimportant_Preference",
                 "User_Defined_Preferences", "User_ID", userID);
     }
 
@@ -173,13 +185,7 @@ public class HopThoseBars {
             sdpComplexity--;
         }
 
-        Integer allowedVariation = 5;
-        Double alcoholContentLow = sdpAlcoholContent - allowedVariation;
-        Double alcoholContentHigh = sdpAlcoholContent + allowedVariation;
-        Double priceLow = sdpPrice - allowedVariation;
-        Double priceHigh = sdpPrice + allowedVariation;
-        Double complexityLow = sdpComplexity - allowedVariation;
-        Double complexityHigh = sdpComplexity + allowedVariation;
+        getVariation(sdpAlcoholContent, sdpPrice, sdpComplexity);
 
         ArrayList<Integer> almostRightDrinks = new ArrayList<>();
         for (Integer drink : allergenFreeDrinks) {
@@ -197,6 +203,62 @@ public class HopThoseBars {
         }
 
         return almostRightDrinks;
+    }
+
+    public static void getVariation(Double alcoholContent, Double price, Double complexity) {
+        Double importantAllowedVariation = 2d;
+        Double allowedVariation = 3.5;
+        Double unimportantAllowedVariation = 5d;
+
+        if (importantPreference.equals(1)) {
+            alcoholContentLow = alcoholContent - importantAllowedVariation;
+            alcoholContentHigh = alcoholContent + importantAllowedVariation;
+            if (unimportantPreference.equals(2)) {
+                priceLow = price - unimportantAllowedVariation;
+                priceHigh = price + unimportantAllowedVariation;
+                complexityLow = complexity - allowedVariation;
+                complexityHigh = complexity + allowedVariation;
+            } else if (unimportantPreference.equals(3)) {
+                complexityLow = complexity - unimportantAllowedVariation;
+                complexityHigh = complexity + unimportantAllowedVariation;
+                priceLow = price - allowedVariation;
+                priceHigh = price + allowedVariation;
+            }
+        } else if (importantPreference.equals(2)) {
+            priceLow = price - importantAllowedVariation;
+            priceHigh = price + importantAllowedVariation;
+            if (unimportantPreference.equals(1)) {
+                alcoholContentLow = alcoholContent - unimportantAllowedVariation;
+                alcoholContentHigh = alcoholContent + unimportantAllowedVariation;
+                complexityLow = complexity - allowedVariation;
+                complexityHigh = complexity + allowedVariation;
+            } else if (unimportantPreference.equals(3)) {
+                complexityLow = complexity - unimportantAllowedVariation;
+                complexityHigh = complexity + unimportantAllowedVariation;
+                alcoholContentLow = alcoholContent - allowedVariation;
+                alcoholContentHigh = alcoholContent + allowedVariation;
+            }
+        } else if (importantPreference.equals(3)) {
+            complexityLow = complexity - importantAllowedVariation;
+            complexityHigh = complexity + importantAllowedVariation;
+            if (unimportantPreference.equals(1)) {
+                alcoholContentLow = alcoholContent - unimportantAllowedVariation;
+                alcoholContentHigh = alcoholContent + unimportantAllowedVariation;
+                priceLow = price - allowedVariation;
+                priceHigh = price + allowedVariation;
+            } else if (unimportantPreference.equals(2)) {
+                priceLow = price - unimportantAllowedVariation;
+                priceHigh = price + unimportantAllowedVariation;
+                alcoholContentLow = alcoholContent - allowedVariation;
+                alcoholContentHigh = alcoholContent + allowedVariation;
+            }
+        }
+        System.out.println(alcoholContentHigh);
+        System.out.println(alcoholContentLow);
+        System.out.println(priceHigh);
+        System.out.println(priceLow);
+        System.out.println(complexityHigh);
+        System.out.println(complexityLow);
     }
 
     public static ArrayList<Integer> getRightDrinks(ArrayList<Integer> almostRightDrinks) {
@@ -442,7 +504,7 @@ public class HopThoseBars {
                     }
                 }
             } else if (difference == 3 || difference == 4) {
-                updateValue *= updateValue * 2;
+                updateValue *= 2;
                 if (minusOrPlus == 0) {
                     if (currentRating <= 9 - updateValue) {
                         currentRating += updateValue;
@@ -455,7 +517,7 @@ public class HopThoseBars {
             }
         } else if (rating == 1) {
             if (difference == 1 || difference == 2) {
-                updateValue *= updateValue * 2;
+                updateValue *= 2;
                 if (minusOrPlus == 0) {
                     if (currentRating <= 9 - updateValue) {
                         currentRating += updateValue;
@@ -466,7 +528,7 @@ public class HopThoseBars {
                     }
                 }
             } else if (difference == 3 || difference == 4) {
-                updateValue *= updateValue * 4;
+                updateValue *= 4;
                 if (minusOrPlus == 0) {
                     if (currentRating <= 9 - updateValue) {
                         currentRating += updateValue;
@@ -489,7 +551,7 @@ public class HopThoseBars {
                     }
                 }
             } else if (difference == 3 || difference == 4) {
-                updateValue *= updateValue * 2;
+                updateValue *= 2;
                 if (minusOrPlus == 0) {
                     if (currentRating >= 1 + updateValue) {
                         currentRating -= updateValue;
@@ -502,7 +564,7 @@ public class HopThoseBars {
             }
         } else if (rating == 5) {
             if (difference == 1 || difference == 2) {
-                updateValue *= updateValue * 2;
+                updateValue *= 2;
                 if (minusOrPlus == 0) {
                     if (currentRating >= 1 + updateValue) {
                         currentRating -= updateValue;
@@ -513,7 +575,7 @@ public class HopThoseBars {
                     }
                 }
             } else if (difference == 3 || difference == 4) {
-                updateValue *= updateValue * 4;
+                updateValue *= 4;
                 if (minusOrPlus == 0) {
                     if (currentRating >= 1 + updateValue) {
                         currentRating -= updateValue;
