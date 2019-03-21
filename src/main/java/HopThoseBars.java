@@ -8,7 +8,7 @@ import java.util.Random;
 import static input.InputUtils.*;
 
 public class HopThoseBars {
-    //TODO check for time with drink selection and factor in specialty price with that
+    //TODO check for time with drink selection and factor in specialty price with that #this will happen when it's a real app
     //TODO Comment your code, you dick
 
     public static Integer howMuchHaveYouHad = 0;
@@ -349,6 +349,7 @@ public class HopThoseBars {
     }
 
     public static void whatDoYouThinkYoureBetterThanMe() {
+        //TODO update drink data
         updateRatingAlcoholContent();
         updateRatingPrice(true);
         updateRatingComplexity();
