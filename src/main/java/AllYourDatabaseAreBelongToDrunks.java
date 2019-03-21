@@ -6,7 +6,6 @@ import static input.InputUtils.yesNoInput;
 
 public class AllYourDatabaseAreBelongToDrunks {
     public static void main(String[] args) { }
-    //TODO Comment your code, you dick
 
 
     /***********************************************
@@ -24,6 +23,7 @@ public class AllYourDatabaseAreBelongToDrunks {
 
     public static void welcomeToYourKingdom(Integer ownerID, String name, Double number, String street, String city,
                                             String state, Double zip) {
+        // Creating a new location
         String insertDataSql = "INSERT INTO Locations (Owner_ID, Name, Phone_Number, Street, City, State, Zip) " +
                 "VALUES (" + ownerID + ", \"" + name + "\", " + number + ", \"" + street + "\", \"" + city + "\", \""
                 + state + "\", " + zip + ");";
@@ -34,6 +34,7 @@ public class AllYourDatabaseAreBelongToDrunks {
                                                   ArrayList<String> openHours, ArrayList<String> closeHours,
                                                   ArrayList<String> speHoursStart, ArrayList<String> speHoursEnd,
                                                   ArrayList<Double> speHoursDiscount) {
+        // Creating a new calendar entry for a location
         for (int i = 0; i < days.size(); i++) {
             String insertDataSql = "INSERT INTO Calendar (Location_ID, Day_of_Week, Time_Open, Time_Close, " +
                     "Specialty_Hour_Start, Specialty_Hour_End, Specialty_Discount) VALUES (" + locationID + ", \""
@@ -68,6 +69,7 @@ public class AllYourDatabaseAreBelongToDrunks {
     public static void thatSoundsDelicious(String name, String startDate, String endDate, Integer strength,
                                            Double price, Integer complexity, boolean spiritForwardOrRefreshing,
                                            Integer type) {
+        // Creating a new drink
         String insertDataSql = "INSERT INTO Drinks (Name, Availability_Start, Availability_End, Alcohol_Content, " +
                 "Price, Complexity, Spirit_Forward_or_Refreshing, Type) VALUES(\"" + name + "\", STR_TO_DATE(\""
                 + startDate + "\", \"%m/%d/%y\"), STR_TO_DATE(\"" + endDate + "\", \"%m/%d/%y\"), " + strength + ", "
@@ -76,6 +78,7 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
     public static void whatsInItThough(ArrayList<String> ingredients, Integer drinkID) {
+        // Creating a new recipe entry for all ingredients in a drink
         for (String ingredient : ingredients) {
             Integer ingredientID = selectIntegerWithString("Ingredient_Name", "Ingredients",
                     "Name", ingredient);
@@ -96,6 +99,7 @@ public class AllYourDatabaseAreBelongToDrunks {
     public static void youGotSomeWeirdKinks(Integer userID, ArrayList<String> allergies, String topShelf,
                                             boolean weakOrStrong, boolean deepPockets, boolean youFancy,
                                             Integer importantPreference, Integer unimportantPreference) {
+        // Storing user defined preferences
         if (!allergies.isEmpty()) {
             for (String allergy : allergies) {
                 Integer allergyID = selectIntegerWithString("Allergy_ID", "Allergies",
@@ -122,17 +126,20 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
     public static void wasItGood(Integer userID, Integer drinkID, Integer rating) {
+        // Storing drink rating
         String sqlStatement = "INSERT INTO Drink_Preferences (User_ID, Drink_ID, Rating) VALUES(" + userID + ", "
                 + drinkID + ", " + rating + ");";
         dontNeedThat(sqlStatement);
     }
 
     public static void youreSayingPeopleLikeThat(String name, String type) {
+        // Creating a new preference
         String sqlStatement = "INSERT INTO Preferences (Name, Type) VALUES(\"" + name + "\", \"" + type + "\");";
         dontNeedThat(sqlStatement);
     }
 
     public static void yourOpinionIsWrong(Integer preferenceID, Integer userID, Double variable) {
+        // Creating a new system defined preference
         String variableString = String.valueOf(String.format("%.3f", variable));
         String sqlStatement = "INSERT INTO System_Defined_Preferences (Preference_ID, User_ID, Variable) VALUES("
                 + preferenceID + ", " + userID + ", " + variableString + ");";
@@ -140,6 +147,7 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
     public static void youHaveNoPersonalityWhatsoever(Integer preferenceID, Integer userID) {
+        // Creating a new blank user
         String sqlStatement = "INSERT INTO System_Defined_Preferences (Preference_ID, User_ID, Variable) VALUES("
                 + preferenceID + ", " + userID + ", 5.000);";
         dontNeedThat(sqlStatement);
