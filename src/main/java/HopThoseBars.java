@@ -402,12 +402,8 @@ public class HopThoseBars {
         Integer sdpID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithSecondKey(
                 "System_Defined_Preference_ID", "System_Defined_Preferences",
                 "Preference_ID", primaryKeyID, "User_ID", userID);
-        System.out.println("This?");
-        System.out.println(newRating);
-        System.out.println(sdpID);
         AllYourDatabaseAreBelongToDrunks.updateDouble("System_Defined_Preferences", "Variable", newRating,
                 "System_Defined_Preference_ID", sdpID);
-        System.out.println("This?");
     }
 
     public static Double getNewSimpleRating(Double currentRating) {
@@ -567,7 +563,7 @@ public class HopThoseBars {
                 "System_Defined_Preference_ID", "System_Defined_Preferences",
                 "Preference_ID", preferenceID, "User_ID", userID);
         if (sdpID == 0) {
-            AllYourDatabaseAreBelongToDrunks.yourOpinionIsWrong(preferenceID, userID, 5.0);
+            AllYourDatabaseAreBelongToDrunks.yourOpinionIsWrong(preferenceID, userID, 5.000);
             sdpID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithSecondKey("System_Defined_Preference_ID",
                     "System_Defined_Preferences", "Preference_ID", preferenceID,
                     "User_ID", userID);

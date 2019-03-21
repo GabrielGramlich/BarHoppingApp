@@ -131,14 +131,15 @@ public class AllYourDatabaseAreBelongToDrunks {
     }
 
     public static void yourOpinionIsWrong(Integer preferenceID, Integer userID, Double variable) {
+        String variableString = String.valueOf(String.format("%.3f", variable));
         String sqlStatement = "INSERT INTO System_Defined_Preferences (Preference_ID, User_ID, Variable) VALUES("
-                + preferenceID + ", " + userID + ", " + variable + ");";
+                + preferenceID + ", " + userID + ", " + variableString + ");";
         dontNeedThat(sqlStatement);
     }
 
     public static void youHaveNoPersonalityWhatsoever(Integer preferenceID, Integer userID) {
         String sqlStatement = "INSERT INTO System_Defined_Preferences (Preference_ID, User_ID, Variable) VALUES("
-                + preferenceID + ", " + userID + ", 5.0);";
+                + preferenceID + ", " + userID + ", 5.000);";
         dontNeedThat(sqlStatement);
     }
 
@@ -150,52 +151,52 @@ public class AllYourDatabaseAreBelongToDrunks {
 
     public static void updateString(String table, String column, String newData, String primaryKeyName,
                                     Integer primaryKeyID) {
-        String sqlStatement = "UPDATE " + table + " SET " + column + " = \"" + newData + "\" WHERE \""
-                + primaryKeyName + "\" = " + primaryKeyID + ";";
+        String sqlStatement = "UPDATE " + table + " SET " + column + " = \"" + newData + "\" WHERE "
+                + primaryKeyName + " = " + primaryKeyID + ";";
         dontNeedThat(sqlStatement);
     }
 
     public static void updateTime(String table, String column, String newData, String primaryKeyName,
                                   Integer primaryKeyID, String secondaryKeyName, String secondaryKeyData) {
         String sqlStatement = "UPDATE " + table + " SET " + column + " = TIME_FORMAT(CONVERT(\"" + newData
-                + "\", TIME), \"%H:%i\") WHERE \"" + primaryKeyName + "\" = " + primaryKeyID + " AND \""
-                + secondaryKeyName + "\" = " + secondaryKeyData + ";";
+                + "\", TIME), \"%H:%i\") WHERE " + primaryKeyName + " = " + primaryKeyID + ", "
+                + secondaryKeyName + " = " + secondaryKeyData + ";";
         dontNeedThat(sqlStatement);
     }
 
     public static void updateDate(String table, String column, String newData, String primaryKeyName,
                                   Integer primaryKeyID) {
         String sqlStatement = "UPDATE " + table + " SET " + column + " = STR_TO_DATE(\"" + newData
-                + "\", \"%m/%d/%y\") WHERE \"" + primaryKeyName + "\" = " + primaryKeyID + ";";
+                + "\", \"%m/%d/%y\") WHERE " + primaryKeyName + " = " + primaryKeyID + ";";
         dontNeedThat(sqlStatement);
     }
 
     public static void updateDouble(String table, String column, Double newData, String primaryKeyName,
                                     Integer primaryKeyID) {
-        String sqlStatement = "UPDATE " + table + " SET " + column + " = " + newData + " WHERE \"" + primaryKeyName
-                + "\" = " + primaryKeyID + ";";
+        String sqlStatement = "UPDATE " + table + " SET " + column + " = " + newData + " WHERE " + primaryKeyName
+                + " = " + primaryKeyID + ";";
         dontNeedThat(sqlStatement);
     }
 
     public static void updateInteger(String table, String column, Integer newData, String primaryKeyName,
                                      Integer primaryKeyID) {
-        String sqlStatement = "UPDATE " + table + " SET " + column + " = " + newData + " WHERE \"" + primaryKeyName
-                + "\" = " + primaryKeyID + ";";
+        String sqlStatement = "UPDATE " + table + " SET " + column + " = " + newData + " WHERE " + primaryKeyName
+                + " = " + primaryKeyID + ";";
         dontNeedThat(sqlStatement);
     }
 
     public static void updateIntegerWithSecondaryID(String table, String column, Integer newData,
                                                     String primaryKeyName, Integer primaryKeyID,
                                                     String secondaryKeyName, Integer secondaryKeyID) {
-        String sqlStatement = "UPDATE " + table + " SET " + column + " = " + newData + " WHERE \"" + primaryKeyName
-                + "\" = " + primaryKeyID + " AND \"" + secondaryKeyName + "\" = " + secondaryKeyID + ";";
+        String sqlStatement = "UPDATE " + table + " SET " + column + " = " + newData + " WHERE " + primaryKeyName
+                + " = " + primaryKeyID + ", " + secondaryKeyName + " = " + secondaryKeyID + ";";
         dontNeedThat(sqlStatement);
     }
 
     public static void updateBoolean(String table, String column, boolean newData, String primaryKeyName,
                                      Integer primaryKeyID) {
-        String sqlStatement = "UPDATE " + table + " SET " + column + " = " + newData + " WHERE \"" + primaryKeyName
-                + "\" = " + primaryKeyID + ";";
+        String sqlStatement = "UPDATE " + table + " SET " + column + " = " + newData + " WHERE " + primaryKeyName
+                + " = " + primaryKeyID + ";";
         dontNeedThat(sqlStatement);
     }
 
