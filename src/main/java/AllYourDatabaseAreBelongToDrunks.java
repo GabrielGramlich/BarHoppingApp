@@ -355,7 +355,7 @@ public class AllYourDatabaseAreBelongToDrunks {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
                             "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
-                    "root", "whopps666");
+                    "BarHopApp", "imissfroggerthatgamewasawesome");
             Statement statement = connection.createStatement();
             statement.execute(sqlStatement);
 
@@ -378,7 +378,7 @@ public class AllYourDatabaseAreBelongToDrunks {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
                             "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
-                    "root", "whopps666");
+                    "BarHopApp", "imissfroggerthatgamewasawesome");
             Statement statement = connection.createStatement();
 
             ResultSet retrievedData = statement.executeQuery(sqlStatement);
@@ -404,7 +404,7 @@ public class AllYourDatabaseAreBelongToDrunks {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
                             "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
-                    "root", "whopps666");
+                    "BarHopApp", "imissfroggerthatgamewasawesome");
             Statement statement = connection.createStatement();
 
             ResultSet retrievedData = statement.executeQuery(sqlStatement);
@@ -430,7 +430,7 @@ public class AllYourDatabaseAreBelongToDrunks {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
                             "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
-                    "root", "whopps666");
+                    "BarHopApp", "imissfroggerthatgamewasawesome");
             Statement statement = connection.createStatement();
 
             ResultSet retrievedData = statement.executeQuery(sqlStatement);
@@ -456,7 +456,7 @@ public class AllYourDatabaseAreBelongToDrunks {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
                             "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
-                    "root", "whopps666");
+                    "BarHopApp", "imissfroggerthatgamewasawesome");
             Statement statement = connection.createStatement();
 
             ResultSet retrievedData = statement.executeQuery(sqlStatement);
@@ -488,7 +488,7 @@ public class AllYourDatabaseAreBelongToDrunks {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
                             "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
-                    "root", "whopps666");
+                    "BarHopApp", "imissfroggerthatgamewasawesome");
             Statement statement = connection.createStatement();
 
             ResultSet retrievedData = statement.executeQuery(sqlStatement);
@@ -516,7 +516,7 @@ public class AllYourDatabaseAreBelongToDrunks {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
                             "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
-                    "root", "whopps666");
+                    "BarHopApp", "imissfroggerthatgamewasawesome");
             Statement statement = connection.createStatement();
 
             ResultSet retrievedData = statement.executeQuery(sqlStatement);
