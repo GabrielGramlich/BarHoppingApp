@@ -13,6 +13,7 @@ public class DontHopUnlessISaySo {
     }
 
     public static boolean whosThere (String username, String potatoes) {
+        // Comparing salted, hashed password with password stored in database
         boolean youLiar;
 
         String seasoning = AllYourDatabaseAreBelongToDrunks.selectStringWithString("Salt",
@@ -32,6 +33,7 @@ public class DontHopUnlessISaySo {
     }
 
     public static String nothingCuresAHangoverLikeATastyPassword(String potatoes, String seasoning) {
+        // Adding salt to password and hashing it with 256 bit encryption
         String hashbrowns = null;
         try {
             byte[] salt = seasoning.getBytes();
@@ -52,7 +54,9 @@ public class DontHopUnlessISaySo {
     }
 
     public static String worthYourWeightInEncryption() {
+        // Creating a salt
         try {
+            //TODO add validation omitting characters that MySQL doesn't like
             SecureRandom sr = SecureRandom.getInstanceStrong();
             byte[] salt = new byte[16];
             sr.nextBytes(salt);
