@@ -4,7 +4,6 @@ import java.security.SecureRandom;
 
 public class DontHopUnlessISaySo {
     public static void main(String[] args) { }
-    //TODO Comment your code, you dick
 
     public static boolean haveWeMet() {
         //TODO check if user is already signed in #this will happen when it's a real app
