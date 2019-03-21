@@ -130,7 +130,7 @@ public class AllYourDatabaseAreBelongToDrunks {
         dontNeedThat(sqlStatement);
     }
 
-    public static void youreOpinionIsWrong(Integer preferenceID, Integer userID, Double variable) {
+    public static void yourOpinionIsWrong(Integer preferenceID, Integer userID, Double variable) {
         String sqlStatement = "INSERT INTO System_Defined_Preferences (Preference_ID, User_ID, Variable) VALUES("
                 + preferenceID + ", " + userID + ", " + variable + ");";
         dontNeedThat(sqlStatement);

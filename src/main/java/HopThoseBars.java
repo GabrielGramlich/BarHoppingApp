@@ -84,7 +84,7 @@ public class HopThoseBars {
         ArrayList<Integer> rightDrinks = getRightDrinks(almostRightDrinks);
 
         Random rand = new Random();
-        int randInt = rand.nextInt(rightDrinks.size() - 1);
+        int randInt = rand.nextInt(rightDrinks.size());
 
         drinkID = rightDrinks.get(randInt);
         String drinkName = AllYourDatabaseAreBelongToDrunks.selectString("Name", "Drinks",
@@ -173,7 +173,7 @@ public class HopThoseBars {
             sdpComplexity--;
         }
 
-        Integer allowedVariation = 3;
+        Integer allowedVariation = 5;
         Double alcoholContentLow = sdpAlcoholContent - allowedVariation;
         Double alcoholContentHigh = sdpAlcoholContent + allowedVariation;
         Double priceLow = sdpPrice - allowedVariation;
@@ -402,26 +402,31 @@ public class HopThoseBars {
         Integer sdpID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithSecondKey(
                 "System_Defined_Preference_ID", "System_Defined_Preferences",
                 "Preference_ID", primaryKeyID, "User_ID", userID);
+        System.out.println("This?");
+        System.out.println(newRating);
+        System.out.println(sdpID);
         AllYourDatabaseAreBelongToDrunks.updateDouble("System_Defined_Preferences", "Variable", newRating,
                 "System_Defined_Preference_ID", sdpID);
+        System.out.println("This?");
     }
 
     public static Double getNewSimpleRating(Double currentRating) {
+        Double updateValue = .125;
         if (rating == 2) {
-            if (currentRating >= 1.25) {
-                currentRating -= .25;
+            if (currentRating >= 1 + updateValue) {
+                currentRating -= updateValue;
             }
         } else if (rating == 1) {
-            if (currentRating >= 1.5) {
-                currentRating -= .5;
+            if (currentRating >= 1 + (updateValue * 2)) {
+                currentRating -= updateValue * 2;
             }
         } else if (rating == 4) {
-            if (currentRating <= 8.75) {
-                currentRating += .25;
+            if (currentRating <= 9 - updateValue) {
+                currentRating += updateValue;
             }
         } else if (rating == 5) {
-            if (currentRating <= 8.5) {
-                currentRating += .5;
+            if (currentRating <= 9 - (updateValue * 2)) {
+                currentRating += updateValue * 2;
             }
         }
         return currentRating;
@@ -541,11 +546,11 @@ public class HopThoseBars {
         for (String ingredient : ingredients) {
             Integer sdpID = haveYouEvenTriedIt(ingredient);
             Double currentRating = AllYourDatabaseAreBelongToDrunks.selectDouble("Variable",
-                    "System_Defined_Preferences", "System_Defined_Preferences_ID", sdpID);
+                    "System_Defined_Preferences", "System_Defined_Preference_ID", sdpID);
 
             Double newRating = getNewSimpleRating(currentRating);
             AllYourDatabaseAreBelongToDrunks.updateDouble("System_Defined_Preferences", "Variable",
-                    newRating, "System_Defined_Preferences_ID", sdpID);
+                    newRating, "System_Defined_Preference_ID", sdpID);
         }
     }
 
@@ -562,7 +567,7 @@ public class HopThoseBars {
                 "System_Defined_Preference_ID", "System_Defined_Preferences",
                 "Preference_ID", preferenceID, "User_ID", userID);
         if (sdpID == 0) {
-            AllYourDatabaseAreBelongToDrunks.youreOpinionIsWrong(preferenceID, userID, 5.0);
+            AllYourDatabaseAreBelongToDrunks.yourOpinionIsWrong(preferenceID, userID, 5.0);
             sdpID = AllYourDatabaseAreBelongToDrunks.selectIntegerWithSecondKey("System_Defined_Preference_ID",
                     "System_Defined_Preferences", "Preference_ID", preferenceID,
                     "User_ID", userID);
@@ -574,7 +579,7 @@ public class HopThoseBars {
     public static void cuttingYouOff() {
         //TODO recommend a ride service #this will happen when it's a real app
         try {
-            Desktop.getDesktop().browse(new URL("uber.com").toURI());
+            Desktop.getDesktop().browse(new URL("https://www.uber.com").toURI());
         } catch (Exception e) {
             e.printStackTrace();
         }
