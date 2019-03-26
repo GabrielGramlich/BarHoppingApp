@@ -1,9 +1,12 @@
+package Menus;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+import static AllYourDatabaseAreBelongToDrunks.SelectStatementCreation.selectStringWithString;
+
 public class DontHopUnlessISaySo {
-    public static void main(String[] args) { }
 
     public static boolean haveWeMet() {
         //TODO check if user is already signed in #this will happen when it's a real app
@@ -15,9 +18,9 @@ public class DontHopUnlessISaySo {
         // Comparing salted, hashed password with password stored in database
         boolean youLiar;
 
-        String seasoning = AllYourDatabaseAreBelongToDrunks.selectStringWithString("Salt",
+        String seasoning = selectStringWithString("Salt",
                 "Login_Credentials", "Username", username);
-        String databaseCredentials = AllYourDatabaseAreBelongToDrunks.selectStringWithString("Password",
+        String databaseCredentials = selectStringWithString("Password",
                 "Login_Credentials", "Username", username);
 
         String saltyHashBrowns = nothingCuresAHangoverLikeATastyPassword(potatoes, seasoning);
