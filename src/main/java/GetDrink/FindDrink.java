@@ -211,9 +211,6 @@ public class FindDrink {
     }
 
     public static ArrayList<Integer> getYouLikeDrinks(ArrayList<Integer> rightDrinks) {
-        //TODO return starting array if new array is null
-        //TODO double check logic
-
         ArrayList<Integer> youLikeDrinks = new ArrayList<>();
         ArrayList<Integer> likedDrinks = selectIntegerArrayListForAll("Drink_ID", "Drink_Preferences");
         for (Integer drink : rightDrinks) {
@@ -226,24 +223,15 @@ public class FindDrink {
                     if (drink.equals(otherDrink)) {
                         Random random = new Random();
                         int go = random.nextInt(5);
-                        if (drinkRating == 5) {
-                            youLikeDrinks.add(drink);
-                        } else if (drinkRating >= 4) {
-                            if (go >= 1) {
-                                youLikeDrinks.add(drink);
+
+                        int j = 1;
+                        for (int i = 5 ; i > 0 ; i--) {
+                            if (drinkRating >= i) {
+                                if (go >= j) {
+                                    youLikeDrinks.add(drink);
+                                }
                             }
-                        } else if (drinkRating >= 3) {
-                            if (go >= 2) {
-                                youLikeDrinks.add(drink);
-                            }
-                        } else if (drinkRating >= 2) {
-                            if (go >= 3) {
-                                youLikeDrinks.add(drink);
-                            }
-                        } else if (drinkRating >= 1) {
-                            if (go == 4) {
-                                youLikeDrinks.add(drink);
-                            }
+                            j++;
                         }
                     }
                 }
@@ -261,9 +249,6 @@ public class FindDrink {
     }
 
     public static ArrayList<Integer> getEveryoneLikesDrinks(ArrayList<Integer> youLikeDrinks) {
-        //TODO return starting array if new array is null
-        //TODO double check logic
-
         ArrayList<Integer> everyoneLikesDrinks = new ArrayList<>();
         ArrayList<Integer> likedDrinks = selectIntegerArrayListForAll("Drink_ID", "Drink_Preferences");
         for (Integer drink : youLikeDrinks) {
@@ -276,24 +261,15 @@ public class FindDrink {
                     if (drink.equals(otherDrink)) {
                         Random random = new Random();
                         int go = random.nextInt(5);
-                        if (drinkRating == 5) {
-                            everyoneLikesDrinks.add(drink);
-                        } else if (drinkRating >= 4) {
-                            if (go >= 1) {
-                                everyoneLikesDrinks.add(drink);
+
+                        int j = 1;
+                        for (int i = 5 ; i > 0 ; i--) {
+                            if (drinkRating >= i) {
+                                if (go >= j) {
+                                    everyoneLikesDrinks.add(drink);
+                                }
                             }
-                        } else if (drinkRating >= 3) {
-                            if (go >= 2) {
-                                everyoneLikesDrinks.add(drink);
-                            }
-                        } else if (drinkRating >= 2) {
-                            if (go >= 3) {
-                                everyoneLikesDrinks.add(drink);
-                            }
-                        } else if (drinkRating >= 1) {
-                            if (go == 4) {
-                                everyoneLikesDrinks.add(drink);
-                            }
+                            j++;
                         }
                     }
                 }
