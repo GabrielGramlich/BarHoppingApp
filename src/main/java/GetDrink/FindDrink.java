@@ -253,7 +253,11 @@ public class FindDrink {
             }
         }
 
-        return youLikeDrinks;
+        if (youLikeDrinks.isEmpty()) {
+            return rightDrinks;
+        } else {
+            return youLikeDrinks;
+        }
     }
 
     public static ArrayList<Integer> getEveryoneLikesDrinks(ArrayList<Integer> youLikeDrinks) {
@@ -299,6 +303,10 @@ public class FindDrink {
             }
         }
 
-        return everyoneLikesDrinks;
+        if (everyoneLikesDrinks.isEmpty()) {
+            return youLikeDrinks;
+        } else {
+            return everyoneLikesDrinks;
+        }
     }
 }
