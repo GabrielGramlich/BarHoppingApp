@@ -8,23 +8,21 @@ import static GetDrink.DrinkingFunTime.*;
 import static GetDrink.UpdateBasePreferences.updateRatingPrice;
 
 public class FindDrink {
-    //TODO remove drinks percent wise for previously rated drinks
-
     public static void main(String[] args) { }
 
     public static void pickingYourPoison() {
 //        ArrayList<Integer> localDrinks = getLocalDrinks();
         ArrayList<Integer> startingDrinks = getStartingDrinks();
         ArrayList<Integer> allergenFreeDrinks = getAllergenFreeDrinks(startingDrinks);
-        ArrayList<Integer> everyoneLikesDrinks = getEveryoneLikesDrinks(allergenFreeDrinks);
-        ArrayList<Integer> youLikeDrinks = getYouLikeDrinks(everyoneLikesDrinks);
-        ArrayList<Integer> almostRightDrinks = getAlmostRightDrinks(youLikeDrinks);
+        ArrayList<Integer> almostRightDrinks = getAlmostRightDrinks(allergenFreeDrinks);
         ArrayList<Integer> rightDrinks = getRightDrinks(almostRightDrinks);
+        ArrayList<Integer> youLikeDrinks = getYouLikeDrinks(rightDrinks);
+        ArrayList<Integer> everyoneLikesDrinks = getEveryoneLikesDrinks(youLikeDrinks);
 
         Random rand = new Random();
-        int randInt = rand.nextInt(rightDrinks.size());
+        int randInt = rand.nextInt(everyoneLikesDrinks.size());
 
-        drinkID = rightDrinks.get(randInt);
+        drinkID = everyoneLikesDrinks.get(randInt);
         String drinkName = selectString("Name", "Drinks",
                 "Drink_ID", drinkID);
 
@@ -90,87 +88,7 @@ public class FindDrink {
         }
     }
 
-    public static ArrayList<Integer> getEveryoneLikesDrinks(ArrayList<Integer> allergenFreeDrinks) {
-        ArrayList<Integer> everyoneLikesDrinks = new ArrayList<>();
-        ArrayList<Integer> likedDrinks = selectIntegerArrayListForAll("Drink_ID", "Drink_Preferences");
-        for (Integer drink : allergenFreeDrinks) {
-            for (Integer otherDrink : likedDrinks) {
-                Double drinkRating = selectAverageDoubleWithKey("Rating", "Drink_Preferences",
-                        "Drink_ID", otherDrink);
-                if (drinkRating != null) {
-                    if (drink.equals(otherDrink)) {
-                        Random random = new Random();
-                        int go = random.nextInt(5);
-                        if (drinkRating == 5) {
-                            everyoneLikesDrinks.add(drink);
-                        } else if (drinkRating >= 4) {
-                            if (go >= 1) {
-                                everyoneLikesDrinks.add(drink);
-                            }
-                        } else if (drinkRating >= 3) {
-                            if (go >= 2) {
-                                everyoneLikesDrinks.add(drink);
-                            }
-                        } else if (drinkRating >= 2) {
-                            if (go >= 3) {
-                                everyoneLikesDrinks.add(drink);
-                            }
-                        } else if (drinkRating >= 1) {
-                            if (go == 4) {
-                                everyoneLikesDrinks.add(drink);
-                            }
-                        }
-                    }
-                } else {
-                    everyoneLikesDrinks.add(drink);
-                }
-            }
-        }
-
-        return everyoneLikesDrinks;
-    }
-
-    public static ArrayList<Integer> getYouLikeDrinks(ArrayList<Integer> everyoneLikesDrinks) {
-        ArrayList<Integer> youLikeDrinks = new ArrayList<>();
-        ArrayList<Integer> likedDrinks = selectIntegerArrayListForAll("Drink_ID", "Drink_Preferences");
-        for (Integer drink : everyoneLikesDrinks) {
-            for (Integer otherDrink : likedDrinks) {
-                Double drinkRating = selectAverageDoubleWithKey("Rating", "Drink_Preferences",
-                        "Drink_ID", otherDrink);
-                if (drinkRating != null) {
-                    if (drink.equals(otherDrink)) {
-                        Random random = new Random();
-                        int go = random.nextInt(5);
-                        if (drinkRating == 5) {
-                            youLikeDrinks.add(drink);
-                        } else if (drinkRating >= 4) {
-                            if (go >= 1) {
-                                youLikeDrinks.add(drink);
-                            }
-                        } else if (drinkRating >= 3) {
-                            if (go >= 2) {
-                                youLikeDrinks.add(drink);
-                            }
-                        } else if (drinkRating >= 2) {
-                            if (go >= 3) {
-                                youLikeDrinks.add(drink);
-                            }
-                        } else if (drinkRating >= 1) {
-                            if (go == 4) {
-                                youLikeDrinks.add(drink);
-                            }
-                        }
-                    }
-                } else {
-                    everyoneLikesDrinks.add(drink);
-                }
-            }
-        }
-
-        return youLikeDrinks;
-    }
-
-    public static ArrayList<Integer> getAlmostRightDrinks(ArrayList<Integer> youLikeDrinks) {
+    public static ArrayList<Integer> getAlmostRightDrinks(ArrayList<Integer> allergenFreeDrinks) {
         Double sdpAlcoholContent = selectDoubleWithSecondaryKey("Variable",
                 "System_Defined_Preferences", "Preference_ID", 1,
                 "User_ID", userID);
@@ -199,7 +117,7 @@ public class FindDrink {
         getVariation(sdpAlcoholContent, sdpPrice, sdpComplexity);
 
         ArrayList<Integer> almostRightDrinks = new ArrayList<>();
-        for (Integer drink : youLikeDrinks) {
+        for (Integer drink : allergenFreeDrinks) {
             drinkID = drink;
             Integer drinkAlcoholContent = selectInteger("Alcohol_Content",
                     "Drinks", "Drink_ID", drinkID);
@@ -290,5 +208,97 @@ public class FindDrink {
         }
 
         return rightDrinks;
+    }
+
+    public static ArrayList<Integer> getYouLikeDrinks(ArrayList<Integer> rightDrinks) {
+        //TODO return starting array if new array is null
+        //TODO double check logic
+
+        ArrayList<Integer> youLikeDrinks = new ArrayList<>();
+        ArrayList<Integer> likedDrinks = selectIntegerArrayListForAll("Drink_ID", "Drink_Preferences");
+        for (Integer drink : rightDrinks) {
+            boolean happened = false;
+            for (Integer otherDrink : likedDrinks) {
+                Double drinkRating = selectAverageDoubleWithKey("Rating", "Drink_Preferences",
+                        "Drink_ID", otherDrink);
+                if (drinkRating != null) {
+                    happened = true;
+                    if (drink.equals(otherDrink)) {
+                        Random random = new Random();
+                        int go = random.nextInt(5);
+                        if (drinkRating == 5) {
+                            youLikeDrinks.add(drink);
+                        } else if (drinkRating >= 4) {
+                            if (go >= 1) {
+                                youLikeDrinks.add(drink);
+                            }
+                        } else if (drinkRating >= 3) {
+                            if (go >= 2) {
+                                youLikeDrinks.add(drink);
+                            }
+                        } else if (drinkRating >= 2) {
+                            if (go >= 3) {
+                                youLikeDrinks.add(drink);
+                            }
+                        } else if (drinkRating >= 1) {
+                            if (go == 4) {
+                                youLikeDrinks.add(drink);
+                            }
+                        }
+                    }
+                }
+            }
+            if (!happened) {
+                youLikeDrinks.add(drink);
+            }
+        }
+
+        return youLikeDrinks;
+    }
+
+    public static ArrayList<Integer> getEveryoneLikesDrinks(ArrayList<Integer> youLikeDrinks) {
+        //TODO return starting array if new array is null
+        //TODO double check logic
+
+        ArrayList<Integer> everyoneLikesDrinks = new ArrayList<>();
+        ArrayList<Integer> likedDrinks = selectIntegerArrayListForAll("Drink_ID", "Drink_Preferences");
+        for (Integer drink : youLikeDrinks) {
+            boolean happened = false;
+            for (Integer otherDrink : likedDrinks) {
+                Double drinkRating = selectAverageDoubleWithKey("Rating", "Drink_Preferences",
+                        "Drink_ID", otherDrink);
+                if (drinkRating != null) {
+                    happened = true;
+                    if (drink.equals(otherDrink)) {
+                        Random random = new Random();
+                        int go = random.nextInt(5);
+                        if (drinkRating == 5) {
+                            everyoneLikesDrinks.add(drink);
+                        } else if (drinkRating >= 4) {
+                            if (go >= 1) {
+                                everyoneLikesDrinks.add(drink);
+                            }
+                        } else if (drinkRating >= 3) {
+                            if (go >= 2) {
+                                everyoneLikesDrinks.add(drink);
+                            }
+                        } else if (drinkRating >= 2) {
+                            if (go >= 3) {
+                                everyoneLikesDrinks.add(drink);
+                            }
+                        } else if (drinkRating >= 1) {
+                            if (go == 4) {
+                                everyoneLikesDrinks.add(drink);
+                            }
+                        }
+                    }
+                }
+            }
+            if (!happened) {
+                everyoneLikesDrinks.add(drink);
+            }
+        }
+
+        return everyoneLikesDrinks;
     }
 }
