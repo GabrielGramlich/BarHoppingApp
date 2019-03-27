@@ -68,8 +68,16 @@ public class SelectStatementCreation {
 
     public static Double selectAverageDouble(String column, String table) {
         String sqlStatement = "SELECT AVG(" + column + ") FROM " + table + ";";
-        Double maxValue = needThatDouble("AVG(" + column + ")", sqlStatement);
-        return maxValue;
+        Double avgValue = needThatDouble("AVG(" + column + ")", sqlStatement);
+        return avgValue;
+    }
+
+    public static Double selectAverageDoubleWithKey(String column, String table, String primaryKeyName,
+                                                    Integer primaryKeyID) {
+        String sqlStatement = "SELECT AVG(" + column + ") FROM " + table + " WHERE " + primaryKeyName + " = "
+                + primaryKeyID + ";";
+        Double avgValue = needThatDouble("AVG(" + column + ")", sqlStatement);
+        return avgValue;
     }
 
     public static Integer selectIntegerWithSecondKey(String column, String table, String primaryKeyName,
@@ -115,4 +123,10 @@ public class SelectStatementCreation {
         ArrayList<Integer> returnArrayListInteger = needThatArrayListInteger(column, sqlStatement);
         return returnArrayListInteger;
     }
+    public static ArrayList<Integer> selectIntegerArrayListForAll(String column, String table) {
+        String sqlStatement = "SELECT " + column + " FROM " + table + ";";
+        ArrayList<Integer> returnArrayListInteger = needThatArrayListInteger(column, sqlStatement);
+        return returnArrayListInteger;
+    }
+
 }

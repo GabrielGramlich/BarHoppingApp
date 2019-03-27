@@ -20,7 +20,6 @@ public class DrinkingFunTime {
     //TODO check for time with drink selection and factor in specialty price with that #this will happen when it's a
     // real app
     //TODO Comment your code, you dick
-    //TODO remove drinks percent wise for previously rated drinks
 
     public static Integer howMuchHaveYouHad = 0;
     public static LocalDateTime startGettingDrunkTime = null;
@@ -147,7 +146,6 @@ public class DrinkingFunTime {
     }
 
     public static void whatDoYouThinkYoureBetterThanMe() {
-        //TODO update drink data
         updateRatingAlcoholContent();
         updateRatingPrice(true);
         updateRatingComplexity();
