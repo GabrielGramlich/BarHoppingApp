@@ -20,37 +20,24 @@ public class SignIn {
     public static Integer locationID;
     public static Integer drinkID;
     public static String drinkSelection;
+    public static boolean hold = true;
+    public static boolean go = false;
 
     public static void main(String[] args) {
-        boolean weHave = DontHopUnlessISaySo.haveWeMet();
-        boolean quit = true;
-        username = "";
-        password = "";
-        // TODO get username and password if already signed in #this will happen when it's a real app
+        MainMenu mainGui = new MainMenu();
 
-        boolean newUser = yesNoInput("Are you a new member?");
+        while (hold) { }
 
-        if (newUser) {
-            quit = createAccountLogin();
-        }
-
-        while (!weHave) {
-            while (quit) {
-                username = stringInput("Enter your username:");
-                password = stringInput("Enter your password:");
-                quit = DontHopUnlessISaySo.whosThere(username, password);
-                if (quit) {
-                    boolean signUp = yesNoInput("Username doesn't exit. Would you like to sign up?");
-                    if (signUp) {
-                        quit = createAccountLogin();
-                    }
-                }
+        while (go) {
+            go = DontHopUnlessISaySo.whosThere(username, password);
+            if (go) {
+                SignInMenu signInGui = new SignInMenu();
             }
-            weHave = true;
         }
 
         loginID = selectIntegerWithString("Login_Credential_ID",
                 "Login_Credentials", "Username", username);
+        System.out.println("success.");
         userOrOwner();
     }
 
