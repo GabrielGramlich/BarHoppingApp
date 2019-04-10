@@ -8,7 +8,6 @@ public class SelectStatementExecution {
 
     public static String needThatString(String column, String sqlStatement) {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
                             "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
@@ -26,7 +25,7 @@ public class SelectStatementExecution {
             connection.close();
 
             return returnString;
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
             return "";
         }
@@ -34,7 +33,6 @@ public class SelectStatementExecution {
 
     public static Integer needThatInteger(String column, String sqlStatement) {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
                             "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
@@ -52,7 +50,7 @@ public class SelectStatementExecution {
             connection.close();
 
             return returnInteger;
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
             return 0;
         }
@@ -60,7 +58,6 @@ public class SelectStatementExecution {
 
     public static Double needThatDouble(String column, String sqlStatement) {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
                             "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
@@ -78,7 +75,7 @@ public class SelectStatementExecution {
             connection.close();
 
             return returnDouble;
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
             return 0.0;
         }
@@ -86,7 +83,6 @@ public class SelectStatementExecution {
 
     public static Integer needThatBoolean(String column, String sqlStatement) {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
                             "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
@@ -110,7 +106,7 @@ public class SelectStatementExecution {
             connection.close();
 
             return returnInteger;
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
             return 0;
         }
@@ -118,7 +114,6 @@ public class SelectStatementExecution {
 
     public static ArrayList<String> needThatArrayListString(String column, String sqlStatement) {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
                             "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
@@ -137,7 +132,7 @@ public class SelectStatementExecution {
             connection.close();
 
             return returnArrayList;
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
             ArrayList<String> returnArrayList = new ArrayList<>();
             return returnArrayList;
@@ -146,7 +141,6 @@ public class SelectStatementExecution {
 
     public static ArrayList<Integer> needThatArrayListInteger(String column, String sqlStatement) {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
                             "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
@@ -165,7 +159,7 @@ public class SelectStatementExecution {
             connection.close();
 
             return returnArrayList;
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
             ArrayList<Integer> returnArrayList = new ArrayList<>();
             return returnArrayList;

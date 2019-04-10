@@ -11,7 +11,6 @@ public class GenericStatementExecution {
     public static void dontNeedThat(String sqlStatement) {
         // Generic means of pushing data
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Bar_Database?useUnicode=true&useJDBCCompliantTimezoneShift" +
                             "=true&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true&useSSL=false",
@@ -21,7 +20,7 @@ public class GenericStatementExecution {
 
             statement.close();
             connection.close();
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
